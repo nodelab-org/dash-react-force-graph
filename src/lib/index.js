@@ -1,6 +1,8 @@
 /* eslint-disable import/prefer-default-export */
-import DashReactForceGraph from './components/DashReactForceGraph.react';
+import Graph2D from './components/Graph2D.react.js';
+import Graph3D from './components/Graph3D.react.js';
 
 export {
-    DashReactForceGraph
+    Graph2D,
+    Graph3D,
 };
