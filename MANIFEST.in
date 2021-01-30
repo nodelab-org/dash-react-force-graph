@@ -1,0 +1,7 @@
+include dash_react_force_graph/dash_react_force_graph.min.js
+include dash_react_force_graph/dash_react_force_graph.min.js.map
+include dash_react_force_graph/metadata.json
+include dash_react_force_graph/package-info.json
+include README.md
+include LICENSE
+include package.json
