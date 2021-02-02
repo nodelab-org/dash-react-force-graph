@@ -2,7 +2,7 @@
 
 dash-react-force-graph is a Dash component library built on (the very powerful) [react-force-graph](https://github.com/vasturiano/react-force-graph). 
 
-It has many features in common with [Dash cytoscape](https://dash.plotly.com/cytoscape) and a few extra, such as 3D, Virtual Reality and Augmented Reality versions, as well as image nodes and backgrounds.  
+The library allows you to easily create an interactive network visualization. It has many features in common with [Dash cytoscape](https://dash.plotly.com/cytoscape) and a few extra, such as 3D, Virtual Reality and Augmented Reality versions, as well as image nodes and backgrounds.  
 
 See `usage.py` for a simple example and check out the original react component repo above for many others.
 
@@ -15,6 +15,8 @@ See `usage.py` for a simple example and check out the original react component r
 4. Visit http://localhost:8050 in your web browser. Enjoy!
 
 ## Features
+
+Please see the [react-force-graph](https://github.com/vasturiano/react-force-graph) docs.
 
 The Dash components expose many of the original React component props directly. Exceptions are:
 * Props taking javascript functions, if available in the Dash component, are implemented differently (since Dash cannot serialize a javascript function). 
