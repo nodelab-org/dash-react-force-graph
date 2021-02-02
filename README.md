@@ -1,16 +1,18 @@
 # dash-react-force-graph
 
-dash-react-force-graph is a Dash component library built on [react-force-graph](https://github.com/vasturiano/react-force-graph). 
+dash-react-force-graph is a Dash component library built on (the very powerful) [react-force-graph](https://github.com/vasturiano/react-force-graph). 
+
+It has many features in common with [Dash cytoscape](https://dash.plotly.com/cytoscape) and a few extra, such as 3D, Virtual Reality and Augmented Reality versions, as well as image nodes and backgrounds.  
 
 See `usage.py` for a simple example and check out the original react component repo above for many others.
 
-## Quick start
-1. Install the library: `python -m pip install git+https://github.com/JonThom/dash-react-force-graph`
+## Quick start (1 minute)
+1. Install the library: `python -m pip install git+https://github.com/JonThom/dash-react-force-graph`, or, if using [pipenv](https://pipenv.pypa.io/en/latest/), `python -m pip install git+https://github.com/JonThom/dash-react-force-graph#egg=dash-react-force-graph`
 2. Install Dash and its dependencies: https://dash.plotly.com/installation
 3. For a simple example, download and run `usage.py`:
 	1. `wget https://github.com/JonThom/dash-react-force-graph/blob/master/usage.py`
 	2. `python usage.py`
-4. Visit http://localhost:8050 in your web browser
+4. Visit http://localhost:8050 in your web browser. Enjoy!
 
 ## Features
 
@@ -18,13 +20,13 @@ The Dash components expose many of the original React component props directly. 
 * Props taking javascript functions, if available in the Dash component, are implemented differently (since Dash cannot serialize a javascript function). 
 * Methods (such as `d3ReheatSimulation`) are, where possible, exposed as Dash props, either boolean or arrays of method arguments. Some methods, such as `.scene()` are currently not exposed in the Dash version.
 
-Many function props (such as event handlers e.g. `onNodeClick`) which are available in the react component have been provided built-in functions that perform some sensible default behavior (such as clicking a node to select it). In this case, thhe Dash component exposes the clicked node and its coordinates as new props.
+Many function props (such as event handlers e.g. `onNodeClick`) which are available in the react component have been provided built-in functions that perform some sensible default behavior (such as clicking a node to select it). In this case, the Dash component exposes the clicked node and its coordinates as additional props.
 
 See comments in the prop validation parts of the components in`./lib/components/` for detail.
 
 ## Status
 
-The component is currently in an alpha-like stage and fixes and updates will follow.
+The component is currently in an alpha-like stage. Fixes and updates will follow.
 
 For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
 
