@@ -4,7 +4,10 @@ dash-react-force-graph is a Dash component library built on [react-force-graph](
 
 See usage.py for a simple example and check out the original react component repo above for many others.
 
-The Dash components expose almost all of the original React component props and methods, but see comments in the prop validation parts of the components in`./lib/components/` for detail.
+The Dash components expose many of the original React component props directly. Exceptions are:
+* Props taking javascript functions, if available in the Dash component, are implemented differently (since Dash cannot serialize a javascript function). Many function props (such as event handlers e.g. `onNodeClick`) already have functions that perform some sensible default behavior (such as clicking a node to select it). The Dash component has this additional logic built-in, and exposes the clicked node and its coordinates as new props.
+* Methods (such as `d3ReheatSimulation`) are, where possible, exposed as Dash props, either boolean or arrays of method arguments. Some methods, such as .scene() are currently not exposed in the Dash version.
+See comments in the prop validation parts of the components in`./lib/components/` for detail.
 
 For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
 
