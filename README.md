@@ -4,20 +4,22 @@ dash-react-force-graph is a Dash component library built on [react-force-graph](
 
 See usage.py for a simple example and check out the original react component repo above for many others.
 
+Quick start:
+1. Install the library: `python -m pip install git+https://github.com/JonThom/dash-react-force-graph`
+2. Install Dash and its dependencies: https://dash.plotly.com/installation
+3. For a simple example, download and run `usage.py`:
+	1. `wget https://github.com/JonThom/dash-react-force-graph/blob/master/usage.py
+	2. `python usage.py`
+4. Visit http://localhost:8050 in your web browser
+
 The Dash components expose many of the original React component props directly. Exceptions are:
 * Props taking javascript functions, if available in the Dash component, are implemented differently (since Dash cannot serialize a javascript function). Many function props (such as event handlers e.g. `onNodeClick`) already have functions that perform some sensible default behavior (such as clicking a node to select it). The Dash component has this additional logic built-in, and exposes the clicked node and its coordinates as new props.
 * Methods (such as `d3ReheatSimulation`) are, where possible, exposed as Dash props, either boolean or arrays of method arguments. Some methods, such as .scene() are currently not exposed in the Dash version.
 See comments in the prop validation parts of the components in`./lib/components/` for detail.
 
-For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
-
 The component is currently in an alpha-like stage and fixes and updates will follow.
 
-Get started with:
-1. install the library: `python -m pip install git+https://github.com/JonThom/dash-react-force-graph`
-2. Install Dash and its dependencies: https://dash.plotly.com/installation
-3. Run the simple example at `python usage.py`
-4. Visit http://localhost:8050 in your web browser
+For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
 
 Below: the standard README text from the Dash component boilerplate 
 
