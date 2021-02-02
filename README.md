@@ -1,9 +1,14 @@
 # dash-react-force-graph
 
 dash-react-force-graph is a Dash component library built on [react-force-graph](https://github.com/vasturiano/react-force-graph). 
+
 See usage.py for a simple example and check out the original react component repo above for many others.
+
 The Dash components expose almost all of the original React component props and methods, but see comments in the prop validation parts of the components in`./lib/components/` for detail.
-The component is currently in alpha-like stage and fixed and updates will follow. For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
+
+For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
+
+The component is currently in alpha-like stage and fixed and updates will follow.
 
 Get started with:
 1. install the library: `python -m pip install git+https://github.com/JonThom/dash-react-force-graph`
@@ -11,7 +16,7 @@ Get started with:
 3. Run the simple example at `python usage.py`
 4. Visit http://localhost:8050 in your web browser
 
-<Below: the standard README text from the Dash component boilerplate> 
+Below: the standard README text from the Dash component boilerplate 
 
 ## Contributing
 
