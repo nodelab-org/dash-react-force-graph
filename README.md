@@ -6,9 +6,10 @@ The Dash components expose almost all of the original React component props and 
 The component is currently in alpha-like stage and fixed and updates will follow. For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
 
 Get started with:
-1. Install Dash and its dependencies: https://dash.plotly.com/installation
-2. Run the simple example at `python usage.py`
-3. Visit http://localhost:8050 in your web browser
+1. install the library: `python -m pip install git+https://github.com/JonThom/dash-react-force-graph`
+2. Install Dash and its dependencies: https://dash.plotly.com/installation
+3. Run the simple example at `python usage.py`
+4. Visit http://localhost:8050 in your web browser
 
 <Below: the standard README text from the Dash component boilerplate> 
 
