@@ -1,5 +1,7 @@
-from .DashReactForceGraph import DashReactForceGraph
+from .Graph2D import Graph2D
+from .Graph3D import Graph3D
 
 __all__ = [
-    "DashReactForceGraph"
+    "Graph2D",
+    "Graph3D"
 ]

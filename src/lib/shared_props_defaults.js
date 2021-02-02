@@ -1,154 +1,197 @@
-//import { none } from "ramda"
-
 const obj_shared_props = {
-    // id: "Graph2D",
+    // props include most react-force-graph props (unless handled with internal logic in higher-level component)
+    // https://github.com/vasturiano/react-force-graph
+    // with additional higher-level props added at the end
+
+    /**
+    * data input
+    */
+    // props
     graphData: {"nodes":[], "links":[]},
-
-    // Container layout
-    backgroundColor: "black",
-    heightRatio: 0.85, 
-
-    // node styling
-    // nodeRelSize: 4,
-    nodeLabel: "name",
-    nodeLabel_attr_type: {},
-    nodeLabel_attr_supertype: {},
-
-    nodeColor: "__color", 
-
-    nodeColor_common_type: {},
-    nodeColor_common_supertype: {},
-
-    nodeAutoColorBy: "__supertype",
-    nodeOpacity:0.9,
+    nodeId: "id",
+    linkSource : "source",
+    linkTarget: "target",
     
-    // nodeCanvasObjectMode:"replace",
+    /**
+    * container layout
+    */
+    // props
+    // width: null, // not exposed, responsive to container width
+    // height: null, // not exposed, uses heightRatio prop instead
+    backgroundColor: "black",
+    showNavInfo: true, // 3D and VR
+    // yOffset: 1.5, // AR 
+    // glScale: 200 // AR 
+    // markerAttrs: { preset: 'hiro' } // AR
+
+    /**
+    * node styling
+    */
+    // props
+    nodeRelSize: 4,
+    nodeVal:"val",
+    nodeLabel: "label",
+    // nodeDesc: "desc" // VR only
+    // nodeVisibility: True // not exposed, use nodeIdsVisible prop instead
+    nodeColor: "color", 
+    nodeAutoColorBy: "label",
+    nodeOpacity:0.75, // 3D, VR, AR only 
+    nodeResolution: 8, // 3D, VR, AR only 
+    // nodeCanvasObject: none // 2D, not exposed
+    // nodeCanvasObjectMode: "replace", // 2D, not exposed
+    // nodeThreeObject: none // 3D, VR, AR, not exposed
     // nodeThreeObjectExtend: true,
     
-    // link styling
-    linkLabel: "__label",
-    linkColor: "#F0FFFF", 
-    linkColor_attr_type: {},
-    linkColor_attr_supertype: {},
-
-    // Azure //"rgb(150,80,250)",
-    linkAutoColorBy:"__label",
-    linkOpacity:0.1,
-    // linkLineDash: false,
-    linkWidth:1, 
-    linkCurvature: 0,
-
-    // linkCanvasObjectMode:"replace",
-    linkThreeObjectExtend:true,
-    
+    /**
+    * link styling
+    */
+    // props
+    linkLabel: "label",
+    // linkDesc: "desc", // VR only,
+    // linkVisibility: true, // not exposed, use nodeIdsVisible instead
+    linkColor: "color", 
+    linkAutoColorBy:"label",
+    linkOpacity:0.2,
+    linkLineDash: null, // falsy value disables dashing
+    linkWidth:1,
+    linkResolution: 6,
+    linkCurvature: 0, 
+    inkCurveRotation: 0, // 3D, VR, AR, 
+    // linkMaterial: null, // 3D, VR, AR, not exposed
+    // linkCanvasObject: null // 2D, not exposed
+    // linkCanvasObjectMode: "replace", // 2D, not exposed
+    // linkThreeObject: null // 3D, VR, AR, not exposed 
+    // linkThreeObjectExtend:true, // 3D, VR, AR, not exposed 
+    // linkPositionUpdate: null, // function, not exposed
     linkDirectionalArrowLength:3,
+    linkDirectionalArrowColor:"color", 
     linkDirectionalArrowRelPos:0.95,
+    linkDirectionalArrowResolution: 8, // 3D, VR, AR
+    linkDirectionalParticles: 0, 
+    linkDirectionalParticleSpeed: 0.01,
+    linkDirectionalParticleWidth: 0.5,
+    linkDirectionalParticleColor: "color",
+    linkDirectionalParticleResolution: 4,
+    // methods
+    emitParticle: null, // to call the emitParticle method, pass it a link through this prop
     
-    // render control
-    // zoomToFit:[250,10],
-    // zoom:1,
-    // centerAt:[0,0,0],
-    // Force engine (d3-force) configuration
-    cooldownTime:2500,
-    // interaction
+    /**
+    * Render control
+    */
+    // props
+    rendererConfig:{ antialias: true, alpha: true },
+    // onRenderFramePre: null, //TODO not ported (cannot pass methods as arguments to Dash a component)
+    // onRenderFramePost: null, //TODO not ported (cannot pass methods as arguments to Dash a component)
+    // methods
+    pauseAnimation: false, // to call the pauseAnimation method, pass True
+    resumeAnimation: false, // to call the resumeAnimation method, pass True
+    centerAt: null,// to call the centerAt method, pass a list or tuple ([x], [y], [ms]) (TODO)
+    zoom: null, // to call the zoom method, pass a list or tuple ([number], [ms])
+    zoomToFit: null,// to call the zoomToFit method, pass a list or tuple ([ms], [px], [nodeFilterFn])
+    cameraPosition:	null, // 3D 
+    // scene: // TODO method
+    // camera: // TODO method
+    // renderer: // TODO method
+    // postProcessingComposer // TODO method
+    // mcontrols // TODO method
+    refresh: false,
 
+    /**
+    * Render control
+    */
+    // props
+    numDimensions: 3, // 3D, VR, AR
+    forceEngine: "d3", 
+    dagMode: null,
+    dagLevelDistance: null,
+    // dagNodeFilter: // TODO: function
+    // onDagError: // TODO: function
+    d3AlphaMin: 0,
+    d3AlphaDecay: 0.0228,
+    d3VelocityDecay: 0.4, 
+    ngraphPhysics: null, 
+    warmupTicks: 0,
+    cooldownTicks: Infinity, 
+    cooldownTime: 15000,
+    // onEngineTick: // TODO: function 
+    // onEngineStop: // TODO: function
+    // methods
+    d3Force: null,
+    d3ReheatSimulation: false,
+
+    /**
+    * interaction
+    */
+    // onNodeClick // not exposed
+    // onNodeRightClick // not exposed
+    // onNodeHover // not exposed 
+    // onNodeCenterHover // not exposed, VR and AR
+    // onNodeDrag // not exposed
+    // onNodeDragEnd // not exposed
+    // onLinkClick // not exposed
+    // onLinkRightClick // not exposed
+    // onLinkHover // not exposed
+    // onLinkCenterHover // not exposed
+    // onBackgroundClick // not exposed
+    // onBackgroundRightClick // not exposed
+    linkHoverPrecision:4,
+    // onZoom // TODO: function
+    // onZoomEnd // TODO: function
+    controlType: "trackball",
+    // enableZoomPanInteraction: true, // overridden by 'interactive' parameter
+    // enableNavigationControls: true, // overridden by 'interactive' parameter
+    // enablePointerInteraction: true, // overridden by 'interactive' parameter
+    enableNodeDrag: true, // overridden by 'interactive' parameter
+
+    /**
+    * utility
+    */
+    // methods
+    getGraphBbox: false, 
+    // screen2GraphCoords // not exposed
+    // graph2ScreenCoords // not exposed
+
+    /**
+    * higher-order props (not in original react component)
+    */
+    heightRatio: 0.85, 
+    size: null,
+    active: true,
+    // zoomOut: false,
+    // center: false,
+    graphBbox: null,
+    nodeURL: "link",
+    nodeImg: "img", 
+    nodeIcon: "icon",
+    nodeIcon_fontsheets: {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
+    linkId: "id",
     interactive: true,
-    enableZoomPanInteraction: true,
-    enableNavigationControls: true,
-    enablePointerInteraction:true,
-    enableNodeDrag:true,
-
     updated:false,
-    
     nodeZoomId: null,
-
     nodesSelected: [],
-    nodeIdsHighlightDrag: [],
-    // nodeClicked:null
-    // click: 0.0,
-    // rightClick: 0.0,
-    // altClick: 0.0,
-    
-    //nodeClicked: null,
+    nodeIdsDrag: [],
+    nodeClicked: null,
+    nodeClickedViewpointCoordinates:null,
     nodeRightClicked: null,
     nodeRightClickedViewpointCoordinates:null,
-    // nodeShiftClicked: null,
-    // nodeAltClicked: null,
-
-
-    // altClickCoordinates: {x:0, y:0, z:0}, // just initial values
-
-    linksSelected: [],
-    linkIdsHighlightDrag: [],
-    // linkClicked:null,
-    // linkRightClicked: null,
-    // linkShiftClicked: null,
-    // linkAltClicked: null,
-
-    graknStatus: "off",
-
-    nodeURL: "link",
-    nodeURL_attr_type: {},
-    nodeURL_attr_supertype: {},
-
-    // nodeIcon
-    useNodeIcon: true,
-    nodeIcon: "icon",
-    nodeIcon_attr_supertype: {},
-    nodeIcon_attr_type:{},
-    nodeIcon_common_supertype: {},
-    nodeIcon_common_type:{
-        "org_entity": {"FontAwesome":"\uF1AD"},
-        "intermediary": {"FontAwesome":"\uE068"},
-        "node-address": {"FontAwesome":"\uF3C5"}, 
-        "officer": {"FontAwesome":"\uF508"},  
-        "other": {"FontAwesome":"\uF494"},   
-    },
-    nodeIcon_fontsheets: {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
-
-    // nodeImg
-    useNodeImg: true,
-    nodeImg: "img",  
-    nodeImg_attr_supertype: {},
-    nodeImg_attr_type:{},
-    nodeImg_common_supertype: {},
-    nodeImg_common_type:{},
-
-    maxDepth_neighbours_select: 4,
-    // aims to avoid javascript max recursion error,
-    
-    maxNodesRender:10000,
-     
-    backgroundImgURL: null,
-
     nodeHovered: null,
-    
-    externalobject_source: null,
-
-    externalobject_input: null, 
-
-    centreCoordinates: {x:300, y:300, z:300}, // just initial values
-
+    nodeHoveredViewpointCoordinates:null,
+    linkClicked:null,
+    linkRightClicked:null,
+    linksSelected: [],
+    linkIdsNodesDrag: [],
     nodeIdsHighlight: [],
-
     linkIdsHighlight: [],
-
-    nodeIdsFilter: [],
-
-    linkIdsFilter: [],
-
+    nodeIdsVisible: [],
+    linkIdsVisible: [],
+    externalobject_source: null,
+    externalobject_input: null, 
+    centreCoordinates: {x:300, y:300, z:300}, // just initial values
     useCoordinates: false,
-
     pixelUnitRatio: null, 
-    
     showCoordinates: null,
-    
-//    origin: PropTypes.arrayOf(PropTypes.number),
-
     gravity: null,
-
-    focused: true,
-
+    maxDepth_neighbours_select: 4,   
 }
 
 export {obj_shared_props}

@@ -12,30 +12,16 @@ import {saturate, darken, lighten} from 'polished';
 import SpriteText from 'three-spritetext';
 import * as THREE from 'THREE';
 import ThreeGeo from 'three-geo';
-// import {max,log10} from 'Math';
-// import { is, prop, none } from 'ramda';
 // import * as material_UI from '@material-ui/icon_fontsheets'; // doesn't work: Module not found: Error: Can't resolve '@material-ui/icon_fontsheets' in '/Users/rkm916/Sync/projects/2020-dashforcegraph/src/lib/components'
 // see https://stackoverflow.com/questions/42051588/wildcard-or-asterisk-vs-named-or-selective-import-es6-javascript
 
 import {obj_shared_props} from "../shared_props_defaults.js"
-
-// import {fnc_make_three_obj} from "../three_objects.js"
 
 // use react resize-me to make canvas container width responsive
 const withSizeHOC = withSize({monitorWidth:true, monitorHeight:false, noPlaceholder:true})
 
 function Graph3D(props) {
 
-    // Dummy set of variables for testing
-    // var graphDataState = {nodes:[],links:[]} 
-    // var graphData = {nodes:[{"id":"1","__label":"Julia"},{"id":"2","__label":"Bob"},{"id":"3", "__label":"Jules"}],links:[{"id":"link1","source":"1", "target":"2"},{"id":"link2", "source":"1", "target":"3"}]}
-    // var nodesById = {} 
-    // var props = {}
-    // props.graphData =  {nodes:[{"id":"man1", "__label":"Joe"},{"id":"man2", "__label":"Ben"}], links:[{"source":"man1", "target":"man2", "id":"link1"},{"source":"man2", "target":"man1", "id":"link2"}]} 
-    // props.collapseNeighboursNodeId = null 
-    // props.currentNodeIds = [] 
-    // props.keepCurrentGraphData = false
-    
     // import scripts 
     // https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
     // importScript("https://kit.fontawesome.com/a6e0eeba63.js");
@@ -120,11 +106,13 @@ function Graph3D(props) {
 
         if (props.nodesSelected !== null) {
             if (props.nodesSelected.length>0) {
-                if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
-                    // retrieve the nodes matching the neighbourNodeIds
-                    const neighbourNodes_unique = neighbourNodeIds_unique.map(nnidu => nodesById[nnidu])
-                    for (let neighbourNode_unique of neighbourNodes_unique) {
-                        neighbourNodeIds_unique = neighbourNodeIds_unique.concat(get_node_neighbour_ids(neighbourNode_unique, depth-1))
+                if (neighbourNodeIds_unique.length) {
+                    if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
+                        // retrieve the nodes matching the neighbourNodeIds
+                        const neighbourNodes_unique = neighbourNodeIds_unique.map(nnidu => nodesById[nnidu])
+                        for (let neighbourNode_unique of neighbourNodes_unique) {
+                            neighbourNodeIds_unique = neighbourNodeIds_unique.concat(get_node_neighbour_ids(neighbourNode_unique, depth-1))
+                        }
                     }
                 }
             }
@@ -132,9 +120,11 @@ function Graph3D(props) {
         neighbourNodeIds_unique = [...new Set(neighbourNodeIds_unique)] 
 
         // if no new nodes were added, return empty array
-        if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
-            neighbourNodeIds_unique.splice(0,neighbourNodeIds_unique.length)
-        } 
+        if (neighbourNodeIds_unique.length) {
+            if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
+                neighbourNodeIds_unique.splice(0,neighbourNodeIds_unique.length)
+            } 
+        }
         return neighbourNodeIds_unique 
     };
 
@@ -143,20 +133,6 @@ function Graph3D(props) {
         
         // reset nodeRightClicked (kludge)
         props.setProps({nodeRightClicked:null});
-        //props.setProps({nodeAltClicked:null});
-
-        // if (event.altKey) {
-        //     // open URL
-        //     // const win = window.open(node[props.nodeURL], '_blank');
-        //     // if (win !== null) {
-        //     //     win.focus();
-        //     // }
-        //     // const altClick = props.altClick+1
-        //     // props.setProps({altClick:altClick});
-            
-        //     const altClickCoordinates = fgRef.current.graph2ScreenCoords(node.x,node.y,node.z)    
-        //     props.setProps({altClickCoordinates:altClickCoordinates})
-        // }
         
         // deep copy props.nodesSelected
         const nodesSelected_tmp = [] 
@@ -177,7 +153,7 @@ function Graph3D(props) {
             //props.setProps({nodeClicked:node});
             // const click = props.click+1
             // props.setProps({click:click});
-            const nodeCoordinates = fgRef.current.graph2ScreenCoords(node.x,node.y,node.z)    
+            // const nodeCoordinates = fgRef.current.graph2ScreenCoords(node.x,node.y,node.z)    
             //props.setProps({nodeClickedViewpointCoordinates:nodeCoordinates})
 
             // not shift 
@@ -228,8 +204,8 @@ function Graph3D(props) {
         // props.setProps({nodeClicked:null});
         // props.setProps({nodeRightClicked:null});
 
-        props.setProps({nodeIdsHighlightDrag:[]});
-        props.setProps({linkIdsHighlightDrag:[]}); 
+        props.setProps({nodeIdsDrag:[]});
+        props.setProps({linkIdsDrag:[]}); 
         
         console.log("node:")
         console.log(node)
@@ -288,21 +264,21 @@ function Graph3D(props) {
                     };
                 }
             }
-            // assign unique ids to nodeIdsHighlightDrag prop
+            // assign unique ids to nodeIdsDrag prop
             neighbourNodeIds.push(node.id)
 
-            console.log("new nodeIdsHighlightDrag:")
+            console.log("new nodeIdsDrag:")
             console.log(neighbourNodeIds)
 
-            props.setProps({nodeIdsHighlightDrag:[...new Set(neighbourNodeIds)]});
-            props.setProps({linkIdsHighlightDrag:linkIds}); 
+            props.setProps({nodeIdsDrag:[...new Set(neighbourNodeIds)]});
+            props.setProps({linkIdsNodesDrag:linkIds}); 
         }
     };
 
     const handleNodeDragEnd = (node, translate) => {
 
-        props.setProps({nodeIdsHighlightDrag:[]});
-        props.setProps({linkIdsHighlightDrag:[]});
+        props.setProps({nodeIdsDrag:[]});
+        props.setProps({linkIdsNodesDrag:[]});
 
         node.fx = node.x;
         node.fy = node.y;
@@ -353,7 +329,7 @@ function Graph3D(props) {
 
     useEffect(()=> {
         props.setProps({updated:false})
-    }, [props.nodeIdsHighlightDrag, props.nodesSelected])
+    }, [props.nodeIdsDrag, props.nodesSelected])
 
 
     const handleLinkClick = (link,event) => {
@@ -441,11 +417,11 @@ function Graph3D(props) {
                 
             }
         }    
-        if (props.nodeIdsHighlightDrag.length) {
+        if (props.nodeIdsDrag.length) {
              // make all other nodes more transparent
             opacity -= 0.3
             // spriteText.color = transparentize(0.3, spriteText.color)
-            if (props.nodeIdsHighlightDrag.indexOf(node.id) !== -1) {
+            if (props.nodeIdsDrag.indexOf(node.id) !== -1) {
                 opacity = 1
                 // spriteText.color = opacify(0.4, spriteText.color) 
                 spriteText.color = saturate(0.2, spriteText.color)
@@ -487,7 +463,7 @@ function Graph3D(props) {
                 spriteImg = generateicon_fontsheetsprite(Object.values(icon_src)[0], Object.keys(icon_src)[0], size, darken(0.1,spriteText.color))
             }
         }
-
+        var out
         if (spriteImg!==null) {
             var group = new THREE.Group();
             const pos_adj1 = new THREE.Vector3( 0, -5, 0 );
@@ -496,11 +472,12 @@ function Graph3D(props) {
             spriteImg.position.add(pos_adj2)
             group.add( spriteText );
             group.add( spriteImg );
-            return group;
+            out = group;
             // return spriteImg 
         } else {
-            return spriteText
+            out = spriteText
         }
+        return out
 
     }
 
@@ -579,32 +556,32 @@ function Graph3D(props) {
                     nodeColor={(node => {
                         var color = props.nodeColor in node? node[props.nodeColor] : node.__type in props.nodeColor_common_type? props.nodeColor_common_type[node.__type] : node.__supertype in props.nodeColor_common_supertype? props.nodeColor_common_supertype[node.__supertype] : node.color;                                  
                         
-                    //     if (props.nodesSelected.map(node => node.id).indexOf(node.id) !== -1) {
-                    //         color = saturate(0.2,color)
-                    //         color = lighten(0.2, color)
-                    //     }
+                        if (props.nodesSelected.map(node => node.id).indexOf(node.id) !== -1) {
+                            color = saturate(0.2,color)
+                            color = lighten(0.2, color)
+                        }
 
-                    //     if (props.nodeIdsHighlight.length) {
-                    //         if (props.nodeIdsHighlight.indexOf(node.id) !== -1) {
-                    //             color = saturate(0.2,color)
-                    //             color = lighten(0.2, color)
-                    //         }
-                    //     }        
+                        if (props.nodeIdsHighlight.length) {
+                            if (props.nodeIdsHighlight.indexOf(node.id) !== -1) {
+                                color = saturate(0.2,color)
+                                color = lighten(0.2, color)
+                            }
+                        }        
                         
-                    //     if (props.nodeIdsHighlightDrag.length) {
-                    //        if (props.nodeIdsHighlightDrag.indexOf(node.id) !== -1) {
-                    //            color = saturate(0.2, color)
-                    //            color = lighten(0.2, color)
-                    //        }
-                    //    } 
+                        if (props.nodeIdsDrag.length) {
+                           if (props.nodeIdsDrag.indexOf(node.id) !== -1) {
+                               color = saturate(0.2, color)
+                               color = lighten(0.2, color)
+                           }
+                       } 
 
                         return color
                     })}
                     nodeVisibility={(node => {
                         var visible = true 
 
-                        if (props.nodeIdsFilter.length) {
-                            if (props.nodeIdsFilter.indexOf(node.id) === -1) {
+                        if (props.nodeIdsVisible.length) {
+                            if (props.nodeIdsVisible.indexOf(node.id) === -1) {
                                 visible = false 
                             }
                         }
@@ -635,9 +612,9 @@ function Graph3D(props) {
                         }
                         
                         // is link highlighted?
-                        if (props.linkIdsHighlightDrag.length) {
+                        if (props.linkIdsNodesDrag.length) {
                             color = darken(0.2, color)
-                            if (props.linkIdsHighlightDrag.indexOf(link.id) !== -1) {
+                            if (props.linkIdsNodesDrag.indexOf(link.id) !== -1) {
                                 color = saturate(0.2,color)
                                 color = lighten(0.2, color)
                             }
@@ -653,21 +630,13 @@ function Graph3D(props) {
                             
                         }
 
-                        // are link source and target highlighted?
-                        // if (props.nodeIdsHighlightDrag.length) {
-                        //     if (props.nodeIdsHighlightDrag.includes(link.source) && props.nodeIdsHighlightDrag.includes(link.target)) {
-                        //        color = saturate(0.2, color)
-                        //        color = lighten(0.2, color)
-                        //    }
-                        // } 
-
                         return color 
                     })}
                     linkVisibility={(link => {
                         var visible = true 
 
-                        if (props.nodeIdsFilter.length) {
-                            // use nodeIdsFilter.length as criterion, since it shows whether or not a filter is applied. 
+                        if (props.nodeIdsVisible.length) {
+                            // use nodeIdsVisible.length as criterion, since it shows whether or not a filter is applied. 
                             // if we use links, often it will be empty, and no links will be invisible
                             if (props.linkIdsFilter.indexOf(link.id) === -1) {
                                 visible = false 
@@ -690,9 +659,9 @@ function Graph3D(props) {
                         }
 
                         // is link highlighted?
-                        if (props.linkIdsHighlightDrag.length) {
+                        if (props.linkIdsNodesDrag.length) {
                             width = width*0.9
-                            if (props.linkIdsHighlightDrag.indexOf(link.id) !== -1) {
+                            if (props.linkIdsNodesDrag.indexOf(link.id) !== -1) {
                                 width = width*1.5
                             }
                         }  
@@ -725,9 +694,9 @@ function Graph3D(props) {
                         }
 
                         // is link highlighted?
-                        if (props.linkIdsHighlightDrag.length) {
+                        if (props.linkIdsNodesDrag.length) {
                             color = darken(0.3, color)
-                            if (props.linkIdsHighlightDrag.indexOf(link.id) !== -1) {
+                            if (props.linkIdsNodesDrag.indexOf(link.id) !== -1) {
                                 color = saturate(0.2,color)
                                 color = lighten(0.3, color)
                             }
@@ -750,8 +719,8 @@ function Graph3D(props) {
                         //     }
                         // }        
                         
-                        // if (props.nodeIdsHighlightDrag.length) {
-                        //     if (props.nodeIdsHighlightDrag.includes(link.source) || props.nodeIdsHighlightDrag.includes(link.target)) {
+                        // if (props.nodeIdsDrag.length) {
+                        //     if (props.nodeIdsDrag.includes(link.source) || props.nodeIdsDrag.includes(link.target)) {
                         //        color = saturate(0.2, color)
                         //        color = lighten(0.2, color)
                         //    }
@@ -872,12 +841,12 @@ Graph3D.propTypes = {
      */
     id: PropTypes.string,
 
-     /**
-     * A label that will be printed when this component is rendered.
-     */
-    label: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.func]),//.isRequired,
+    //  /**
+    //  * A label that will be printed when this component is rendered.
+    //  */
+    // label: PropTypes.oneOfType([
+    //     PropTypes.string,
+    //     PropTypes.func]),//.isRequired,
 
     /**
      * Dash-assigned callback that should be called to report property changes
@@ -1242,7 +1211,7 @@ Graph3D.propTypes = {
         PropTypes.object
     ),
   
-    nodeIdsHighlightDrag: PropTypes.arrayOf(
+    nodeIdsDrag: PropTypes.arrayOf(
         PropTypes.string
     ),
     
@@ -1266,7 +1235,7 @@ Graph3D.propTypes = {
         PropTypes.object
     ),
     
-    linkIdsHighlightDrag: PropTypes.arrayOf(
+    linkIdsNodesDrag: PropTypes.arrayOf(
         PropTypes.string
     ),
    
@@ -1315,7 +1284,7 @@ Graph3D.propTypes = {
 
     // linkIdsHighlight: PropTypes.arrayOf(PropTypes.string),
 
-    nodeIdsFilter: PropTypes.arrayOf(PropTypes.string),
+    nodeIdsVisible: PropTypes.arrayOf(PropTypes.string),
 
     linkIdsFilter: PropTypes.arrayOf(PropTypes.string),
 

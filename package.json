@@ -24,6 +24,7 @@
   "author": "Jon Thompson <jjt@tutanota.com>",
   "license": "MIT",
   "dependencies": {
+    "d3": "^6.5.0",
     "polished": "^4.1.0",
     "ramda": "^0.26.1",
     "react-force-graph": "^1.37.2",

@@ -24,7 +24,13 @@
   "author": "Jon Thompson <jjt@tutanota.com>",
   "license": "MIT",
   "dependencies": {
-    "ramda": "^0.26.1"
+    "d3": "^6.5.0",
+    "polished": "^4.1.0",
+    "ramda": "^0.26.1",
+    "react-force-graph": "^1.37.2",
+    "react-sizeme": "^2.6.12",
+    "three-geo": "^1.4.3",
+    "three-spritetext": "^1.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
@@ -44,8 +50,8 @@
     "react": "^16.8.6",
     "react-docgen": "^4.1.1",
     "react-dom": "^16.8.6",
-    "styled-jsx": "^3.2.1",
     "style-loader": "^0.23.1",
+    "styled-jsx": "^3.2.1",
     "webpack": "4.36.1",
     "webpack-cli": "3.3.6",
     "webpack-serve": "3.1.0"

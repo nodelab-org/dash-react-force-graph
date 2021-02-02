@@ -20,17 +20,10 @@ class App extends Component {
     render() {
         return (
             <div>
-                <h1>dash-react-force-graph demo</h1>
-                <Graph2D
+                <dash-react-force-graph
                     setProps={this.setProps}
                     {...this.state}
                 />
-                <hr/>
-                <Graph3D
-                    setProps={this.setProps}
-                    {...this.state}
-                />
-
             </div>
         )
     }
