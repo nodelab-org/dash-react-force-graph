@@ -8,7 +8,7 @@ The Dash components expose almost all of the original React component props and 
 
 For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
 
-The component is currently in alpha-like stage and fixed and updates will follow.
+The component is currently in an alpha-like stage and fixes and updates will follow.
 
 Get started with:
 1. install the library: `python -m pip install git+https://github.com/JonThom/dash-react-force-graph`
