@@ -1630,7 +1630,7 @@ Graph2D.propTypes = {
     nodeURL: PropTypes.string,
    
     /**
-    * The node attribute containing url to image to display for each individual node. Takes precedence over nodeIcon_supertype and nodeIcon_type
+    * The node attribute containing url to image to display for each individual node
     */
     nodeImg: PropTypes.string,
 
