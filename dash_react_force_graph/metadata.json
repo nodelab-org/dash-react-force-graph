@@ -607,7 +607,7 @@
           "name": "string"
         },
         "required": false,
-        "description": "The node attribute containing url to image to display for each individual node. Takes precedence over nodeIcon_supertype and nodeIcon_type"
+        "description": "The node attribute containing url to image to display for each individual node"
       },
       "nodeIcon": {
         "type": {

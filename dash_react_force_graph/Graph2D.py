@@ -75,7 +75,7 @@ Bounding box is saved as the graphBbox prop
 - size (dict; optional): provided react-sizeme. Contains an object with "width" and "height" attributes
 - active (boolean; optional): whether or not session is active. Used to enable or disable warning browser dialog when closing
 - nodeURL (string; optional): The node attribute containing a URL
-- nodeImg (string; optional): The node attribute containing url to image to display for each individual node. Takes precedence over nodeIcon_supertype and nodeIcon_type
+- nodeImg (string; optional): The node attribute containing url to image to display for each individual node
 - nodeIcon (string; optional): The node attribute containing object with icon to display for each individual node.
 - nodeIcon_fontsheets (dict; optional): object with keys being fonts (string) and values being CSS sheets
 - linkId (string; optional): The link attribute containing the unique link id

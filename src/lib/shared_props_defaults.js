@@ -11,7 +11,7 @@ const obj_shared_props = {
     nodeId: "id",
     linkSource : "source",
     linkTarget: "target",
-    
+
     /**
     * container layout
     */
@@ -20,8 +20,8 @@ const obj_shared_props = {
     // height: null, // not exposed, uses heightRatio prop instead
     backgroundColor: "black",
     showNavInfo: true, // 3D and VR
-    // yOffset: 1.5, // AR 
-    // glScale: 200 // AR 
+    // yOffset: 1.5, // AR
+    // glScale: 200 // AR
     // markerAttrs: { preset: 'hiro' } // AR
 
     /**
@@ -33,15 +33,15 @@ const obj_shared_props = {
     nodeLabel: "label",
     // nodeDesc: "desc" // VR only
     // nodeVisibility: True // not exposed, use nodeIdsVisible prop instead
-    nodeColor: "color", 
+    nodeColor: "color",
     nodeAutoColorBy: "label",
-    nodeOpacity:0.75, // 3D, VR, AR only 
-    nodeResolution: 8, // 3D, VR, AR only 
+    nodeOpacity:0.75, // 3D, VR, AR only
+    nodeResolution: 8, // 3D, VR, AR only
     // nodeCanvasObject: none // 2D, not exposed
     // nodeCanvasObjectMode: "replace", // 2D, not exposed
     // nodeThreeObject: none // 3D, VR, AR, not exposed
     // nodeThreeObjectExtend: true,
-    
+
     /**
     * link styling
     */
@@ -49,32 +49,32 @@ const obj_shared_props = {
     linkLabel: "label",
     // linkDesc: "desc", // VR only,
     // linkVisibility: true, // not exposed, use nodeIdsVisible instead
-    linkColor: "color", 
+    linkColor: "color",
     linkAutoColorBy:"label",
     linkOpacity:0.2,
     linkLineDash: null, // falsy value disables dashing
     linkWidth:1,
     linkResolution: 6,
-    linkCurvature: 0, 
-    inkCurveRotation: 0, // 3D, VR, AR, 
+    linkCurvature: 0,
+    linkCurveRotation: 0, // 3D, VR, AR,
     // linkMaterial: null, // 3D, VR, AR, not exposed
     // linkCanvasObject: null // 2D, not exposed
     // linkCanvasObjectMode: "replace", // 2D, not exposed
-    // linkThreeObject: null // 3D, VR, AR, not exposed 
-    // linkThreeObjectExtend:true, // 3D, VR, AR, not exposed 
+    // linkThreeObject: null // 3D, VR, AR, not exposed
+    // linkThreeObjectExtend:true, // 3D, VR, AR, not exposed
     // linkPositionUpdate: null, // function, not exposed
     linkDirectionalArrowLength:3,
-    linkDirectionalArrowColor:"color", 
+    linkDirectionalArrowColor:"color",
     linkDirectionalArrowRelPos:0.95,
     linkDirectionalArrowResolution: 8, // 3D, VR, AR
-    linkDirectionalParticles: 0, 
+    linkDirectionalParticles: 0,
     linkDirectionalParticleSpeed: 0.01,
     linkDirectionalParticleWidth: 0.5,
     linkDirectionalParticleColor: "color",
     linkDirectionalParticleResolution: 4,
     // methods
     emitParticle: null, // to call the emitParticle method, pass it a link through this prop
-    
+
     /**
     * Render control
     */
@@ -88,7 +88,7 @@ const obj_shared_props = {
     centerAt: null,// to call the centerAt method, pass a list or tuple ([x], [y], [ms]) (TODO)
     zoom: null, // to call the zoom method, pass a list or tuple ([number], [ms])
     zoomToFit: null,// to call the zoomToFit method, pass a list or tuple ([ms], [px], [nodeFilterFn])
-    cameraPosition:	null, // 3D 
+    cameraPosition:	null, // 3D
     // scene: // TODO method
     // camera: // TODO method
     // renderer: // TODO method
@@ -100,20 +100,21 @@ const obj_shared_props = {
     * Render control
     */
     // props
+
     numDimensions: 3, // 3D, VR, AR
-    forceEngine: "d3", 
+    forceEngine: "d3",
     dagMode: null,
     dagLevelDistance: null,
     // dagNodeFilter: // TODO: function
     // onDagError: // TODO: function
     d3AlphaMin: 0,
     d3AlphaDecay: 0.0228,
-    d3VelocityDecay: 0.4, 
-    ngraphPhysics: null, 
+    d3VelocityDecay: 0.4,
+    ngraphPhysics: null,
     warmupTicks: 0,
-    cooldownTicks: Infinity, 
+    cooldownTicks: Infinity,
     cooldownTime: 15000,
-    // onEngineTick: // TODO: function 
+    // onEngineTick: // TODO: function
     // onEngineStop: // TODO: function
     // methods
     d3Force: null,
@@ -124,7 +125,7 @@ const obj_shared_props = {
     */
     // onNodeClick // not exposed
     // onNodeRightClick // not exposed
-    // onNodeHover // not exposed 
+    // onNodeHover // not exposed
     // onNodeCenterHover // not exposed, VR and AR
     // onNodeDrag // not exposed
     // onNodeDragEnd // not exposed
@@ -147,21 +148,21 @@ const obj_shared_props = {
     * utility
     */
     // methods
-    getGraphBbox: false, 
+    getGraphBbox: false,
     // screen2GraphCoords // not exposed
     // graph2ScreenCoords // not exposed
 
     /**
     * higher-order props (not in original react component)
     */
-    heightRatio: 0.85, 
+    heightRatio: 0.85,
     size: null,
     active: true,
     // zoomOut: false,
     // center: false,
     graphBbox: null,
     nodeURL: "link",
-    nodeImg: "img", 
+    nodeImg: "img",
     nodeIcon: "icon",
     nodeIcon_fontsheets: {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     linkId: "id",
@@ -185,13 +186,13 @@ const obj_shared_props = {
     nodeIdsVisible: [],
     linkIdsVisible: [],
     externalobject_source: null,
-    externalobject_input: null, 
+    externalobject_input: null,
     centreCoordinates: {x:300, y:300, z:300}, // just initial values
     useCoordinates: false,
-    pixelUnitRatio: null, 
+    pixelUnitRatio: null,
     showCoordinates: null,
     gravity: null,
-    maxDepth_neighbours_select: 4,   
+    maxDepth_neighbours_select: 4,
 }
 
 export {obj_shared_props}

@@ -185,7 +185,7 @@ Bounding box is saved as the graphBbox prop}
 
 \item{nodeURL}{Character. The node attribute containing a URL}
 
-\item{nodeImg}{Character. The node attribute containing url to image to display for each individual node. Takes precedence over nodeIcon_supertype and nodeIcon_type}
+\item{nodeImg}{Character. The node attribute containing url to image to display for each individual node}
 
 \item{nodeIcon}{Character. The node attribute containing object with icon to display for each individual node.}
 
