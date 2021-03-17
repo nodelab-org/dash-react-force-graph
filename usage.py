@@ -11,15 +11,15 @@ app = dash.Dash(__name__,
 
 graphData = {
     "nodes":[
-        {"id":"1",  "label":"Joe Benson", "color":"cornflowerblue", "icon":{"FontAwesome":"\uF007"}},
-        {"id":"2", "label":"Daniella M", "color":"cornflowerblue", "icon":{"FontAwesome":"\uF007"}},
-        {"id":"3",  "label":"Susan T", "color":"cornflowerblue", "icon":{"FontAwesome":"\uF007"}},
-        {"id":"4",  "label":"Ed Smith", "color":"cornflowerblue", "icon":{"FontAwesome":"\uF007"}},
-        {"id":"5",  "label":"Chevron", "color":"cornflowerblue", "img":"https://picsum.photos/200"},
-        {"id":"6",  "label":"Frieds of the Earth", "color":"cornflowerblue", "img":"https://picsum.photos/200"},
-        {"id":"7",  "label":"employment", "color":"tomato"},
-        {"id":"8",  "label":"employment", "color":"tomato"}, 
-        {"id":"9",  "label":"neighbours", "color":"tomato"}, 
+        {"nodeId":"1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"2", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"3",  "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"4",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/200"},
+        {"nodeId":"6",  "__nodeLabel":"Frieds of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/200"},
+        {"nodeId":"7",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
+        {"nodeId":"8",  "__nodeLabel":"employment", "__nodeColor":"tomato"}, 
+        {"nodeId":"9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"}, 
         ], 
     "links":[
         {"id":"1", "label":"employee", "source":"1", "target":"7"},
@@ -44,22 +44,27 @@ app.layout = html.Div([
         id='graph2D',
         graphData=graphData,
         heightRatio=0.45,
+        nodeId="nodeId",
+        nodeLabel="__nodeLabel",
+        nodeColor="__nodeColor",
+        nodeIcon="__nodeIcon",
+        nodeImg="__nodeImg",
         nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     ),
     html.Div(id='output-nodeHovered-2D'),
     html.Div(id='output-nodeClicked-2D'),
     html.Div(id='output-nodeRightClicked-2D'),
     html.Br(),
-    html.Br(),
-    dash_react_force_graph.Graph3D(
-        id='graph3D',
-        graphData=graphData,
-        heightRatio=0.45,
-        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
-    ),
-    html.Div(id='output-nodeHovered-3D'),
-    html.Div(id='output-nodeClicked-3D'),
-    html.Div(id='output-nodeRightClicked-3D'),
+    # html.Br(),
+    # dash_react_force_graph.Graph3D(
+    #     id='graph3D',
+    #     graphData=graphData,
+    #     heightRatio=0.45,
+    #     nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
+    # ),
+    # html.Div(id='output-nodeHovered-3D'),
+    # html.Div(id='output-nodeClicked-3D'),
+    # html.Div(id='output-nodeRightClicked-3D'),
 ])
 
 
@@ -103,13 +108,13 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
         trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
     if trigger_id == "button-add":
-        newNodeId = max([int(node["id"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
-        newNode = {"id":newNodeId, "label":"new_node_".format(newNodeId), "color":"orange"}
+        newNodeId = max([int(node["nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
+        newNode = {"nodeId":newNodeId, "__nodeLabel":"new_node_".format(newNodeId), "__nodeColor":"orange"}
         
         if len(graphData["nodes"]):
             ridx =  random.randrange(len(graphData["nodes"]))
             newLinkId = max([int(link["id"]) for link in graphData["links"]])+1 if len(graphData["links"]) else 1
-            newLink = {"id":newLinkId, "source":newNode, "target": graphData["nodes"][ridx]["id"], "label":"new_link".format(newLinkId)}
+            newLink = {"id":newLinkId, "source":newNode, "target": graphData["nodes"][ridx]["nodeId"], "label":"new_link".format(newLinkId)}
             graphData["links"].append(newLink)
 
         graphData["nodes"].append(newNode)
@@ -122,10 +127,9 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
         nodeDel = graphData["nodes"].pop(ridx)
 
         if len(graphData["links"]):
-            graphData["links"] = list(filter(lambda link: not nodeDel["id"] in [link["source"]["id"], link["target"]["id"]], graphData["links"]))
+            graphData["links"] = list(filter(lambda link: not nodeDel["nodeId"] in [link["source"], link["target"]], graphData["links"]))
         
     return graphData
-
 
 
 if __name__ == '__main__':

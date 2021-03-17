@@ -28,8 +28,7 @@ function Graph2D(props) {
     }
 
     const fgRef = useRef(null);
-    // const [highlightNodes, setHighlightNodes] = useState({});
-
+  
     var nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
 
     // display standard browser warning before navigating away from page
@@ -162,19 +161,19 @@ function Graph2D(props) {
         
         var neighbourNodeIds_unique = neighbourNodeIds.length? [...new Set(neighbourNodeIds)] : []
 
-        if (props.nodesSelected !== null) {
-            if (props.nodesSelected.length>0) {
-                if (neighbourNodeIds_unique.length) {
-                    if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
-                        // retrieve the nodes matching the neighbourNodeIds
-                        const neighbourNodes_unique = neighbourNodeIds_unique.map(nnidu => nodesById[nnidu])
-                        for (let neighbourNode_unique of neighbourNodes_unique) {
-                            neighbourNodeIds_unique = neighbourNodeIds_unique.concat(get_node_neighbour_ids(neighbourNode_unique, depth-1))
-                        }
+        //if (props.nodesSelected) {
+        if (props.nodesSelected.length>0) {
+            if (neighbourNodeIds_unique.length) {
+                if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
+                    // retrieve the nodes matching the neighbourNodeIds
+                    const neighbourNodes_unique = neighbourNodeIds_unique.map(nnidu => nodesById[nnidu])
+                    for (let neighbourNode_unique of neighbourNodes_unique) {
+                        neighbourNodeIds_unique = neighbourNodeIds_unique.concat(get_node_neighbour_ids(neighbourNode_unique, depth-1))
                     }
                 }
             }
         }
+        //}
         neighbourNodeIds_unique = neighbourNodeIds_unique.length? [...new Set(neighbourNodeIds_unique)] : []
 
         // if no new nodes were added, return empty array
@@ -436,7 +435,7 @@ function Graph2D(props) {
 
     // zoom to node
     useEffect(() => {
-        if (props.nodeZoomId !== null) {
+        if (props.nodeZoomId) {
             // new position
             fgRef.current.centerAt(nodesById[props.nodeZoomId].x, nodesById[props.nodeZoomId].y, 250) 
             fgRef.current.zoom(4,250)
@@ -459,8 +458,8 @@ function Graph2D(props) {
         // https://www.w3schools.com/tags/canvas_globalalpha.asp
         // initialize color
         // provide a sensible default
-        var fillStyle = props.nodeColor in node? node[props.nodeColor] !== null? node[props.nodeColor] : "#0000ff" : "#0000ff" 
-        const label = props.nodeLabel in node? node[props.nodeLabel] !== null? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
+        var fillStyle = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff" 
+        const label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
         const size = 12;
         ctx.globalAlpha = 0.9;
         ctx.fontWeight = "normal";
@@ -477,6 +476,7 @@ function Graph2D(props) {
                 fontSize = fontSize*1.2
             }
         }
+
         if (props.nodeIdsDrag.length) {
              // make all other nodes more transparent
             ctx.globalAlpha -= 0.3
@@ -508,7 +508,7 @@ function Graph2D(props) {
         // set modified style parameters
         var img_src = null 
         if (props.nodeImg in node) {
-            if (node[props.nodeImg] !== null) {
+            if (node[props.nodeImg]) {
                 img_src = node[props.nodeImg] 
                 if (typeof(img_src)==="string" && (img_src.includes("http") || img_src.includes("www"))) {
                     const img = new Image();
@@ -524,9 +524,9 @@ function Graph2D(props) {
 
         if (img_src === null & props.nodeIcon in node) {
             // icon
-            if (node[props.nodeIcon] !== null) {
+            if (node[props.nodeIcon]) {
                 const icon_src = node[props.nodeIcon]
-                if (icon_src !== null) {
+                if (icon_src) {
                     ctx.font = `${size}px ${Object.keys(icon_src)[0]}`
                     ctx.fillStyle = fillStyle
                     ctx.fillText(`${Object.values(icon_src)[0]}`, node.x, node.y-size/1.7, size);
@@ -672,7 +672,7 @@ function Graph2D(props) {
                     nodeRelSize={props.nodeRelSize}
                     nodeVal={props.nodeVal}
                     nodeLabel={(node => 
-                        props.nodeLabel in node? node[props.nodeLabel] !== null? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
+                        props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
                         // node must contain id, so fall back on id as label
                         )} 
                     // nodeDesc: "desc" // VR only
@@ -687,7 +687,7 @@ function Graph2D(props) {
                         return visible 
                     })}
                     nodeColor={(node => {
-                        var color = props.nodeColor in node? node[props.nodeColor] !== null? node[props.nodeColor] : "#0000ff" : "#0000ff"
+                        var color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
                         if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                             color = saturate(0.2,color)
                             color = lighten(0.2, color)
@@ -711,7 +711,8 @@ function Graph2D(props) {
                     nodeResolution={props.nodeResolution}
                     nodeCanvasObject={nodeCanvasObjectFunction}
                     nodeCanvasObjectMode={(node => {   
-                        return (props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] !== null || node[props.nodeIcon] !== null ? "replace" : "after" : "after")
+                        "after"
+                        //return (props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? "replace" : "after" : "after")
                     })}   
                     // nodeThreeObject: none // 3D, VR, AR, not exposed
                     // nodeThreeObjectExtend: true,
