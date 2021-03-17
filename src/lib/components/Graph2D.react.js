@@ -709,13 +709,12 @@ function Graph2D(props) {
                     nodeAutoColorBy={props.nodeAutoColorBy}
                     nodeOpacity={props.nodeOpacity}
                     nodeResolution={props.nodeResolution}
-                    nodeCanvasObject={nodeCanvasObjectFunction}
-                    nodeCanvasObjectMode={(node => {   
-                        "after"
-                        //return (props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? "replace" : "after" : "after")
-                    })}   
-                    // nodeThreeObject: none // 3D, VR, AR, not exposed
-                    // nodeThreeObjectExtend: true,
+                    // nodeCanvasObject={nodeCanvasObjectFunction}
+                    // nodeCanvasObjectMode={(node => {   
+                    //     "after"
+                    //     //return (props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? "replace" : "after" : "after")
+                    // })}   
+                    
                     /**
                     * link styling
                     */
