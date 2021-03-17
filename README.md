@@ -16,7 +16,7 @@ pip: `python -m pip install git+https://github.com/JonThom/dash-react-force-grap
 [poetry](https://python-poetry.org/): `poetry add git+https://github.com/JonThom/dash-react-force-graph#master`
 
 3. Install Dash and its dependencies: https://dash.plotly.com/installation
-4. For a simple example, download and run `usage.py`:
+4. For a simple example, download and run `usage.py` (requires installing the python module `dash_treeview_antd`):
 	1. `wget https://github.com/JonThom/dash-react-force-graph/blob/master/usage.py`
 	2. `python usage.py`
 5. Visit http://localhost:8050 in your web browser. Enjoy!
