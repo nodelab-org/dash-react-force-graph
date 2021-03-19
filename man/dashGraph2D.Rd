@@ -37,11 +37,11 @@ cooldownTicks=NULL, cooldownTime=NULL, d3Force=NULL,
 d3ReheatSimulation=NULL, linkHoverPrecision=NULL,
 controlType=NULL, enableNodeDrag=NULL, getGraphBbox=NULL,
 heightRatio=NULL, size=NULL, active=NULL, nodeURL=NULL,
-nodeImg=NULL, nodeIcon=NULL, nodeIcon_fontsheets=NULL,
-linkId=NULL, interactive=NULL, updated=NULL,
-nodeZoomId=NULL, nodesSelected=NULL, nodeIdsDrag=NULL,
-nodeClicked=NULL, nodeClickedViewpointCoordinates=NULL,
-nodeRightClicked=NULL,
+useNodeImg=NULL, nodeImg=NULL, useNodeIcon=NULL,
+nodeIcon=NULL, nodeIcon_fontsheets=NULL, linkId=NULL,
+interactive=NULL, updated=NULL, nodeZoomId=NULL,
+nodesSelected=NULL, nodeIdsDrag=NULL, nodeClicked=NULL,
+nodeClickedViewpointCoordinates=NULL, nodeRightClicked=NULL,
 nodeRightClickedViewpointCoordinates=NULL, nodeHovered=NULL,
 nodeHoveredViewpointCoordinates=NULL, linkClicked=NULL,
 linkRightClicked=NULL, linkHovered=NULL, linksSelected=NULL,
@@ -185,7 +185,11 @@ Bounding box is saved as the graphBbox prop}
 
 \item{nodeURL}{Character. The node attribute containing a URL}
 
+\item{useNodeImg}{Logical. Whether or not to use the nodeImg. Overrides nodeIcon}
+
 \item{nodeImg}{Character. The node attribute containing url to image to display for each individual node}
+
+\item{useNodeIcon}{Logical. Whether or not to use the nodeIcon}
 
 \item{nodeIcon}{Character. The node attribute containing object with icon to display for each individual node.}
 

@@ -602,12 +602,26 @@
         "required": false,
         "description": "The node attribute containing a URL"
       },
+      "useNodeImg": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether or not to use the nodeImg. Overrides nodeIcon"
+      },
       "nodeImg": {
         "type": {
           "name": "string"
         },
         "required": false,
         "description": "The node attribute containing url to image to display for each individual node"
+      },
+      "useNodeIcon": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether or not to use the nodeIcon"
       },
       "nodeIcon": {
         "type": {
