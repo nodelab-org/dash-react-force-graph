@@ -461,37 +461,40 @@ function Graph2D(props) {
         var fillStyle = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
         const label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
         const size = 12;
-        ctx.globalAlpha = 0.9;
+        // ctx.globalAlpha = 0.9;
         ctx.fontWeight = "normal";
         var fontSize = Math.max(11/globalScale,5)
 
         // modify style parameters if node is selected and/or highlighted
         if (props.nodesSelected.length) {
             // make all other nodes more transparent
-            ctx.globalAlpha -= 0.3
+            // ctx.globalAlpha -= 0.3
+            fillStyle = darken(0.2, fillStyle)
             if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
-                ctx.globalAlpha = 1
+                // ctx.globalAlpha = 1
                 fillStyle = saturate(0.2,fillStyle)
-                fillStyle = lighten(0.2, fillStyle)
+                fillStyle = lighten(0.4, fillStyle)
                 fontSize = fontSize*1.2
             }
         }
 
         if (props.nodeIdsDrag.length) {
              // make all other nodes more transparent
-            ctx.globalAlpha -= 0.3
+            // ctx.globalAlpha -= 0.3
+            fillStyle = darken(0.2, fillStyle)
             if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
-                ctx.globalAlpha = 1
-                fillStyle = lighten(0.2, fillStyle)
+                // ctx.globalAlpha = 1
+                fillStyle = lighten(0.4, fillStyle)
                 ctx.fontWeight="bold"
             }
         }
 
         if (props.nodeIdsHighlight.length) {
-            ctx.globalAlpha -= 0.3
+            // ctx.globalAlpha -= 0.3
+            fillStyle = darken(0.2, fillStyle)
             if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
-                ctx.globalAlpha = 1
-                fillStyle = lighten(0.2, fillStyle)
+                //ctx.globalAlpha = 1
+                fillStyle = lighten(0.4, fillStyle)
                 ctx.fontWeight="bold"
             }
         }
@@ -739,7 +742,7 @@ function Graph2D(props) {
                                 color = lighten(0.1,color)
                             }
                         }
-                        // is link highlighted?
+                        // is link connected to node being dragged?
                         if (props.linkIdsNodesDrag.length) {
                             color = darken(0.2, color)
                             if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
