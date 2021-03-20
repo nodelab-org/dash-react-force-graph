@@ -469,11 +469,11 @@ function Graph2D(props) {
         if (props.nodesSelected.length) {
             // make all other nodes more transparent
             // ctx.globalAlpha -= 0.3
-            fillStyle = darken(0.2, fillStyle)
+            fillStyle = darken(0.1, fillStyle)
             if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                 // ctx.globalAlpha = 1
                 fillStyle = saturate(0.2,fillStyle)
-                fillStyle = lighten(0.4, fillStyle)
+                fillStyle = lighten(0.2, fillStyle)
                 fontSize = fontSize*1.2
             }
         }
@@ -481,20 +481,20 @@ function Graph2D(props) {
         if (props.nodeIdsDrag.length) {
              // make all other nodes more transparent
             // ctx.globalAlpha -= 0.3
-            fillStyle = darken(0.2, fillStyle)
+            fillStyle = darken(0.1, fillStyle)
             if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
                 // ctx.globalAlpha = 1
-                fillStyle = lighten(0.4, fillStyle)
+                fillStyle = lighten(0.2, fillStyle)
                 ctx.fontWeight="bold"
             }
         }
 
         if (props.nodeIdsHighlight.length) {
             // ctx.globalAlpha -= 0.3
-            fillStyle = darken(0.2, fillStyle)
+            fillStyle = darken(0.1, fillStyle)
             if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
                 //ctx.globalAlpha = 1
-                fillStyle = lighten(0.4, fillStyle)
+                fillStyle = lighten(0.2, fillStyle)
                 ctx.fontWeight="bold"
             }
         }
@@ -688,20 +688,28 @@ function Graph2D(props) {
                         return visible
                     })}
                     nodeColor={(node => {
+
                         var color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
-                        if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
-                            color = saturate(0.2,color)
-                            color = lighten(0.2, color)
+
+                        if (props.nodesSelected.length) {
+                          color = darken(0.1, color)
+                          if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+                              color = saturate(0.2,color)
+                              color = lighten(0.2, color)
+                          }
                         }
+
                         if (props.nodeIdsHighlight.length) {
+                            color = darken(0.1, color)
                             if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
-                                color = saturate(0.2,color)
+                                //color = saturate(0.2,color)
                                 color = lighten(0.2, color)
                             }
                         }
                         if (props.nodeIdsDrag.length) {
+                            color = darken(0.1, color)
                             if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
-                                color = saturate(0.2, color)
+                                //color = saturate(0.2, color)
                                 color = lighten(0.2, color)
                             }
                         }
@@ -849,9 +857,9 @@ function Graph2D(props) {
                         props.setProps({enablePointerInteraction: props.interactive? true : false})
                         props.setProps({enableNavigationControls: props.interactive? true : false})
                     }}
-                    d3Force={() => {
-                        ('charge').strength(-50)
-                    }}
+                    // d3Force={() => {
+                    //     ('charge').strength(-50)
+                    // }}
                     /**
                     * interaction
                     */
