@@ -30,9 +30,9 @@ linkOpacity=NULL, linkWidth=NULL, linkCurvature=NULL,
 linkThreeObject=NULL, linkThreeObjectExtend=NULL,
 linkCanvasObjectMode=NULL, linkDirectionalArrowLength=NULL,
 linkDirectionalArrowRelPos=NULL, zoomOut=NULL, center=NULL,
-cooldownTime=NULL, d3Force=NULL, onNodeClick=NULL,
-onNodeRightClick=NULL, onNodeHover=NULL, onLinkClick=NULL,
-onLinkRightClick=NULL, onLinkHover=NULL,
+cooldownTime=NULL, d3Force_define=NULL, d3Force_call=NULL,
+onNodeClick=NULL, onNodeRightClick=NULL, onNodeHover=NULL,
+onLinkClick=NULL, onLinkRightClick=NULL, onLinkHover=NULL,
 onBackgroundClick=NULL, onBackgroundRightClick=NULL,
 interactive=NULL, enableZoomPanInteraction=NULL,
 enableNavigationControls=NULL,
@@ -148,7 +148,18 @@ focused=NULL)
 
 \item{cooldownTime}{Numeric. cooldown time}
 
-\item{d3Force}{Character. }
+\item{d3Force_define}{Named list. object to define a new force on the simulation. E.g.
+d3Force_define = {
+   "name": "charge", // the name to which the force is (to be) assigned
+   "force": "strength", // the force, e.g "forceManyBody" or "forceCenter" (omit the 'd3' object) Pass a null value to remove the force from the simulation
+   "force_args": [], // arguments to pass to force, e.g. links to forceLink. No functions, e.g. of node, allowed (currently)
+}}
+
+\item{d3Force_call}{Named list. object to call a method on an existing simulation force. E.g.
+d3Force_call_method = {
+   "name": "charge", // the name to which the force is assigned
+   "method": "strength", // the name of a method to call on the force
+   "method_args": [-50], // array of args to pass to force method}
 
 \item{onNodeClick}{onNodeClick}
 

@@ -56,7 +56,17 @@ Keyword arguments:
 - `zoomOut` (Bool; optional): zoom
 - `center` (Bool; optional)
 - `cooldownTime` (Real; optional): cooldown time
-- `d3Force` (String; optional)
+- `d3Force_define` (Dict; optional): object to define a new force on the simulation. E.g.
+d3Force_define = {
+   "name": "charge", // the name to which the force is (to be) assigned
+   "force": "strength", // the force, e.g "forceManyBody" or "forceCenter" (omit the 'd3' object) Pass a null value to remove the force from the simulation
+   "force_args": [], // arguments to pass to force, e.g. links to forceLink. No functions, e.g. of node, allowed (currently)
+}
+- `d3Force_call` (Dict; optional): object to call a method on an existing simulation force. E.g.
+d3Force_call_method = {
+   "name": "charge", // the name to which the force is assigned
+   "method": "strength", // the name of a method to call on the force
+   "method_args": [-50], // array of args to pass to force method
 - `interactive` (Bool; optional): toggle with a single control whether graph is interactive
 - `enableZoomPanInteraction` (Bool; optional): enable zoom and panning? (2D)
 - `enableNavigationControls` (Bool; optional): enable navigation? (3D)
@@ -89,7 +99,7 @@ Keyword arguments:
 - `focused` (Bool; optional): focused: whether component is focused
 """
 function dash_graph3d(; kwargs...)
-        available_props = Symbol[:id, :graphData, :heightRatio, :backgroundColor, :width, :nodeRelSize, :nodeLabel, :nodeLabel_attr_type, :nodeLabel_attr_supertype, :nodeColor, :nodeColor_common_type, :nodeColor_common_supertype, :nodeURL, :nodeURL_attr_type, :nodeURL_attr_supertype, :nodeAutoColorBy, :nodeOpacity, :nodeCanvasObjectMode, :nodeThreeObject, :useNodeIcon, :nodeIcon, :nodeIcon_attr_type, :nodeIcon_attr_supertype, :nodeIcon_common_type, :nodeIcon_common_supertype, :nodeIcon_fontsheets, :useNodeImg, :nodeImg, :nodeImg_attr_type, :nodeImg_attr_supertype, :nodeImg_common_type, :nodeImg_common_supertype, :linkLabel, :linkColor, :linkColor_attr_type, :linkColor_attr_supertype, :linkAutoColorBy, :linkOpacity, :linkWidth, :linkCurvature, :linkThreeObject, :linkThreeObjectExtend, :linkCanvasObjectMode, :linkDirectionalArrowLength, :linkDirectionalArrowRelPos, :zoomOut, :center, :cooldownTime, :d3Force, :interactive, :enableZoomPanInteraction, :enableNavigationControls, :enablePointerInteraction, :enableNodeDrag, :nodeZoomId, :nodesSelected, :nodeIdsDrag, :nodeRightClicked, :nodeRightClickedViewpointCoordinates, :linksSelected, :linkIdsNodesDrag, :graknStatus, :maxDepth_neighbours_select, :max_nodes_render, :size, :externalobject_source, :externalobject_input, :nodeHovered, :centreCoordinates, :graphData_changed, :updated, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsFilter, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :focused]
+        available_props = Symbol[:id, :graphData, :heightRatio, :backgroundColor, :width, :nodeRelSize, :nodeLabel, :nodeLabel_attr_type, :nodeLabel_attr_supertype, :nodeColor, :nodeColor_common_type, :nodeColor_common_supertype, :nodeURL, :nodeURL_attr_type, :nodeURL_attr_supertype, :nodeAutoColorBy, :nodeOpacity, :nodeCanvasObjectMode, :nodeThreeObject, :useNodeIcon, :nodeIcon, :nodeIcon_attr_type, :nodeIcon_attr_supertype, :nodeIcon_common_type, :nodeIcon_common_supertype, :nodeIcon_fontsheets, :useNodeImg, :nodeImg, :nodeImg_attr_type, :nodeImg_attr_supertype, :nodeImg_common_type, :nodeImg_common_supertype, :linkLabel, :linkColor, :linkColor_attr_type, :linkColor_attr_supertype, :linkAutoColorBy, :linkOpacity, :linkWidth, :linkCurvature, :linkThreeObject, :linkThreeObjectExtend, :linkCanvasObjectMode, :linkDirectionalArrowLength, :linkDirectionalArrowRelPos, :zoomOut, :center, :cooldownTime, :d3Force_define, :d3Force_call, :interactive, :enableZoomPanInteraction, :enableNavigationControls, :enablePointerInteraction, :enableNodeDrag, :nodeZoomId, :nodesSelected, :nodeIdsDrag, :nodeRightClicked, :nodeRightClickedViewpointCoordinates, :linksSelected, :linkIdsNodesDrag, :graknStatus, :maxDepth_neighbours_select, :max_nodes_render, :size, :externalobject_source, :externalobject_input, :nodeHovered, :centreCoordinates, :graphData_changed, :updated, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsFilter, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :focused]
         wild_props = Symbol[]
         return Component("dash_graph3d", "Graph3D", "dash_react_force_graph", available_props, wild_props; kwargs...)
 end

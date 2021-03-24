@@ -117,7 +117,8 @@ const obj_shared_props = {
     // onEngineTick: // TODO: function
     // onEngineStop: // TODO: function
     // methods
-    d3Force: null,
+    d3Force_method: null,
+    d3Force_call: null,
     d3ReheatSimulation: false,
 
     /**

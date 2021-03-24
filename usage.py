@@ -68,9 +68,9 @@ graphData = {
         {"nodeId":"5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/200"},
         {"nodeId":"6",  "__nodeLabel":"Frieds of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/200"},
         {"nodeId":"7",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"8",  "__nodeLabel":"employment", "__nodeColor":"tomato"}, 
-        {"nodeId":"9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"}, 
-        ], 
+        {"nodeId":"8",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
+        {"nodeId":"9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
+        ],
     "links":[
         {"id":"1", "label":"employee", "source":"1", "target":"7"},
         {"id":"2", "label":"employee", "source":"2", "target":"7"},
@@ -89,7 +89,16 @@ app.layout = html.Div([
     html.Button("add random node", id="button-add"),
     html.Button("delete random node", id="button-delete"),
     html.Br(),
+    dcc.Slider(
+        id="slider-d3Force-charge-strength",
+        min=-100,
+        max=100,
+        marks={i: 'Label {}'.format(i) for i in range(-100,100,20)},
+        step=20,
+        value=0
+    ),
     html.Br(),
+
     dash_react_force_graph.Graph2D(
         id='graph2D',
         graphData=graphData,
@@ -132,16 +141,16 @@ app.layout = html.Div([
 ])
 
 def display_selected_nodes_2D(nodeHovered, nodeClicked, nodeRightClicked, nodesSelected):
-    return ["hovered node: {}".format(nodeHovered), "clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]    
+    return ["hovered node: {}".format(nodeHovered), "clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
 
 @app.callback(
-    Output('graph2D', 'd3ReheatSimulation'), 
+    Output('graph2D', 'd3ReheatSimulation'),
 [
     Input('button-reheat', 'n_clicks')])
 def reheat_graphData_2D(n_clicks):
     return True
 
-@app.callback(Output('graph2D', 'graphData'), 
+@app.callback(Output('graph2D', 'graphData'),
     [
         Input('button-add', 'n_clicks'),
         Input('button-delete', 'n_clicks')
@@ -162,7 +171,7 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
     if trigger_id == "button-add":
         newNodeId = max([int(node["nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
         newNode = {"nodeId":newNodeId, "__nodeLabel":"new_node_".format(newNodeId), "__nodeColor":"orange"}
-        
+
         if len(graphData["nodes"]):
             ridx =  random.randrange(len(graphData["nodes"]))
             newLinkId = max([int(link["id"]) for link in graphData["links"]])+1 if len(graphData["links"]) else 1
@@ -170,7 +179,7 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
             graphData["links"].append(newLink)
 
         graphData["nodes"].append(newNode)
-    
+
     elif trigger_id == "button-delete":
         if not len(graphData["nodes"]):
             raise PreventUpdate
@@ -180,7 +189,7 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
 
         if len(graphData["links"]):
             graphData["links"] = list(filter(lambda link: not nodeDel["nodeId"] in [link["source"], link["target"]], graphData["links"]))
-        
+
     return graphData
 
 

@@ -89,44 +89,45 @@ function Graph2D(props) {
         // to each node, add a "__source" and "__target" attribute
         // each containing a dict, with linkLabels as keys, and values being dicts of {linkid1:nodeid1, linkid2:nodeid2..}
         // e.g. "__source":{"linkLabel1":{linkid343":"nodeid121"}, "linkLabel2":{..}}}
-        if (props.graphData.nodes.length && props.graphData.links.length) {
-            const nodes = []
-            const nodeIds = props.graphData.nodes.map(node=>node[props.nodeId])
-            // initialise __source and __target while copying nodes
-            for (let node of props.graphData.nodes) {
-                node.__source = {}
-                node.__target = {}
-                nodes.push(node)
-            }
-            for (let link of props.graphData.links) {
+        if (props.graphData.nodes.length) {
+          const nodes = []
+          // initialise __source and __target while copying nodes
+          for (let node of props.graphData.nodes) {
+              node.__source = {}
+              node.__target = {}
+              nodes.push(node)
+          }
+          if (props.graphData.links.length) {
+              const nodeIds = props.graphData.nodes.map(node=>node[props.nodeId])
+              for (let link of props.graphData.links) {
 
-                if (typeof(link.source)==="object") {
-                    link.source = link.source.id
-                }
-                if (typeof(link.target)==="object") {
-                    link.target = link.target.id
-                }
+                  if (typeof(link.source)==="object") {
+                      link.source = link.source.id
+                  }
+                  if (typeof(link.target)==="object") {
+                      link.target = link.target.id
+                  }
 
-                const idx_source_node = nodeIds.indexOf(link.source)
-                // if not link[props.linkLabel] a key in node.__source, add new
-                if (!(props.linkLabel in link)) {
-                    link[props.linkLabel] = link[props.linkId]
-                }
+                  const idx_source_node = nodeIds.indexOf(link.source)
+                  // if not link[props.linkLabel] a key in node.__source, add new
+                  if (!(props.linkLabel in link)) {
+                      link[props.linkLabel] = link[props.linkId]
+                  }
 
-                if (!Object.keys(nodes[idx_source_node].__source).includes(link[props.linkLabel])) {
-                    nodes[idx_source_node].__source[link[props.linkLabel]] = {}
-                }
-                nodes[idx_source_node].__source[link[props.linkLabel]][link[props.linkId]] = link.target
-                // if link[props.linkLabel] not in taget nodes.__source, add new
-                const idx_target_node = nodeIds.indexOf(link.target)
-                // if not link[props.linkLabel] a key in node.__source, add new
-                if (!Object.keys(nodes[idx_target_node].__target).includes(link[props.linkLabel])) {
-                    nodes[idx_target_node].__target[link[props.linkLabel]] = {}
-                }
-                nodes[idx_target_node].__target[link[props.linkLabel]][link[props.linkId]] = link.source
-
-            }
-            props.setProps({graphData:{"nodes":nodes, "links":props.graphData.links}})
+                  if (!Object.keys(nodes[idx_source_node].__source).includes(link[props.linkLabel])) {
+                      nodes[idx_source_node].__source[link[props.linkLabel]] = {}
+                  }
+                  nodes[idx_source_node].__source[link[props.linkLabel]][link[props.linkId]] = link.target
+                  // if link[props.linkLabel] not in taget nodes.__source, add new
+                  const idx_target_node = nodeIds.indexOf(link.target)
+                  // if not link[props.linkLabel] a key in node.__source, add new
+                  if (!Object.keys(nodes[idx_target_node].__target).includes(link[props.linkLabel])) {
+                      nodes[idx_target_node].__target[link[props.linkLabel]] = {}
+                  }
+                  nodes[idx_target_node].__target[link[props.linkLabel]][link[props.linkId]] = link.source
+              }
+          }
+          props.setProps({graphData:{"nodes":nodes, "links":props.graphData.links}})
         }
     },[props.graphData])
 
@@ -626,10 +627,38 @@ function Graph2D(props) {
     // },[props.refresh])
 
     useEffect( () => {
-        if (props.d3Force && props.forceEngine === "d3"){
-            fgRef.current.d3Force(...props.d3Force)
+        // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
+        if (props.forceEngine === "d3") {
+           if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
+             console.log("found all the keys")
+             if (props.d3Force_define.name) {
+               console.log("the name value is not null")
+               if (props.d3Force_define.force) {
+                 // define force
+                 console.log("define force")
+                 fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
+               } else {
+                 // remove force
+                 fgRef.current.d3Force(props.d3Force_define.name, null)
+               }
+             }
+           }
+         }
+    },[props.d3Force_define])
+
+
+    useEffect( () => {
+      // e.g. fgRef.current.d3Force('charge').strength(-70);
+      if (props.forceEngine === "d3") {
+        if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
+          if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
+            //console.log("the name value is not null and nor is the method value")
+            fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
+          }
         }
-    },[props.d3Force])
+      }
+    },[props.d3Force_call])
+
 
     useEffect( () => {
         if (props.d3ReheatSimulation && props.forceEngine === "d3"){
@@ -850,6 +879,7 @@ function Graph2D(props) {
                     warmupTicks={props.warmupTicks}
                     cooldownTicks={props.cooldownTicks}
                     cooldownTime={props.cooldownTime}
+
                     // Math.max(0.8*1000*Math.log10(props.graphData.nodes.length),1)
                     // onEngineTick: // TODO: function
                     onEngineStop={()=>{
@@ -858,8 +888,10 @@ function Graph2D(props) {
                         props.setProps({enableNavigationControls: props.interactive? true : false})
                     }}
                     // d3Force={() => {
-                    //     ('charge').strength(-50)
-                    // }}
+                    //     // if (props.node_attr_label || props.nodeImg) {
+                    //         ('charge').strength(-50)}
+                    //     // }
+                    //     }
                     /**
                     * interaction
                     */
@@ -1467,12 +1499,37 @@ Graph2D.propTypes = {
     // onEngineStop: PropTypes.func, // not exposed
 
     /**
+     * d3Force
      * Access to the internal forces that control the d3 simulation engine. Follows the same interface as d3-force-3d's simulation.force. Three forces are included by default: 'link' (based on forceLink), 'charge' (based on forceManyBody) and 'center' (based on forceCenter). Each of these forces can be reconfigured, or new forces can be added to the system. Only applicable if using the d3 simulation engine.
+     * See details at https://github.com/vasturiano/react-force-graph
+     * For examples, search https://github.com/vasturiano for .d3Force and look in code
+     *
+     * In react-force-graph, three forces are included by default: 'link' (based on forceLink), 'charge' (based on forceManyBody) and 'center' (based on forceCenter).
+     *
+     * In this dash-react-force-graph component, the user can acccess the d3Force method via the two different props below:
      */
-    d3Force: PropTypes.oneOfType([
-        PropTypes.string,
-    //    PropTypes.func
-    ]),
+
+     /**
+     *  object to define a new force on the simulation. E.g.
+     * d3Force_define = {
+     *    "name": "charge", // the name to which the force is (to be) assigned
+     *    "force": "strength", // the force, e.g "forceManyBody" or "forceCenter" (omit the 'd3' object) Pass a null value to remove the force from the simulation
+     *    "force_args": [], // arguments to pass to force, e.g. links to forceLink. No functions, e.g. of node, allowed (currently)
+     * }
+     */
+
+     d3Force_define: PropTypes.object,
+
+     /**
+     * object to call a method on an existing simulation force. E.g.
+     * d3Force_call_method = {
+     *    "name": "charge", // the name to which the force is assigned
+     *    "method": "strength", // the name of a method to call on the force
+     *    "method_args": [-50], // array of args to pass to force method
+     *
+     */
+
+    d3Force_call: PropTypes.object,
 
     /**
      * Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine.

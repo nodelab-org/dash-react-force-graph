@@ -33,14 +33,15 @@ zoomToFit=NULL, cameraPosition=NULL, refresh=NULL,
 numDimensions=NULL, forceEngine=NULL, dagMode=NULL,
 dagLevelDistance=NULL, d3AlphaMin=NULL, d3AlphaDecay=NULL,
 d3VelocityDecay=NULL, ngraphPhysics=NULL, warmupTicks=NULL,
-cooldownTicks=NULL, cooldownTime=NULL, d3Force=NULL,
-d3ReheatSimulation=NULL, linkHoverPrecision=NULL,
-controlType=NULL, enableNodeDrag=NULL, getGraphBbox=NULL,
-heightRatio=NULL, size=NULL, active=NULL, nodeURL=NULL,
-useNodeImg=NULL, nodeImg=NULL, useNodeIcon=NULL,
-nodeIcon=NULL, nodeIcon_fontsheets=NULL, linkId=NULL,
-interactive=NULL, updated=NULL, nodeZoomId=NULL,
-nodesSelected=NULL, nodeIdsDrag=NULL, nodeClicked=NULL,
+cooldownTicks=NULL, cooldownTime=NULL, d3Force_define=NULL,
+d3Force_call=NULL, d3ReheatSimulation=NULL,
+linkHoverPrecision=NULL, controlType=NULL,
+enableNodeDrag=NULL, getGraphBbox=NULL, heightRatio=NULL,
+size=NULL, active=NULL, nodeURL=NULL, useNodeImg=NULL,
+nodeImg=NULL, useNodeIcon=NULL, nodeIcon=NULL,
+nodeIcon_fontsheets=NULL, linkId=NULL, interactive=NULL,
+updated=NULL, nodeZoomId=NULL, nodesSelected=NULL,
+nodeIdsDrag=NULL, nodeClicked=NULL,
 nodeClickedViewpointCoordinates=NULL, nodeRightClicked=NULL,
 nodeRightClickedViewpointCoordinates=NULL, nodeHovered=NULL,
 nodeHoveredViewpointCoordinates=NULL, linkClicked=NULL,
@@ -164,7 +165,18 @@ maxDepth_neighbours_select=NULL)
 
 \item{cooldownTime}{Numeric. How long (ms) to render for before stopping and freezing the layout engine.}
 
-\item{d3Force}{Character. Access to the internal forces that control the d3 simulation engine. Follows the same interface as d3-force-3d's simulation.force. Three forces are included by default: 'link' (based on forceLink), 'charge' (based on forceManyBody) and 'center' (based on forceCenter). Each of these forces can be reconfigured, or new forces can be added to the system. Only applicable if using the d3 simulation engine.}
+\item{d3Force_define}{Named list. object to define a new force on the simulation. E.g.
+d3Force_define = {
+   "name": "charge", // the name to which the force is (to be) assigned
+   "force": "strength", // the force, e.g "forceManyBody" or "forceCenter" (omit the 'd3' object) Pass a null value to remove the force from the simulation
+   "force_args": [], // arguments to pass to force, e.g. links to forceLink. No functions, e.g. of node, allowed (currently)
+}}
+
+\item{d3Force_call}{Named list. object to call a method on an existing simulation force. E.g.
+d3Force_call_method = {
+   "name": "charge", // the name to which the force is assigned
+   "method": "strength", // the name of a method to call on the force
+   "method_args": [-50], // array of args to pass to force method}
 
 \item{d3ReheatSimulation}{Logical. Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine.}
 
