@@ -3,6 +3,7 @@ import dash_react_force_graph
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_html_components as html
+import dash_core_components as dcc
 import random
 
 app = dash.Dash(__name__,
@@ -93,7 +94,7 @@ app.layout = html.Div([
         id="slider-d3Force-charge-strength",
         min=-100,
         max=100,
-        marks={i: 'Label {}'.format(i) for i in range(-100,100,20)},
+        marks={i: '{}'.format(i) for i in range(-100,100,20)},
         step=20,
         value=0
     ),
@@ -149,6 +150,15 @@ def display_selected_nodes_2D(nodeHovered, nodeClicked, nodeRightClicked, nodesS
     Input('button-reheat', 'n_clicks')])
 def reheat_graphData_2D(n_clicks):
     return True
+
+
+
+@app.callback(
+    Output('graph2D', 'd3Force_call'),
+[
+    Input('slider-d3Force-charge-strength', 'value')])
+def update_d3Force_charge_strength(slidervalue):
+    return {"name":"charge", "method":"strength", "method_args":[slidervalue]}
 
 @app.callback(Output('graph2D', 'graphData'),
     [

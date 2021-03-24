@@ -364,26 +364,38 @@ function Graph3D(props) {
         props.setProps({linksSelected:linksSelected_tmp});
     };
 
-    
+
     useEffect( () => {
         // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
-        if (props.forceEngine === "d3" & props.d3Force_define.name) {
-          if (props.d3Force_define.force) {
-            // define force
-            fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
-          } else {
-            // remove force
-            fgRef.current.d3Force(props.d3Force_define.name, null)
-          }
-        }
+        if (props.forceEngine === "d3") {
+           if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
+             console.log("found all the keys")
+             if (props.d3Force_define.name) {
+               console.log("the name value is not null")
+               if (props.d3Force_define.force) {
+                 // define force
+                 console.log("define force")
+                 fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
+               } else {
+                 // remove force
+                 fgRef.current.d3Force(props.d3Force_define.name, null)
+               }
+             }
+           }
+         }
     },[props.d3Force_define])
 
 
     useEffect( () => {
       // e.g. fgRef.current.d3Force('charge').strength(-70);
-        if (props.forceEngine === "d3" & props.d3Force_call.name & props.d3Force_call.method) {
-            fgRef.current.d3Force(props.d3Force.name, d3[props.d3Force_call.method](...props.d3Force_call.method_args))
+      if (props.forceEngine === "d3") {
+        if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
+          if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
+            //console.log("the name value is not null and nor is the method value")
+            fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
+          }
         }
+      }
     },[props.d3Force_call])
 
 
