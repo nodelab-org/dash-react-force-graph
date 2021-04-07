@@ -151,10 +151,11 @@ function Graph2D(props) {
         if (depth===0) {
             return []
         };
+
         const neighbourNodeIds = []
         if ("__source" in node) {
         // if (Object.keys(node).includes("__source")) {
-            if (node.__source.length) {
+            if (Object.keys(node.__source).length) {
                 for (let key in node.__source){
                     // iterate over roles
                     Object.values(node.__source[key]).map(nodeId => neighbourNodeIds.push(nodeId))
@@ -163,7 +164,7 @@ function Graph2D(props) {
         };
         if ("__target" in node) {
         // if (Object.keys(node).includes("__target")) {
-            if (node.__target.length) {
+            if (Object.keys(node.__target).length) {
                 for (let key in node.__target){
                     // iterate over roles
                     Object.values(node.__target[key]).map(nodeId => neighbourNodeIds.push(nodeId))
@@ -173,24 +174,24 @@ function Graph2D(props) {
 
         let neighbourNodeIds_unique = neighbourNodeIds.length? [...new Set(neighbourNodeIds)] : []
 
-        //if (props.nodesSelected) {
-        if (props.nodesSelected.length>0) {
-            if (neighbourNodeIds_unique.length) {
-                if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
-                    // retrieve the nodes matching the neighbourNodeIds
-                    const neighbourNodes_unique = neighbourNodeIds_unique.map(nnidu => nodesById[nnidu])
-                    for (let neighbourNode_unique of neighbourNodes_unique) {
-                        neighbourNodeIds_unique = neighbourNodeIds_unique.concat(get_node_neighbour_ids(neighbourNode_unique, depth-1))
-                    }
+        if (neighbourNodeIds_unique.length) {
+            // if all the neighbour nodes are already selected
+            if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns[props.nodeId]).includes(nnid))) {
+
+                // retrieve the nodes matching the neighbourNodeIds
+                const neighbourNodes_unique = neighbourNodeIds_unique.map(nnidu => nodesById[nnidu])
+                for (let neighbourNode_unique of neighbourNodes_unique) {
+                    neighbourNodeIds_unique = neighbourNodeIds_unique.concat(get_node_neighbour_ids(neighbourNode_unique, depth-1))
                 }
             }
         }
+
         //}
         neighbourNodeIds_unique = neighbourNodeIds_unique.length? [...new Set(neighbourNodeIds_unique)] : []
 
         // if no new nodes were added, return empty array
         if (neighbourNodeIds_unique.length) {
-            if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
+            if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns[props.nodeId]).includes(nnid))) {
                 neighbourNodeIds_unique.splice(0,neighbourNodeIds_unique.length)
             }
         }
@@ -219,6 +220,7 @@ function Graph2D(props) {
             nodesSelected_tmp.push(node_tmp)
         }
         const nodeIndex = nodesSelected_tmp.map(node => node[props.nodeId]).indexOf(node[props.nodeId])
+
         if (event.shiftKey) {
             // multi-selection
             if (nodeIndex === -1) {
@@ -234,7 +236,6 @@ function Graph2D(props) {
                 nodesSelected_tmp.push(node);
             } else {
                 // node already selected
-
                 const neighbourNodeIds = get_node_neighbour_ids(node, props.maxDepth_neighbours_select)
 
                 let neighbourNodes = neighbourNodeIds.length > 0 ? neighbourNodeIds.map(neighbourNodeId => nodesById[neighbourNodeId]) : []
@@ -244,7 +245,6 @@ function Graph2D(props) {
             }
         }
         props.setProps({nodesSelected:nodesSelected_tmp});
-
     };
 
     const handleNodeRightClick = node=> {
@@ -641,12 +641,12 @@ function Graph2D(props) {
         // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
         if (props.forceEngine === "d3") {
            if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
-             console.log("found all the keys")
+
              if (props.d3Force_define.name) {
-               console.log("the name value is not null")
+
                if (props.d3Force_define.force) {
                  // define force
-                 console.log("define force")
+
                  fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
                } else {
                  // remove force
@@ -1889,7 +1889,7 @@ const graphSharedProptypes = {
 
 };
 
-Graph2D.propTypes = graphSharedProptypes 
+Graph2D.propTypes = graphSharedProptypes
 
 objSharedProps.id = "Graph2D"
 

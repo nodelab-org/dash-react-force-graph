@@ -62,25 +62,25 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=["x","y","z"])
 
 graphData = {
     "nodes":[
-        {"nodeId":"1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"2", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"3",  "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"4",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/200"},
-        {"nodeId":"6",  "__nodeLabel":"Frieds of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/200"},
-        {"nodeId":"7",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"8",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
+        {"nodeId":"node1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"node2", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"node3",  "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"node4",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"node5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/200"},
+        {"nodeId":"node6",  "__nodeLabel":"Frieds of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/200"},
+        {"nodeId":"node7",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
+        {"nodeId":"node8",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
+        {"nodeId":"node9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
         ],
     "links":[
-        {"id":"1", "label":"employee", "source":"1", "target":"7"},
-        {"id":"2", "label":"employee", "source":"2", "target":"7"},
-        {"id":"3", "label":"employer", "source":"5", "target":"7"},
-        {"id":"4", "label":"employee", "source":"3", "target":"8"},
-        {"id":"5", "label":"employer", "source":"4", "target":"8"},
-        {"id":"6", "label":"employee", "source":"6", "target":"8"},
-        {"id":"7", "label":"neighbour", "source":"2", "target":"9"},
-        {"id":"7", "label":"neighbour", "source":"4", "target":"9"},
+        {"id":"link1", "label":"employee", "source":"node1", "target":"node7"},
+        {"id":"link2", "label":"employee", "source":"node2", "target":"node7"},
+        {"id":"link3", "label":"employer", "source":"node5", "target":"node7"},
+        {"id":"link4", "label":"employee", "source":"node3", "target":"node8"},
+        {"id":"link5", "label":"employer", "source":"node4", "target":"node8"},
+        {"id":"link6", "label":"employee", "source":"node6", "target":"node8"},
+        {"id":"link7", "label":"neighbour", "source":"node2", "target":"node9"},
+        {"id":"link8", "label":"neighbour", "source":"node4", "target":"node9"},
         ]#
     }
 
@@ -111,7 +111,7 @@ app.layout = html.Div([
         nodeImg="__nodeImg",
         nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     ),
-    html.Div(id='output-nodeHovered-2D'),
+    # html.Div(id='output-nodeHovered-2D'),
     html.Div(id='output-nodeClicked-2D'),
     html.Div(id='output-nodeRightClicked-2D'),
     html.Br(),
@@ -130,19 +130,18 @@ app.layout = html.Div([
 
 @app.callback(
 [
-    Output('output-nodeHovered-2D', 'children'),
+    # Output('output-nodeHovered-2D', 'children'),
     Output('output-nodeClicked-2D',  'children'),
     Output('output-nodeRightClicked-2D',  'children'),
 ],
 [
-    Input('graph2D', 'nodeHovered'),
+    # Input('graph2D', 'nodeHovered'),
     Input('graph2D', 'nodeClicked'),
     Input('graph2D', 'nodeRightClicked'),
     Input('graph2D', 'nodesSelected'),
 ])
-
-def display_selected_nodes_2D(nodeHovered, nodeClicked, nodeRightClicked, nodesSelected):
-    return ["hovered node: {}".format(nodeHovered), "clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
+def display_selected_nodes_2D( nodeClicked, nodeRightClicked, nodesSelected):
+    return ["clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
 
 @app.callback(
     Output('graph2D', 'd3ReheatSimulation'),
