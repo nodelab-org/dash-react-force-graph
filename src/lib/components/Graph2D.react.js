@@ -1,24 +1,35 @@
-import React, {useEffect, useRef} from 'react';
+import { ForceGraph2D } from 'react-force-graph';
+import React, {useEffect, useRef} from "react";
+
 import PropTypes from 'prop-types';
-import {ForceGraph2D} from 'react-force-graph';
+
 import importScript from '../customHooks/importScript.js';
 // import useFontFace from '../customhooks/useFontFace.js';
-// https://github.com/ctrlplusb/react-sizeme
-import { withSize } from 'react-sizeme';
-import {saturate, lighten, darken} from 'polished';
+
 // import {forceCenter, forceManyBody, forceLink, forceRadial} from "d3";
 
 // https://github.com/ctrlplusb/react-sizeme
-// import * as material_UI from '@material-ui/icon_s'; // doesn't work: Module not found: Error: Can't resolve '@material-ui/icons' in '/Users/rkm916/Sync/projects/2020-dashforcegraph/src/lib/components'
-// see https://stackoverflow.com/questions/42051588/wildcard-or-asterisk-vs-named-or-selective-import-es6-javascript
 
-import {obj_shared_props} from "../shared_props_defaults.js"
+// import * as material_UI from '@material-ui/icon_s'; // doesn't work: Module not found: Error: Can't resolve '@material-ui/icons' in '/Users/rkm916/Sync/projects/2020-dashforcegraph/src/lib/components'
+
+// See https://stackoverflow.com/questions/42051588/wildcard-or-asterisk-vs-named-or-selective-import-es6-javascript
+
+// import graphSharedProptypes from "../graph_shared_proptypes.js"
+
+import {darken, lighten, saturate} from 'polished';
+
+// https://github.com/ctrlplusb/react-sizeme
+import {withSize} from 'react-sizeme';
+
+import objSharedProps from "../shared_props_defaults.js"
 
 // use react resize-me to make canvas container width responsive
-const withSizeHOC = withSize({monitorWidth:true, monitorHeight:false, noPlaceholder:true});
+const withSizeHOC = withSize({
+    "monitorHeight": false,
+    "monitorWidth": true,
+    "noPlaceholder": true});
 
 function Graph2D(props) {
-
     // import scripts
     // https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
     // importScript("https://kit.fontawesome.com/a6e0eeba63.js");
@@ -29,7 +40,7 @@ function Graph2D(props) {
 
     const fgRef = useRef(null);
 
-    var nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
+    let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
 
     // display standard browser warning before navigating away from page
     // https://stackoverflow.com/questions/1119289/how-to-show-the-are-you-sure-you-want-to-navigate-away-from-this-page-when-ch
@@ -160,7 +171,7 @@ function Graph2D(props) {
             };
         };
 
-        var neighbourNodeIds_unique = neighbourNodeIds.length? [...new Set(neighbourNodeIds)] : []
+        let neighbourNodeIds_unique = neighbourNodeIds.length? [...new Set(neighbourNodeIds)] : []
 
         //if (props.nodesSelected) {
         if (props.nodesSelected.length>0) {
@@ -226,7 +237,7 @@ function Graph2D(props) {
 
                 const neighbourNodeIds = get_node_neighbour_ids(node, props.maxDepth_neighbours_select)
 
-                var neighbourNodes = neighbourNodeIds.length > 0 ? neighbourNodeIds.map(neighbourNodeId => nodesById[neighbourNodeId]) : []
+                let neighbourNodes = neighbourNodeIds.length > 0 ? neighbourNodeIds.map(neighbourNodeId => nodesById[neighbourNodeId]) : []
                 if  (neighbourNodeIds.length > 0) {
                     neighbourNodes.map(neighbourNode => neighbourNode[props.nodeId] === node[props.nodeId]? null : nodesSelected_tmp.push(neighbourNode))
                 }
@@ -459,12 +470,12 @@ function Graph2D(props) {
         // https://www.w3schools.com/tags/canvas_globalalpha.asp
         // initialize color
         // provide a sensible default
-        var fillStyle = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        let fillStyle = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
         const label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
         const size = 12;
         // ctx.globalAlpha = 0.9;
         ctx.fontWeight = "normal";
-        var fontSize = Math.max(11/globalScale,5)
+        let fontSize = Math.max(11/globalScale,5)
 
         // modify style parameters if node is selected and/or highlighted
         if (props.nodesSelected.length) {
@@ -503,14 +514,14 @@ function Graph2D(props) {
         // paint node text background rectangle
         // is this necessary??
         ctx.fillStyle = fillStyle
-        var backgroundColor = !(props.backgroundColor===null)? props.backgroundColor : "#000000"
+        let backgroundColor = !(props.backgroundColor===null)? props.backgroundColor : "#000000"
         ctx.fillStyle = lighten(0.2,backgroundColor);
         // add padding
         const rectsize = size*0.2
         ctx.fillRect(node.x-rectsize/2, node.y -rectsize, rectsize, rectsize);
 
         // set modified style parameters
-        var img_src = null
+        let img_src = null
         if (props.nodeImg in node && props.useNodeImg) {
             if (node[props.nodeImg]) {
                 img_src = node[props.nodeImg]
@@ -707,7 +718,7 @@ function Graph2D(props) {
                         )}
                     // nodeDesc: "desc" // VR only
                     nodeVisibility={(node => {
-                        var visible = true
+                        let visible = true
 
                         if (props.nodeIdsVisible.length) {
                             if (props.nodeIdsVisible.indexOf(node[props.nodeId]) === -1) {
@@ -718,7 +729,7 @@ function Graph2D(props) {
                     })}
                     nodeColor={(node => {
 
-                        var color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+                        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
 
                         if (props.nodesSelected.length) {
                           color = darken(0.1, color)
@@ -758,7 +769,7 @@ function Graph2D(props) {
                    linkLabel={props.linkLabel}
                    // linkDesc: "desc", // VR only,
                    linkVisibility={(link => {
-                        var visible = true
+                        let visible = true
                         if (props.nodeIdsVisible.length) {
                             // use nodeIdsVisible.length as criterion, since it shows whether or not a filter is applied.
                             // if we use links, often it will be empty, and no links will be invisible
@@ -770,7 +781,7 @@ function Graph2D(props) {
                         }
                     )}
                     linkColor={(link => {
-                        var color = props.linkColor in link? link[props.linkColor] : "#ffffff";
+                        let color = props.linkColor in link? link[props.linkColor] : "#ffffff";
                         // is link selected?
                         if (props.linksSelected.length) {
                             color = darken(0.1, color)
@@ -801,7 +812,7 @@ function Graph2D(props) {
                     linkOpacity={props.linkOpacity}
                     linkLineDash={props.linkLineDash}
                     linkWidth={(link => {
-                        var width = props.linkWidth
+                        let width = props.linkWidth
                         // is link selected?
                         if (props.linksSelected.length) {
                             width = width*0.9
@@ -935,17 +946,18 @@ function Graph2D(props) {
     );
 }
 
-Graph2D.propTypes = {
+const graphSharedProptypes = {
+
     /**
      * The ID used to identify this component in Dash callbacks.
      */
-    id: PropTypes.string.isRequired,
+    "id": PropTypes.string.isRequired,
 
     /**
      * Dash-assigned callback that should be called to report property changes
      * to Dash, to make them available for callbacks.
      */
-    setProps: PropTypes.func,
+    "setProps": PropTypes.func,
 
     /**
     * DATA INPUT
@@ -954,22 +966,22 @@ Graph2D.propTypes = {
     /**
      * Graph data structure. Can also be used to apply incremental updates. Format {nodes:{}, links:{}}
      */
-    graphData: PropTypes.object.isRequired,
+    "graphData": PropTypes.object.isRequired,
 
     /**
      * Node object accessor attribute for unique node id (used in link objects source/target).
      */
-    nodeId: PropTypes.string,
+    "nodeId": PropTypes.string,
 
     /**
      * Link object accessor attribute referring to id of source node.
      */
-    linkSource: PropTypes.string,
+    "linkSource": PropTypes.string,
 
     /**
      * Link object accessor attribute referring to id of target node.
      */
-    linkTarget: PropTypes.string,
+    "linkTarget": PropTypes.string,
 
     /**
      * CONTAINER LAYOUT
@@ -988,12 +1000,12 @@ Graph2D.propTypes = {
     /**
      * Getter/setter for the chart background color, default transparent
      */
-    backgroundColor: PropTypes.string,
+    "backgroundColor": PropTypes.string,
 
     /**
      * Whether to show the navigation controls footer info.
      */
-    showNavInfo: PropTypes.bool,
+    "showNavInfo": PropTypes.bool,
 
     /**
      * In AR mode, defines the offset distance above the marker where to place the center coordinates <0,0,0> of the force directed graph. Measured in terms of marker width units.
@@ -1017,12 +1029,12 @@ Graph2D.propTypes = {
     /**
      *  Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.
      */
-    nodeRelSize: PropTypes.number,
+    "nodeRelSize": PropTypes.number,
 
     /**
      *  Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.
      */
-    nodeVal: PropTypes.oneOfType([
+    "nodeVal": PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
         //PropTypes.func
@@ -1032,7 +1044,7 @@ Graph2D.propTypes = {
      * Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
      * 2D, 3D and VR
      */
-    nodeLabel:  PropTypes.oneOfType([
+    "nodeLabel":  PropTypes.oneOfType([
         PropTypes.string,
         //PropTypes.func
     ]),
@@ -1040,7 +1052,7 @@ Graph2D.propTypes = {
     /**
      * For VR only. Node object accessor function or attribute for description (shown under label).
      */
-    nodeDesc:  PropTypes.oneOfType([
+    "nodeDesc":  PropTypes.oneOfType([
         PropTypes.string,
         // PropTypes.func
     ]),
@@ -1058,7 +1070,7 @@ Graph2D.propTypes = {
     /**
      * The node attribute whose value should be used for coloring nodes
      */
-    nodeColor: PropTypes.oneOfType([
+    "nodeColor": PropTypes.oneOfType([
         PropTypes.string,
         // PropTypes.func
     ]),
@@ -1066,7 +1078,7 @@ Graph2D.propTypes = {
     /**
      * Node object accessor function or attribute to automatically group colors by. Only affects nodes without a color attribute.
      */
-    nodeAutoColorBy: PropTypes.oneOfType([
+    "nodeAutoColorBy": PropTypes.oneOfType([
         PropTypes.string,
     //    PropTypes.func
     ]),
@@ -1075,16 +1087,15 @@ Graph2D.propTypes = {
     /**
      * Nodes sphere opacity, between [0,1]. 3D, VR, AR
      */
-    nodeOpacity: PropTypes.number,
-
+    "nodeOpacity": PropTypes.number,
 
     /**
      * Geometric resolution of each node's sphere, expressed in how many slice segments to divide the circumference. Higher values yield smoother spheres. Only applicable to 3D modes.
      * 3D, VR, AR
      */
-    nodeResolution: PropTypes.number,
+    "nodeResolution": PropTypes.number,
 
-     /**
+        /**
      * Callback function for painting a custom 2D canvas object to represent graph nodes. Should use the provided canvas context attribute to perform drawing operations for each node. The callback function will be called for each node at every frame, and has the signature: nodeCanvasObject(<node>, <canvas context>, <current global scale>, <isShadowContext>). 2D
      */
     // nodeCanvasObject: PropTypes.func, // not exposed, handled interally
@@ -1120,14 +1131,14 @@ Graph2D.propTypes = {
     //     PropTypes.string,
     //     PropTypes.func]), // not exposed, handle interally
 
-     /**
+        /**
      * LINK STYLING
      */
 
     /**
      * Link object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
      */
-    linkLabel: PropTypes.oneOfType([
+    "linkLabel": PropTypes.oneOfType([
         PropTypes.string,
         // PropTypes.func
     ]),
@@ -1135,7 +1146,7 @@ Graph2D.propTypes = {
     /**
      * For VR only. Link object accessor function or attribute for description (shown under label).
      */
-    linkDesc: PropTypes.oneOfType([
+    "linkDesc": PropTypes.oneOfType([
         PropTypes.string,
         // PropTypes.func
     ]),
@@ -1152,7 +1163,7 @@ Graph2D.propTypes = {
     /**
      * Link object accessor function or attribute for line color.
      */
-    linkColor: PropTypes.oneOfType([
+    "linkColor": PropTypes.oneOfType([
         PropTypes.string,
     //    PropTypes.func
     ]),
@@ -1160,7 +1171,7 @@ Graph2D.propTypes = {
     /**
      * Link object accessor function or attribute to automatically group colors by. Only affects links without a color attribute.
      */
-    linkAutoColorBy: PropTypes.oneOfType([
+    "linkAutoColorBy": PropTypes.oneOfType([
         PropTypes.string,
     //    PropTypes.func
     ]),
@@ -1168,12 +1179,12 @@ Graph2D.propTypes = {
     /**
      * Line opacity of links, between [0,1]. 3D, VR, AR
      */
-    linkOpacity: PropTypes.number,
+    "linkOpacity": PropTypes.number,
 
     /**
      * Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing.
      */
-    linkLineDash: PropTypes.oneOfType([
+    "linkLineDash": PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     //     PropTypes.func,
@@ -1182,7 +1193,7 @@ Graph2D.propTypes = {
     /**
      * Link object accessor function, attribute or a numeric constant for the link line width.
      */
-    linkWidth: PropTypes.oneOfType([
+    "linkWidth": PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     //    PropTypes.func
@@ -1191,12 +1202,12 @@ Graph2D.propTypes = {
     /**
      * Geometric resolution of each link 3D line, expressed in how many radial segments to divide the cylinder. Higher values yield smoother cylinders. Applicable only to links with positive width. 3D, VR, AR
      */
-    linkResolution: PropTypes.number,
+    "linkResolution": PropTypes.number,
 
-     /**
+        /**
      * Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.
      */
-    linkCurvature: PropTypes.oneOfType([
+    "linkCurvature": PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     //    PropTypes.func
@@ -1205,7 +1216,7 @@ Graph2D.propTypes = {
     /**
      * Link object accessor function, attribute or a numeric constant for the rotation along the line axis to apply to the curve. Has no effect on straight lines. At 0 rotation, the curve is oriented in the direction of the intersection with the XY plane. The rotation angle (in radians) will rotate the curved line clockwise around the "start-to-end" axis from this reference orientation.
      */
-    linkCurveRotation: PropTypes.oneOfType([
+    "linkCurveRotation": PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     //    PropTypes.func
@@ -1262,7 +1273,7 @@ Graph2D.propTypes = {
     /**
      * Link object accessor function, attribute or a numeric constant for the length of the arrow head indicating the link directionality. The arrow is displayed directly over the link line, and points in the direction of source > target. A value of 0 hides the arrow.
      */
-    linkDirectionalArrowLength: PropTypes.oneOfType([
+    "linkDirectionalArrowLength": PropTypes.oneOfType([
             PropTypes.number,
             PropTypes.string,
         //     PropTypes.func,
@@ -1272,7 +1283,7 @@ Graph2D.propTypes = {
     /**
      * Link object accessor function or attribute for the color of the arrow head.
      */
-    linkDirectionalArrowColor: PropTypes.oneOfType([
+    "linkDirectionalArrowColor": PropTypes.oneOfType([
         PropTypes.string,
     //     PropTypes.func,
     ]),
@@ -1280,63 +1291,63 @@ Graph2D.propTypes = {
     /**
     * Link object accessor function, attribute or a numeric constant for the longitudinal position of the arrow head along the link line, expressed as a ratio between 0 and 1, where 0 indicates immediately next to the source node, 1 next to the target node, and 0.5 right in the middle.
     */
-    linkDirectionalArrowRelPos: PropTypes.oneOfType([
+    "linkDirectionalArrowRelPos": PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
     //     PropTypes.func,
     ]),
 
-   /**
+    /**
     * Geometric resolution of the arrow head, expressed in how many slice segments to divide the cone base circumference. Higher values yield smoother arrows.
     */
-   linkDirectionalArrowResolution: PropTypes.number,
+    "linkDirectionalArrowResolution": PropTypes.number,
 
 
-   /**
+    /**
     * Link object accessor function, attribute or a numeric constant for the number of particles (small spheres) to display over the link line. The particles are distributed equi-spaced along the line, travel in the direction source > target, and can be used to indicate link directionality.
     */
-   linkDirectionalParticles: PropTypes.oneOfType([
+    "linkDirectionalParticles": PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     // PropTypes.func,
     ]),
 
-   /**
+    /**
     * Link object accessor function, attribute or a numeric constant for the directional particles speed, expressed as the ratio of the link length to travel per frame. Values above 0.5 are discouraged.
     */
-   linkDirectionalParticleSpeed: PropTypes.oneOfType([
+    "linkDirectionalParticleSpeed": PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     // PropTypes.func,
     ]),
 
-   /**
+    /**
     * Link object accessor function, attribute or a numeric constant for the directional particles width. Values are rounded to the nearest decimal for indexing purposes.
     */
-   linkDirectionalParticleWidth: PropTypes.oneOfType([
+    "linkDirectionalParticleWidth": PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     // PropTypes.func,
     ]),
 
-   /**
+    /**
     * Link object accessor function or attribute for the directional particles color.
     */
-   linkDirectionalParticleColor: PropTypes.oneOfType([
+    "linkDirectionalParticleColor": PropTypes.oneOfType([
     PropTypes.string,
     // PropTypes.func,
     ]),
 
-   /**
+    /**
     * Geometric resolution of each 3D directional particle, expressed in how many slice segments to divide the circumference. Higher values yield smoother particles.
     */
-   linkDirectionalParticleResolution: PropTypes.number,
+    "linkDirectionalParticleResolution": PropTypes.number,
 
-   // METHODS
+    // METHODS
     /**
     * An alternative mechanism for generating particles, this method emits a non-cyclical single particle within a specific link. The emitted particle shares the styling (speed, width, color) of the regular particle props. A valid link object that is included in graphData should be passed as a single parameter.
     */
-   emitParticle: PropTypes.object,
+    "emitParticle": PropTypes.object,
 
     /**
     * RENDER CONTROL
@@ -1345,64 +1356,64 @@ Graph2D.propTypes = {
     /**
     * Configuration parameters to pass to the ThreeJS WebGLRenderer constructor. This prop only has an effect on component mount. 3D only
     */
-   rendererConfig: PropTypes.object,
+    "rendererConfig": PropTypes.object,
 
-  /**
+    /**
     * Callback function to invoke at every frame, immediately before any node/link is rendered to the canvas. This can be used to draw additional external items on the canvas. The canvas context and the current global scale are included as parameters: .onRenderFramePre(<canvas context>, <global scale>).
     */
-   // onRenderFramePre: PropTypes.func, // not exposed
+    // onRenderFramePre: PropTypes.func, // not exposed
 
-     /**
+        /**
     * Callback function to invoke at every frame, immediately after the last node/link is rendered to the canvas. This can be used to draw additional external items on the canvas. The canvas context and the current global scale are included as parameters: .onRenderFramePre(<canvas context>, <global scale>).
     */
-   // onRenderFramePost: PropTypes.func, // not exposed
+    // onRenderFramePost: PropTypes.func, // not exposed
 
-   // METHODS
+    // METHODS
 
     /**
     * Pauses the rendering cycle of the component, effectively freezing the current view and cancelling all user interaction. This method can be used to save performance in circumstances when a static image is sufficient.
     */
-   pauseAnimation: PropTypes.bool,
+    "pauseAnimation": PropTypes.bool,
 
     /**
     * Resumes the rendering cycle of the component, and re-enables the user interaction. This method can be used together with pauseAnimation for performance optimization purposes.
     */
-   resumeAnimation: PropTypes.bool,
+    "resumeAnimation": PropTypes.bool,
 
     /**
     * Set the coordinates of the center of the viewport. This method can be used to perform panning on the 2D canvas programmatically. Each of the x, y coordinates is optional, allowing for motion in just one dimension. An optional 3rd argument defines the duration of the transition (in ms) to animate the canvas motion.
     */
-   centerAt: PropTypes.array,
+    "centerAt": PropTypes.array,
 
     /**
     * Set the 2D canvas zoom amount. The zoom is defined in terms of the scale transform of each px. A value of 1 indicates unity, larger values zoom in and smaller values zoom out. An optional 2nd argument defines the duration of the transition (in ms) to animate the canvas motion. By default the zoom is set to a value inversely proportional to the amount of nodes in the system.
     */
-   zoom: PropTypes.array,
+    "zoom": PropTypes.array,
 
     /**
     * Automatically zooms/pans the canvas so that all of the nodes fit inside it. If no nodes are found no action is taken. It accepts two optional arguments: the first defines the duration of the transition (in ms) to animate the canvas motion (default: 0ms). The second argument is the amount of padding (in px) between the edge of the canvas and the outermost node (default: 10px). The third argument specifies a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful for focusing on a portion of the graph. 2D, 3D
     */
-   zoomToFit: PropTypes.array,
+    "zoomToFit": PropTypes.array,
 
     /**
     * Re-position the camera, in terms of x, y, z coordinates. Each of the coordinates is optional, allowing for motion in just some dimensions. The optional second argument can be used to define the direction that the camera should aim at, in terms of an {x,y,z} point in the 3D space. The 3rd optional argument defines the duration of the transition (in ms) to animate the camera motion. A value of 0 (default) moves the camera immediately to the final position. By default the camera will face the center of the graph at a z distance proportional to the amount of nodes in the system. 3D
     */
-    cameraPosition: PropTypes.array,
+    "cameraPosition": PropTypes.array,
 
     /**
     * Access the internal ThreeJS Scene.
     */
-   // scene:  // not exposed
+    // scene:  // not exposed
 
     /**
     * Access the internal ThreeJS Camera.
     */
-   // camera:  // not exposed
+    // camera:  // not exposed
 
     /**
     * Access the internal ThreeJS WebGL renderer.
     */
-   // renderer:  // not exposed
+    // renderer:  // not exposed
 
     /**
     * Access the post-processing composer. Use this to add post-processing rendering effects to the scene. By default the composer has a single pass (RenderPass) that directly renders the scene without any effects.
@@ -1417,7 +1428,7 @@ Graph2D.propTypes = {
     /**
     * Redraws all the nodes/links. 3D, VR, AR
     */
-    refresh: PropTypes.bool,
+    "refresh": PropTypes.bool,
 
     /**
     * FORCE ENGINGE CONFIGURATION
@@ -1426,22 +1437,22 @@ Graph2D.propTypes = {
     /**
     * Not applicable to 2D mode. Number of dimensions to run the force simulation on. 3D, VR, AR
     */
-   numDimensions: PropTypes.number,
+    "numDimensions": PropTypes.number,
 
     /**
     * Which force-simulation engine to use (d3 or ngraph).
     */
-   forceEngine: PropTypes.string,
+    "forceEngine": PropTypes.string,
 
     /**
     * Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).
     */
-   dagMode: PropTypes.string,
+    "dagMode": PropTypes.string,
 
     /**
     * If dagMode is engaged, this specifies the distance between the different graph depths.
     */
-   dagLevelDistance: PropTypes.number,
+    "dagLevelDistance": PropTypes.number,
 
     /**
     * Node accessor function to specify nodes to ignore during the DAG layout processing. This accessor method receives a node object and should return a boolean value indicating whether the node is to be included. Excluded nodes will be left unconstrained and free to move in any direction.
@@ -1451,42 +1462,42 @@ Graph2D.propTypes = {
     /**
     * Callback to invoke if a cycle is encountered while processing the data structure for a DAG layout. The loop segment of the graph is included for information, as an array of node ids. By default an exception will be thrown whenever a loop is encountered. You can override this method to handle this case externally and allow the graph to continue the DAG processing. Strict graph directionality is not guaranteed if a loop is encountered and the result is a best effort to establish a hierarchy.
     */
-   // onDagError: PropTypes.func,
+    // onDagError: PropTypes.func,
 
     /**
     * Sets the simulation alpha min parameter. Only applicable if using the d3 simulation engine.
     */
-   d3AlphaMin: PropTypes.number,
+    "d3AlphaMin": PropTypes.number,
 
     /**
     * Sets the simulation intensity decay parameter. Only applicable if using the d3 simulation engine.
     */
-   d3AlphaDecay: PropTypes.number,
+    "d3AlphaDecay": PropTypes.number,
 
     /**
     * Nodes' velocity decay that simulates the medium resistance. Only applicable if using the d3 simulation engine.
     */
-   d3VelocityDecay: PropTypes.number,
+    "d3VelocityDecay": PropTypes.number,
 
     /**
     * Specify custom physics configuration for ngraph, according to its configuration object syntax. Only applicable if using the ngraph simulation engine.
     */
-   ngraphPhysics: PropTypes.object,
+    "ngraphPhysics": PropTypes.object,
 
     /**
     * Number of layout engine cycles to dry-run at ignition before starting to render.
     */
-   warmupTicks: PropTypes.number,
+    "warmupTicks": PropTypes.number,
 
     /**
     * How many build-in frames to render before stopping and freezing the layout engine.
     */
-   cooldownTicks: PropTypes.number,
+    "cooldownTicks": PropTypes.number,
 
     /**
      * How long (ms) to render for before stopping and freezing the layout engine.
      */
-    cooldownTime:PropTypes.number,
+    "cooldownTime": PropTypes.number,
 
     /**
      * Callback function invoked at every tick of the simulation engine.
@@ -1509,7 +1520,7 @@ Graph2D.propTypes = {
      * In this dash-react-force-graph component, the user can acccess the d3Force method via the two different props below:
      */
 
-     /**
+        /**
      *  object to define a new force on the simulation. E.g.
      * d3Force_define = {
      *    "name": "charge", // the name to which the force is (to be) assigned
@@ -1518,9 +1529,9 @@ Graph2D.propTypes = {
      * }
      */
 
-     d3Force_define: PropTypes.object,
+    "d3Force_define": PropTypes.object,
 
-     /**
+        /**
      * object to call a method on an existing simulation force. E.g.
      * d3Force_call_method = {
      *    "name": "charge", // the name to which the force is assigned
@@ -1529,12 +1540,12 @@ Graph2D.propTypes = {
      *
      */
 
-    d3Force_call: PropTypes.object,
+    "d3Force_call": PropTypes.object,
 
     /**
      * Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine.
      */
-    d3ReheatSimulation: PropTypes.bool,
+    "d3ReheatSimulation": PropTypes.bool,
 
     /**
      * INTERACTION
@@ -1600,30 +1611,30 @@ Graph2D.propTypes = {
     */
     // onBackgroundRightClick: PropTypes.func, // not exposed
 
-   /**
+    /**
     * Whether to display the link label when gazing the link closely (low value) or from far away (high value).
     */
-    linkHoverPrecision: PropTypes.number,
+    "linkHoverPrecision": PropTypes.number,
 
-   /**
+    /**
     * Callback function for zoom/pan events. The current zoom transform is included as single argument onZoom({ k, x, y }). Note that onZoom is triggered by user interaction as well as programmatic zooming/panning with zoom() and centerAt(). 2D
     */
-   // onZoom: PropTypes.func, // not exposed
+    // onZoom: PropTypes.func, // not exposed
 
     /**
     * Callback function for on 'end' of zoom/pan events. The current zoom transform is included as single argument onZoomEnd({ k, x, y }). Note that onZoomEnd is triggered by user interaction as well as programmatic zooming/panning with zoom() and centerAt().
     */
-   // onZoomEnd: PropTypes.func, // not exposed
+    // onZoomEnd: PropTypes.func, // not exposed
 
     /**
     * Which type of control to use to control the camera on 3D mode. Choice between trackball, orbit or fly.
     */
-   controlType: PropTypes.string,
+    "controlType": PropTypes.string,
 
     /**
     * Whether to enable zooming and panning user interactions on a 2D canvas.
     */
-   // enableZoomPanInteraction: PropTypes.bool, overridden by 'interactive' parameter
+    // enableZoomPanInteraction: PropTypes.bool, overridden by 'interactive' parameter
 
     /**
      * Whether to enable the trackball navigation controls used to move the camera using mouse interactions (rotate/zoom/pan).
@@ -1638,7 +1649,7 @@ Graph2D.propTypes = {
     /**
     * Whether to enable the user interaction to drag nodes by click-dragging. If enabled, every time a node is dragged the simulation is re-heated so the other nodes react to the changes. Only applicable if enablePointerInteraction is true.
     */
-    enableNodeDrag: PropTypes.bool,
+    "enableNodeDrag": PropTypes.bool,
 
     /**
     * UTILITY
@@ -1648,17 +1659,17 @@ Graph2D.propTypes = {
     * Returns the current bounding box of the nodes in the graph, formatted as { x: [<num>, <num>], y: [<num>, <num>], z: [<num>, <num>] }. If no nodes are found, returns null. Accepts an optional argument to define a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful to calculate the bounding box of a portion of the graph.
     * Bounding box is saved as the graphBbox prop
     */
-   getGraphBbox: PropTypes.bool,
+    "getGraphBbox": PropTypes.bool,
 
     /**
     * Utility method to translate viewport coordinates to the graph domain. Given a pair of x,y screen coordinates, returns the current equivalent {x, y} in the domain of graph node coordinates. 2D
     */
-   // screen2GraphCoords: , // not exposed
+    // screen2GraphCoords: , // not exposed
 
     /**
     * Utility method to translate node coordinates to the viewport domain. Given a set of x,y(,z) graph coordinates, returns the current equivalent {x, y} in viewport coordinates. 2D, 3D
     */
-   // graph2ScreenCoords: , // not exposed
+    // graph2ScreenCoords: , // not exposed
 
     /**
     * HIGHER-ORDER COMPONENT PROPS (NOT IN ORIGINAL REACT COMPONENT)
@@ -1667,12 +1678,12 @@ Graph2D.propTypes = {
     /**
     * height of component as proportion of container
     */
-    heightRatio: PropTypes.number,
+    "heightRatio": PropTypes.number,
 
     /**
     * provided react-sizeme. Contains an object with "width" and "height" attributes
     */
-    size: PropTypes.oneOfType([
+    "size": PropTypes.oneOfType([
         PropTypes.func,
         PropTypes.object]),
 
@@ -1680,7 +1691,7 @@ Graph2D.propTypes = {
     /**
     * whether or not session is active. Used to enable or disable warning browser dialog when closing
     */
-    active: PropTypes.bool,
+    "active": PropTypes.bool,
 
     /**
     * set to True to zoom out
@@ -1695,123 +1706,123 @@ Graph2D.propTypes = {
     /**
      * The node attribute containing a URL
      */
-    nodeURL: PropTypes.string,
+    "nodeURL": PropTypes.string,
 
     /**
     * Whether or not to use the nodeImg. Overrides nodeIcon
     */
-    useNodeImg: PropTypes.bool,
+    "useNodeImg": PropTypes.bool,
 
     /**
     * The node attribute containing url to image to display for each individual node
     */
-    nodeImg: PropTypes.string,
+    "nodeImg": PropTypes.string,
 
     /**
     * Whether or not to use the nodeIcon
     */
-    useNodeIcon: PropTypes.bool,
+    "useNodeIcon": PropTypes.bool,
 
     /**
     * The node attribute containing object with icon to display for each individual node.
     */
-    nodeIcon: PropTypes.string,
+    "nodeIcon": PropTypes.string,
 
     /**
     * object with keys being fonts (string) and values being CSS sheets
     */
-    nodeIcon_fontsheets: PropTypes.object,
+    "nodeIcon_fontsheets": PropTypes.object,
 
     /**
     * The link attribute containing the unique link id
     */
-    linkId: PropTypes.string,
+    "linkId": PropTypes.string,
 
     /**
     * toggle enableZoomPanInteraction, enablePointerInteraction, enableNavigationControls with a single control
     */
-    interactive: PropTypes.bool,
+    "interactive": PropTypes.bool,
 
     /**
     * whether or not graphData has changed. Internally, sets interactive to False until (mainly used internally)
     */
-    updated: PropTypes.bool,
+    "updated": PropTypes.bool,
 
     /**
     * id of node to zoom to
     */
-    nodeZoomId: PropTypes.string,
+    "nodeZoomId": PropTypes.string,
 
     /**
     * selected (clicked) nodes
     */
-    nodesSelected: PropTypes.arrayOf(
+    "nodesSelected": PropTypes.arrayOf(
         PropTypes.object
     ),
 
     /**
     * ids of nodes highlighted due to being dragged
     */
-    nodeIdsDrag: PropTypes.arrayOf(
+    "nodeIdsDrag": PropTypes.arrayOf(
         PropTypes.string
     ),
 
     /**
     * clicked node
     */
-    nodeClicked: PropTypes.object,
+    "nodeClicked": PropTypes.object,
 
     /**
     *  screen coordinates of clicked node
     */
-    nodeClickedViewpointCoordinates: PropTypes.objectOf(PropTypes.number),
+    "nodeClickedViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
 
     /**
     * right-clicked node
     */
-    nodeRightClicked: PropTypes.object,
+    "nodeRightClicked": PropTypes.object,
 
     /**
     *  screen coordinates of right-clicked node
     */
-    nodeRightClickedViewpointCoordinates: PropTypes.objectOf(PropTypes.number),
+    "nodeRightClickedViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
 
     /**
     * the currently hovered node
     */
-    nodeHovered: PropTypes.object,
+    "nodeHovered": PropTypes.object,
 
     /**
     *  screen coordinates of hovered node
     */
-    nodeHoveredViewpointCoordinates: PropTypes.objectOf(PropTypes.number),
+    "nodeHoveredViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
 
     /**
     * clicked link
     */
-    linkClicked: PropTypes.object,
+    "linkClicked": PropTypes.object,
 
     /**
     * right-clicked link
     */
-    linkRightClicked: PropTypes.object,
+    "linkRightClicked": PropTypes.object,
 
     /**
     * hovered link
     */
-    linkHovered: PropTypes.object,
+    "linkHovered": PropTypes.object,
 
     /**
     *  selected (clicked) links
     */
-    linksSelected: PropTypes.arrayOf(
+    "linksSelected": PropTypes.arrayOf(
         PropTypes.object
     ),
 
     /**
     * ids of links highlighted due to being dragged
     */
-    linkIdsNodesDrag: PropTypes.arrayOf(
+    "linkIdsNodesDrag": PropTypes.arrayOf(
         PropTypes.string
     ),
 
@@ -1819,27 +1830,27 @@ Graph2D.propTypes = {
     /**
     * ids of highlighted nodes (through searcha)
     */
-   nodeIdsHighlight: PropTypes.arrayOf(PropTypes.string),
+    "nodeIdsHighlight": PropTypes.arrayOf(PropTypes.string),
 
-   /**
-   * ids of visible nodes
-   */
-   nodeIdsVisible: PropTypes.arrayOf(PropTypes.string),
+    /**
+     * ids of visible nodes
+     */
+    "nodeIdsVisible": PropTypes.arrayOf(PropTypes.string),
 
-   /**
-   * ids of visible links
-   */
-   linkIdsVisible: PropTypes.arrayOf(PropTypes.string),
+    /**
+     * ids of visible links
+     */
+    "linkIdsVisible": PropTypes.arrayOf(PropTypes.string),
 
     /**
     * externalobject_source:
     */
-    externalobject_source: PropTypes.string,
+    "externalobject_source": PropTypes.string,
 
     /**
     * externalobject_source:
     */
-    externalobject_input: PropTypes.oneOfType([
+    "externalobject_input": PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
         PropTypes.bool,
@@ -1849,37 +1860,39 @@ Graph2D.propTypes = {
     /**
     * origin coordinates
     */
-    centreCoordinates: PropTypes.objectOf(PropTypes.number),
+    "centreCoordinates": PropTypes.objectOf(PropTypes.number),
 
     /**
     * useCoordinates: whether to use node attribute to set node coordinates
     */
-    useCoordinates: PropTypes.bool,
+    "useCoordinates": PropTypes.bool,
 
     /**
     * pixelUnitRatio: if node attribute (in some unit of measurement) is used as coordinates, pixel:unit scale
     */
-    pixelUnitRatio: PropTypes.number,
+    "pixelUnitRatio": PropTypes.number,
 
     /**
     * showCoordinates: whether or not to show pointer coordinates as tooltip (not yet used)
     */
-    showCoordinates: PropTypes.bool,
+    "showCoordinates": PropTypes.bool,
 
     /**
     * gravity: not yet used, prop to change three gravity. Not used in 2D
     */
-    gravity: PropTypes.string,
+    "gravity": PropTypes.string,
 
     /**
     * max levels of neighbourhood selection around a node by repeat clicking
     */
-   maxDepth_neighbours_select: PropTypes.number,
+    "maxDepth_neighbours_select": PropTypes.number,
 
 };
 
-obj_shared_props.id = "Graph2D"
+Graph2D.propTypes = graphSharedProptypes 
 
-Graph2D.defaultProps = obj_shared_props;
+objSharedProps.id = "Graph2D"
+
+Graph2D.defaultProps = objSharedProps;
 
 export default withSizeHOC(Graph2D)

@@ -10,143 +10,160 @@
 }
 
 \usage{
-dashGraph3D(id=NULL, graphData=NULL, heightRatio=NULL,
-backgroundColor=NULL, width=NULL, nodeRelSize=NULL,
-nodeLabel=NULL, nodeLabel_attr_type=NULL,
-nodeLabel_attr_supertype=NULL, nodeColor=NULL,
-nodeColor_common_type=NULL, nodeColor_common_supertype=NULL,
-nodeURL=NULL, nodeURL_attr_type=NULL,
-nodeURL_attr_supertype=NULL, nodeAutoColorBy=NULL,
-nodeOpacity=NULL, nodeCanvasObjectMode=NULL,
-nodeThreeObject=NULL, useNodeIcon=NULL, nodeIcon=NULL,
-nodeIcon_attr_type=NULL, nodeIcon_attr_supertype=NULL,
-nodeIcon_common_type=NULL, nodeIcon_common_supertype=NULL,
-nodeIcon_fontsheets=NULL, useNodeImg=NULL, nodeImg=NULL,
-nodeImg_attr_type=NULL, nodeImg_attr_supertype=NULL,
-nodeImg_common_type=NULL, nodeImg_common_supertype=NULL,
-linkLabel=NULL, linkColor=NULL, linkColor_attr_type=NULL,
-linkColor_attr_supertype=NULL, linkAutoColorBy=NULL,
-linkOpacity=NULL, linkWidth=NULL, linkCurvature=NULL,
-linkThreeObject=NULL, linkThreeObjectExtend=NULL,
-linkCanvasObjectMode=NULL, linkDirectionalArrowLength=NULL,
-linkDirectionalArrowRelPos=NULL, zoomOut=NULL, center=NULL,
-cooldownTime=NULL, d3Force_define=NULL, d3Force_call=NULL,
-onNodeClick=NULL, onNodeRightClick=NULL, onNodeHover=NULL,
-onLinkClick=NULL, onLinkRightClick=NULL, onLinkHover=NULL,
-onBackgroundClick=NULL, onBackgroundRightClick=NULL,
-interactive=NULL, enableZoomPanInteraction=NULL,
-enableNavigationControls=NULL,
-enablePointerInteraction=NULL, enableNodeDrag=NULL,
-nodeZoomId=NULL, nodesSelected=NULL, nodeIdsDrag=NULL,
-nodeRightClicked=NULL,
-nodeRightClickedViewpointCoordinates=NULL,
-linksSelected=NULL, linkIdsNodesDrag=NULL, graknStatus=NULL,
-maxDepth_neighbours_select=NULL, max_nodes_render=NULL,
-size=NULL, externalobject_source=NULL,
-externalobject_input=NULL, nodeHovered=NULL,
-centreCoordinates=NULL, graphData_changed=NULL,
-updated=NULL, nodeIdsHighlight=NULL, nodeIdsVisible=NULL,
-linkIdsFilter=NULL, useCoordinates=NULL,
+dashGraph3D(id=NULL, graphData=NULL, nodeId=NULL, linkSource=NULL,
+linkTarget=NULL, backgroundColor=NULL, showNavInfo=NULL,
+nodeRelSize=NULL, nodeVal=NULL, nodeLabel=NULL,
+nodeDesc=NULL, nodeColor=NULL, nodeAutoColorBy=NULL,
+nodeOpacity=NULL, nodeResolution=NULL, linkLabel=NULL,
+linkDesc=NULL, linkColor=NULL, linkAutoColorBy=NULL,
+linkOpacity=NULL, linkLineDash=NULL, linkWidth=NULL,
+linkResolution=NULL, linkCurvature=NULL,
+linkCurveRotation=NULL, linkDirectionalArrowLength=NULL,
+linkDirectionalArrowColor=NULL,
+linkDirectionalArrowRelPos=NULL,
+linkDirectionalArrowResolution=NULL,
+linkDirectionalParticles=NULL,
+linkDirectionalParticleSpeed=NULL,
+linkDirectionalParticleWidth=NULL,
+linkDirectionalParticleColor=NULL,
+linkDirectionalParticleResolution=NULL, emitParticle=NULL,
+rendererConfig=NULL, pauseAnimation=NULL,
+resumeAnimation=NULL, centerAt=NULL, zoom=NULL,
+zoomToFit=NULL, cameraPosition=NULL, refresh=NULL,
+numDimensions=NULL, forceEngine=NULL, dagMode=NULL,
+dagLevelDistance=NULL, d3AlphaMin=NULL, d3AlphaDecay=NULL,
+d3VelocityDecay=NULL, ngraphPhysics=NULL, warmupTicks=NULL,
+cooldownTicks=NULL, cooldownTime=NULL, d3Force_define=NULL,
+d3Force_call=NULL, d3ReheatSimulation=NULL,
+linkHoverPrecision=NULL, controlType=NULL,
+enableNodeDrag=NULL, getGraphBbox=NULL, heightRatio=NULL,
+size=NULL, active=NULL, nodeURL=NULL, useNodeImg=NULL,
+nodeImg=NULL, useNodeIcon=NULL, nodeIcon=NULL,
+nodeIcon_fontsheets=NULL, linkId=NULL, interactive=NULL,
+updated=NULL, nodeZoomId=NULL, nodesSelected=NULL,
+nodeIdsDrag=NULL, nodeClicked=NULL,
+nodeClickedViewpointCoordinates=NULL, nodeRightClicked=NULL,
+nodeRightClickedViewpointCoordinates=NULL, nodeHovered=NULL,
+nodeHoveredViewpointCoordinates=NULL, linkClicked=NULL,
+linkRightClicked=NULL, linkHovered=NULL, linksSelected=NULL,
+linkIdsNodesDrag=NULL, nodeIdsHighlight=NULL,
+nodeIdsVisible=NULL, linkIdsVisible=NULL,
+externalobject_source=NULL, externalobject_input=NULL,
+centreCoordinates=NULL, useCoordinates=NULL,
 pixelUnitRatio=NULL, showCoordinates=NULL, gravity=NULL,
-focused=NULL)
+maxDepth_neighbours_select=NULL)
 }
 
 \arguments{
 \item{id}{Character. The ID used to identify this component in Dash callbacks.}
 
-\item{graphData}{Named list. The data to display. Format {nodes:{}, links:{}}}
+\item{graphData}{Named list. Graph data structure. Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
-\item{heightRatio}{Numeric. }
+\item{nodeId}{Character. Node object accessor attribute for unique node id (used in link objects source/target).}
 
-\item{backgroundColor}{Character. backgroundColor: Getter/setter for the chart background color, default transparent}
+\item{linkSource}{Character. Link object accessor attribute referring to id of source node.}
 
-\item{width}{Numeric. width: Canvas width, in px.}
+\item{linkTarget}{Character. Link object accessor attribute referring to id of target node.}
 
-\item{nodeRelSize}{Numeric. Ratio of node circle area (square px) per value unit.}
+\item{backgroundColor}{Character. Getter/setter for the chart background color, default transparent}
 
-\item{nodeLabel}{Character. The node attribute whose value should be displayed as label}
+\item{showNavInfo}{Logical. Whether to show the navigation controls footer info.}
 
-\item{nodeLabel_attr_type}{List with named elements and values of type character. The node attribute whose value should be displayed as label, by type}
+\item{nodeRelSize}{Numeric. Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.}
 
-\item{nodeLabel_attr_supertype}{List with named elements and values of type character. The node attribute whose value should be displayed as label, by supertype}
+\item{nodeVal}{Numeric | character. Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.}
+
+\item{nodeLabel}{Character. Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
+2D, 3D and VR}
+
+\item{nodeDesc}{Character. For VR only. Node object accessor function or attribute for description (shown under label).}
 
 \item{nodeColor}{Character. The node attribute whose value should be used for coloring nodes}
 
-\item{nodeColor_common_type}{List with named elements and values of type character. common node colors by type, overrides nodeColor_common_supertype}
+\item{nodeAutoColorBy}{Character. Node object accessor function or attribute to automatically group colors by. Only affects nodes without a color attribute.}
 
-\item{nodeColor_common_supertype}{List with named elements and values of type character. common node colors by supertype (relation, entity, attribute)}
+\item{nodeOpacity}{Numeric. Nodes sphere opacity, between [0,1]. 3D, VR, AR}
 
-\item{nodeURL}{Character. The node attribute which is activated upon Cmd click}
+\item{nodeResolution}{Numeric. Geometric resolution of each node's sphere, expressed in how many slice segments to divide the circumference. Higher values yield smoother spheres. Only applicable to 3D modes.
+3D, VR, AR}
 
-\item{nodeURL_attr_type}{List with named elements and values of type character. specify node URL attribute by type, override nodeURL_attr_supertype and nodeURL_common_*}
+\item{linkLabel}{Character. Link object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).}
 
-\item{nodeURL_attr_supertype}{List with named elements and values of type character. specify node URL attribute by supertype (relation, entity, attribute), overrides nodeURL_common_*}
+\item{linkDesc}{Character. For VR only. Link object accessor function or attribute for description (shown under label).}
 
-\item{nodeAutoColorBy}{Character. The node attribute whose value should be used for coloring nodes}
+\item{linkColor}{Character. Link object accessor function or attribute for line color.}
 
-\item{nodeOpacity}{Numeric. node opacity}
+\item{linkAutoColorBy}{Character. Link object accessor function or attribute to automatically group colors by. Only affects links without a color attribute.}
 
-\item{nodeCanvasObjectMode}{Character. when showing nodeThreeObject, keep showing default node object as well as text or image}
+\item{linkOpacity}{Numeric. Line opacity of links, between [0,1]. 3D, VR, AR}
 
-\item{nodeThreeObject}{Named list | character. }
+\item{linkLineDash}{Numeric | character. Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing.}
 
-\item{useNodeIcon}{Logical. Whether to use nodeIcon*}
+\item{linkWidth}{Numeric | character. Link object accessor function, attribute or a numeric constant for the link line width.}
 
-\item{nodeIcon}{Character. The node attribute containing url to image to display for each individual node. Takes precedence over nodeIcon_supertype and nodeIcon_type}
+\item{linkResolution}{Numeric. Geometric resolution of each link 3D line, expressed in how many radial segments to divide the cylinder. Higher values yield smoother cylinders. Applicable only to links with positive width. 3D, VR, AR}
 
-\item{nodeIcon_attr_type}{List with named elements and values of type character. specify node image attribute by type, overrides nodeIcon_attr_supertype and nodeIcon_common_*}
+\item{linkCurvature}{Numeric | character. Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.}
 
-\item{nodeIcon_attr_supertype}{List with named elements and values of type character. specify node image attribute by supertype (relation, entity, attribute), overrides nodeIcon_common_*}
+\item{linkCurveRotation}{Numeric | character. Link object accessor function, attribute or a numeric constant for the rotation along the line axis to apply to the curve. Has no effect on straight lines. At 0 rotation, the curve is oriented in the direction of the intersection with the XY plane. The rotation angle (in radians) will rotate the curved line clockwise around the "start-to-end" axis from this reference orientation.}
 
-\item{nodeIcon_common_type}{List with named elements and values of type list with named elements and values of type character. Common node image by type   overrides nodeIcon_supertype}
+\item{linkDirectionalArrowLength}{Numeric | character. Link object accessor function, attribute or a numeric constant for the length of the arrow head indicating the link directionality. The arrow is displayed directly over the link line, and points in the direction of source > target. A value of 0 hides the arrow.}
 
-\item{nodeIcon_common_supertype}{List with named elements and values of type list with named elements and values of type character. Common node image by supertype (relation, entity, attribute)}
+\item{linkDirectionalArrowColor}{Character. Link object accessor function or attribute for the color of the arrow head.}
 
-\item{nodeIcon_fontsheets}{Named list. }
+\item{linkDirectionalArrowRelPos}{Numeric | character. Link object accessor function, attribute or a numeric constant for the longitudinal position of the arrow head along the link line, expressed as a ratio between 0 and 1, where 0 indicates immediately next to the source node, 1 next to the target node, and 0.5 right in the middle.}
 
-\item{useNodeImg}{Logical. Whether to use nodeImg*}
+\item{linkDirectionalArrowResolution}{Numeric. Geometric resolution of the arrow head, expressed in how many slice segments to divide the cone base circumference. Higher values yield smoother arrows.}
 
-\item{nodeImg}{Character. The node attribute containing url to image to display for each individual node. Takes precedence over nodeIcon_supertype and nodeIcon_type}
+\item{linkDirectionalParticles}{Numeric | character. Link object accessor function, attribute or a numeric constant for the number of particles (small spheres) to display over the link line. The particles are distributed equi-spaced along the line, travel in the direction source > target, and can be used to indicate link directionality.}
 
-\item{nodeImg_attr_type}{List with named elements and values of type character. specify node image attribute by type, overrides nodeImg_attr_supertype and nodeImg_common_*}
+\item{linkDirectionalParticleSpeed}{Numeric | character. Link object accessor function, attribute or a numeric constant for the directional particles speed, expressed as the ratio of the link length to travel per frame. Values above 0.5 are discouraged.}
 
-\item{nodeImg_attr_supertype}{List with named elements and values of type character. specify node image attribute by supertype (relation, entity, attribute), overrides nodeImg_common_*}
+\item{linkDirectionalParticleWidth}{Numeric | character. Link object accessor function, attribute or a numeric constant for the directional particles width. Values are rounded to the nearest decimal for indexing purposes.}
 
-\item{nodeImg_common_type}{List with named elements and values of type character. Common node image by type   overrides nodeImg_supertype}
+\item{linkDirectionalParticleColor}{Character. Link object accessor function or attribute for the directional particles color.}
 
-\item{nodeImg_common_supertype}{List with named elements and values of type character. Common node image by supertype (relation, entity, attribute)}
+\item{linkDirectionalParticleResolution}{Numeric. Geometric resolution of each 3D directional particle, expressed in how many slice segments to divide the circumference. Higher values yield smoother particles.}
 
-\item{linkLabel}{Character. The node attribute whose value should be displayed as label}
+\item{emitParticle}{Named list. An alternative mechanism for generating particles, this method emits a non-cyclical single particle within a specific link. The emitted particle shares the styling (speed, width, color) of the regular particle props. A valid link object that is included in graphData should be passed as a single parameter.}
 
-\item{linkColor}{Character. linkColor}
+\item{rendererConfig}{Named list. Configuration parameters to pass to the ThreeJS WebGLRenderer constructor. This prop only has an effect on component mount. 3D only}
 
-\item{linkColor_attr_type}{List with named elements and values of type character. }
+\item{pauseAnimation}{Logical. Pauses the rendering cycle of the component, effectively freezing the current view and cancelling all user interaction. This method can be used to save performance in circumstances when a static image is sufficient.}
 
-\item{linkColor_attr_supertype}{List with named elements and values of type character. }
+\item{resumeAnimation}{Logical. Resumes the rendering cycle of the component, and re-enables the user interaction. This method can be used together with pauseAnimation for performance optimization purposes.}
 
-\item{linkAutoColorBy}{Character. autocolor the links by some link attribute}
+\item{centerAt}{Unnamed list. Set the coordinates of the center of the viewport. This method can be used to perform panning on the 2D canvas programmatically. Each of the x, y coordinates is optional, allowing for motion in just one dimension. An optional 3rd argument defines the duration of the transition (in ms) to animate the canvas motion.}
 
-\item{linkOpacity}{Numeric. opacity, in [0,1]}
+\item{zoom}{Unnamed list. Set the 2D canvas zoom amount. The zoom is defined in terms of the scale transform of each px. A value of 1 indicates unity, larger values zoom in and smaller values zoom out. An optional 2nd argument defines the duration of the transition (in ms) to animate the canvas motion. By default the zoom is set to a value inversely proportional to the amount of nodes in the system.}
 
-\item{linkWidth}{Numeric | character. linkWidth}
+\item{zoomToFit}{Unnamed list. Automatically zooms/pans the canvas so that all of the nodes fit inside it. If no nodes are found no action is taken. It accepts two optional arguments: the first defines the duration of the transition (in ms) to animate the canvas motion (default: 0ms). The second argument is the amount of padding (in px) between the edge of the canvas and the outermost node (default: 10px). The third argument specifies a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful for focusing on a portion of the graph. 2D, 3D}
 
-\item{linkCurvature}{Numeric | character. linkCurvature}
+\item{cameraPosition}{Unnamed list. Re-position the camera, in terms of x, y, z coordinates. Each of the coordinates is optional, allowing for motion in just some dimensions. The optional second argument can be used to define the direction that the camera should aim at, in terms of an {x,y,z} point in the 3D space. The 3rd optional argument defines the duration of the transition (in ms) to animate the camera motion. A value of 0 (default) moves the camera immediately to the final position. By default the camera will face the center of the graph at a z distance proportional to the amount of nodes in the system. 3D}
 
-\item{linkThreeObject}{Named list | character. object to display (instead of normal link)}
+\item{refresh}{Logical. Redraws all the nodes/links. 3D, VR, AR}
 
-\item{linkThreeObjectExtend}{Logical | character. also show normal link}
+\item{numDimensions}{Numeric. Not applicable to 2D mode. Number of dimensions to run the force simulation on. 3D, VR, AR}
 
-\item{linkCanvasObjectMode}{Character. }
+\item{forceEngine}{Character. Which force-simulation engine to use (d3 or ngraph).}
 
-\item{linkDirectionalArrowLength}{Numeric. link arrow length}
+\item{dagMode}{Character. Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).}
 
-\item{linkDirectionalArrowRelPos}{Numeric. link arrow position}
+\item{dagLevelDistance}{Numeric. If dagMode is engaged, this specifies the distance between the different graph depths.}
 
-\item{zoomOut}{Logical. zoom}
+\item{d3AlphaMin}{Numeric. Sets the simulation alpha min parameter. Only applicable if using the d3 simulation engine.}
 
-\item{center}{Logical. }
+\item{d3AlphaDecay}{Numeric. Sets the simulation intensity decay parameter. Only applicable if using the d3 simulation engine.}
 
-\item{cooldownTime}{Numeric. cooldown time}
+\item{d3VelocityDecay}{Numeric. Nodes' velocity decay that simulates the medium resistance. Only applicable if using the d3 simulation engine.}
+
+\item{ngraphPhysics}{Named list. Specify custom physics configuration for ngraph, according to its configuration object syntax. Only applicable if using the ngraph simulation engine.}
+
+\item{warmupTicks}{Numeric. Number of layout engine cycles to dry-run at ignition before starting to render.}
+
+\item{cooldownTicks}{Numeric. How many build-in frames to render before stopping and freezing the layout engine.}
+
+\item{cooldownTime}{Numeric. How long (ms) to render for before stopping and freezing the layout engine.}
 
 \item{d3Force_define}{Named list. object to define a new force on the simulation. E.g.
 d3Force_define = {
@@ -161,71 +178,80 @@ d3Force_call_method = {
    "method": "strength", // the name of a method to call on the force
    "method_args": [-50], // array of args to pass to force method}
 
-\item{onNodeClick}{onNodeClick}
+\item{d3ReheatSimulation}{Logical. Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine.}
 
-\item{onNodeRightClick}{onNodeRightClick}
+\item{linkHoverPrecision}{Numeric. Whether to display the link label when gazing the link closely (low value) or from far away (high value).}
 
-\item{onNodeHover}{onNodeHover}
+\item{controlType}{Character. Which type of control to use to control the camera on 3D mode. Choice between trackball, orbit or fly.}
 
-\item{onLinkClick}{onLinkClick}
+\item{enableNodeDrag}{Logical. Whether to enable the user interaction to drag nodes by click-dragging. If enabled, every time a node is dragged the simulation is re-heated so the other nodes react to the changes. Only applicable if enablePointerInteraction is true.}
 
-\item{onLinkRightClick}{onLinkRightClick}
+\item{getGraphBbox}{Logical. Returns the current bounding box of the nodes in the graph, formatted as { x: [<num>, <num>], y: [<num>, <num>], z: [<num>, <num>] }. If no nodes are found, returns null. Accepts an optional argument to define a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful to calculate the bounding box of a portion of the graph.
+Bounding box is saved as the graphBbox prop}
 
-\item{onLinkHover}{onLinkHover}
+\item{heightRatio}{Numeric. height of component as proportion of container}
 
-\item{onBackgroundClick}{onBackgroundClick}
+\item{size}{Named list. provided react-sizeme. Contains an object with "width" and "height" attributes}
 
-\item{onBackgroundRightClick}{onBackgroundRightClick}
+\item{active}{Logical. whether or not session is active. Used to enable or disable warning browser dialog when closing}
 
-\item{interactive}{Logical. toggle with a single control whether graph is interactive}
+\item{nodeURL}{Character. The node attribute containing a URL}
 
-\item{enableZoomPanInteraction}{Logical. enable zoom and panning? (2D)}
+\item{useNodeImg}{Logical. Whether or not to use the nodeImg. Overrides nodeIcon}
 
-\item{enableNavigationControls}{Logical. enable navigation? (3D)}
+\item{nodeImg}{Character. The node attribute containing url to image to display for each individual node}
 
-\item{enablePointerInteraction}{Logical. enable pointer interaction such as hover, click, drag?}
+\item{useNodeIcon}{Logical. Whether or not to use the nodeIcon}
 
-\item{enableNodeDrag}{Logical. enable node drag? more efficient if false}
+\item{nodeIcon}{Character. The node attribute containing object with icon to display for each individual node.}
+
+\item{nodeIcon_fontsheets}{Named list. object with keys being fonts (string) and values being CSS sheets}
+
+\item{linkId}{Character. The link attribute containing the unique link id}
+
+\item{interactive}{Logical. toggle enableZoomPanInteraction, enablePointerInteraction, enableNavigationControls with a single control}
+
+\item{updated}{Logical. whether or not graphData has changed. Internally, sets interactive to False until (mainly used internally)}
 
 \item{nodeZoomId}{Character. id of node to zoom to}
 
-\item{nodesSelected}{List of named lists. }
+\item{nodesSelected}{List of named lists. selected (clicked) nodes}
 
-\item{nodeIdsDrag}{List of characters. }
+\item{nodeIdsDrag}{List of characters. ids of nodes highlighted due to being dragged}
 
-\item{nodeRightClicked}{Named list. }
+\item{nodeClicked}{Named list. clicked node}
 
-\item{nodeRightClickedViewpointCoordinates}{List with named elements and values of type numeric. }
+\item{nodeClickedViewpointCoordinates}{List with named elements and values of type numeric. screen coordinates of clicked node}
 
-\item{linksSelected}{List of named lists. }
+\item{nodeRightClicked}{Named list. right-clicked node}
 
-\item{linkIdsNodesDrag}{List of characters. }
+\item{nodeRightClickedViewpointCoordinates}{List with named elements and values of type numeric. screen coordinates of right-clicked node}
 
-\item{graknStatus}{Character. }
+\item{nodeHovered}{Named list. the currently hovered node}
 
-\item{maxDepth_neighbours_select}{Numeric. }
+\item{nodeHoveredViewpointCoordinates}{List with named elements and values of type numeric. screen coordinates of hovered node}
 
-\item{max_nodes_render}{Numeric. }
+\item{linkClicked}{Named list. clicked link}
 
-\item{size}{Named list. }
+\item{linkRightClicked}{Named list. right-clicked link}
 
-\item{externalobject_source}{Character. }
+\item{linkHovered}{Named list. hovered link}
 
-\item{externalobject_input}{Numeric | character | logical | unnamed list | named list. }
+\item{linksSelected}{List of named lists. selected (clicked) links}
 
-\item{nodeHovered}{Named list. }
+\item{linkIdsNodesDrag}{List of characters. ids of links highlighted due to being dragged}
 
-\item{centreCoordinates}{List with named elements and values of type numeric. }
+\item{nodeIdsHighlight}{List of characters. ids of highlighted nodes (through searcha)}
 
-\item{graphData_changed}{Logical. }
+\item{nodeIdsVisible}{List of characters. ids of visible nodes}
 
-\item{updated}{Logical. }
+\item{linkIdsVisible}{List of characters. ids of visible links}
 
-\item{nodeIdsHighlight}{List of characters. }
+\item{externalobject_source}{Character. externalobject_source:}
 
-\item{nodeIdsVisible}{List of characters. }
+\item{externalobject_input}{Numeric | character | logical | unnamed list | named list. externalobject_source:}
 
-\item{linkIdsFilter}{List of characters. }
+\item{centreCoordinates}{List with named elements and values of type numeric. origin coordinates}
 
 \item{useCoordinates}{Logical. useCoordinates: whether to use node attribute to set node coordinates}
 
@@ -235,7 +261,7 @@ d3Force_call_method = {
 
 \item{gravity}{Character. gravity: not yet used, prop to change three gravity. Not used in 2D}
 
-\item{focused}{Logical. focused: whether component is focused}
+\item{maxDepth_neighbours_select}{Numeric. max levels of neighbourhood selection around a node by repeat clicking}
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

@@ -1,4 +1,4 @@
-const obj_shared_props = {
+const objSharedProps = {
     // props include most react-force-graph props (unless handled with internal logic in higher-level component)
     // https://github.com/vasturiano/react-force-graph
     // with additional higher-level props added at the end
@@ -119,7 +119,7 @@ const obj_shared_props = {
     // methods
     d3Force_define: {"name":null, "force":null, "force_args":null},
     d3Force_call: {"name":null, "method":null, "method_args":null},
-    
+
     d3ReheatSimulation: false,
 
     /**
@@ -157,7 +157,7 @@ const obj_shared_props = {
     /**
     * higher-order props (not in original react component)
     */
-    heightRatio: 0.85,
+    heightRatio: 1,
     size: null,
     active: true,
     // zoomOut: false,
@@ -199,4 +199,4 @@ const obj_shared_props = {
     maxDepth_neighbours_select: 4,
 }
 
-export {obj_shared_props}
+export default objSharedProps;

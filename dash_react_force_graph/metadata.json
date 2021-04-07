@@ -896,7 +896,7 @@
         "type": {
           "name": "string"
         },
-        "required": false,
+        "required": true,
         "description": "The ID used to identify this component in Dash callbacks."
       },
       "setProps": {
@@ -911,116 +911,100 @@
           "name": "object"
         },
         "required": true,
-        "description": "The data to display. Format {nodes:{}, links:{}}"
+        "description": "Graph data structure. Can also be used to apply incremental updates. Format {nodes:{}, links:{}}"
       },
-      "heightRatio": {
+      "nodeId": {
         "type": {
-          "name": "number"
+          "name": "string"
         },
         "required": false,
-        "description": ""
+        "description": "Node object accessor attribute for unique node id (used in link objects source/target)."
+      },
+      "linkSource": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Link object accessor attribute referring to id of source node."
+      },
+      "linkTarget": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Link object accessor attribute referring to id of target node."
       },
       "backgroundColor": {
         "type": {
           "name": "string"
         },
         "required": false,
-        "description": "backgroundColor: Getter/setter for the chart background color, default transparent"
+        "description": "Getter/setter for the chart background color, default transparent"
       },
-      "width": {
+      "showNavInfo": {
         "type": {
-          "name": "number"
+          "name": "bool"
         },
         "required": false,
-        "description": "width: Canvas width, in px."
+        "description": "Whether to show the navigation controls footer info."
       },
       "nodeRelSize": {
         "type": {
           "name": "number"
         },
         "required": false,
-        "description": "Ratio of node circle area (square px) per value unit."
+        "description": "Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit."
+      },
+      "nodeVal": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit."
       },
       "nodeLabel": {
         "type": {
-          "name": "string"
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            }
+          ]
         },
         "required": false,
-        "description": "The node attribute whose value should be displayed as label"
+        "description": "Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).\n2D, 3D and VR"
       },
-      "nodeLabel_attr_type": {
+      "nodeDesc": {
         "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            }
+          ]
         },
         "required": false,
-        "description": "The node attribute whose value should be displayed as label, by type"
-      },
-      "nodeLabel_attr_supertype": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "The node attribute whose value should be displayed as label, by supertype"
+        "description": "For VR only. Node object accessor function or attribute for description (shown under label)."
       },
       "nodeColor": {
         "type": {
-          "name": "string"
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            }
+          ]
         },
         "required": false,
         "description": "The node attribute whose value should be used for coloring nodes"
-      },
-      "nodeColor_common_type": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "common node colors by type, overrides nodeColor_common_supertype"
-      },
-      "nodeColor_common_supertype": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "common node colors by supertype (relation, entity, attribute)"
-      },
-      "nodeURL": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "The node attribute which is activated upon Cmd click"
-      },
-      "nodeURL_attr_type": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "specify node URL attribute by type, override nodeURL_attr_supertype and nodeURL_common_*"
-      },
-      "nodeURL_attr_supertype": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "specify node URL attribute by supertype (relation, entity, attribute), overrides nodeURL_common_*"
       },
       "nodeAutoColorBy": {
         "type": {
@@ -1028,175 +1012,25 @@
           "value": [
             {
               "name": "string"
-            },
-            {
-              "name": "func"
             }
           ]
         },
         "required": false,
-        "description": "The node attribute whose value should be used for coloring nodes"
+        "description": "Node object accessor function or attribute to automatically group colors by. Only affects nodes without a color attribute."
       },
       "nodeOpacity": {
         "type": {
           "name": "number"
         },
         "required": false,
-        "description": "node opacity"
+        "description": "Nodes sphere opacity, between [0,1]. 3D, VR, AR"
       },
-      "nodeCanvasObjectMode": {
+      "nodeResolution": {
         "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            }
-          ]
+          "name": "number"
         },
         "required": false,
-        "description": "when showing nodeThreeObject, keep showing default node object as well as text or image"
-      },
-      "nodeThreeObject": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "object"
-            },
-            {
-              "name": "string"
-            },
-            {
-              "name": "func"
-            }
-          ]
-        },
-        "required": false,
-        "description": ""
-      },
-      "useNodeIcon": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "Whether to use nodeIcon*"
-      },
-      "nodeIcon": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "The node attribute containing url to image to display for each individual node. Takes precedence over nodeIcon_supertype and nodeIcon_type"
-      },
-      "nodeIcon_attr_type": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "specify node image attribute by type, overrides nodeIcon_attr_supertype and nodeIcon_common_*"
-      },
-      "nodeIcon_attr_supertype": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "specify node image attribute by supertype (relation, entity, attribute), overrides nodeIcon_common_*"
-      },
-      "nodeIcon_common_type": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "objectOf",
-            "value": {
-              "name": "string"
-            }
-          }
-        },
-        "required": false,
-        "description": "Common node image by type   overrides nodeIcon_supertype"
-      },
-      "nodeIcon_common_supertype": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "objectOf",
-            "value": {
-              "name": "string"
-            }
-          }
-        },
-        "required": false,
-        "description": "Common node image by supertype (relation, entity, attribute)"
-      },
-      "nodeIcon_fontsheets": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": ""
-      },
-      "useNodeImg": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "Whether to use nodeImg*"
-      },
-      "nodeImg": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "The node attribute containing url to image to display for each individual node. Takes precedence over nodeIcon_supertype and nodeIcon_type"
-      },
-      "nodeImg_attr_type": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "specify node image attribute by type, overrides nodeImg_attr_supertype and nodeImg_common_*"
-      },
-      "nodeImg_attr_supertype": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "specify node image attribute by supertype (relation, entity, attribute), overrides nodeImg_common_*"
-      },
-      "nodeImg_common_type": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "Common node image by type   overrides nodeImg_supertype"
-      },
-      "nodeImg_common_supertype": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "Common node image by supertype (relation, entity, attribute)"
+        "description": "Geometric resolution of each node's sphere, expressed in how many slice segments to divide the circumference. Higher values yield smoother spheres. Only applicable to 3D modes.\n3D, VR, AR"
       },
       "linkLabel": {
         "type": {
@@ -1204,14 +1038,23 @@
           "value": [
             {
               "name": "string"
-            },
-            {
-              "name": "func"
             }
           ]
         },
         "required": false,
-        "description": "The node attribute whose value should be displayed as label"
+        "description": "Link object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR)."
+      },
+      "linkDesc": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "For VR only. Link object accessor function or attribute for description (shown under label)."
       },
       "linkColor": {
         "type": {
@@ -1219,48 +1062,45 @@
           "value": [
             {
               "name": "string"
-            },
-            {
-              "name": "func"
             }
           ]
         },
         "required": false,
-        "description": "linkColor"
-      },
-      "linkColor_attr_type": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": ""
-      },
-      "linkColor_attr_supertype": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": ""
+        "description": "Link object accessor function or attribute for line color."
       },
       "linkAutoColorBy": {
         "type": {
-          "name": "string"
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            }
+          ]
         },
         "required": false,
-        "description": "autocolor the links by some link attribute"
+        "description": "Link object accessor function or attribute to automatically group colors by. Only affects links without a color attribute."
       },
       "linkOpacity": {
         "type": {
           "name": "number"
         },
         "required": false,
-        "description": "opacity, in [0,1]"
+        "description": "Line opacity of links, between [0,1]. 3D, VR, AR"
+      },
+      "linkLineDash": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing."
       },
       "linkWidth": {
         "type": {
@@ -1271,14 +1111,18 @@
             },
             {
               "name": "string"
-            },
-            {
-              "name": "func"
             }
           ]
         },
         "required": false,
-        "description": "linkWidth"
+        "description": "Link object accessor function, attribute or a numeric constant for the link line width."
+      },
+      "linkResolution": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Geometric resolution of each link 3D line, expressed in how many radial segments to divide the cylinder. Higher values yield smoother cylinders. Applicable only to links with positive width. 3D, VR, AR"
       },
       "linkCurvature": {
         "type": {
@@ -1289,24 +1133,18 @@
             },
             {
               "name": "string"
-            },
-            {
-              "name": "func"
             }
           ]
         },
         "required": false,
-        "description": "linkCurvature"
+        "description": "Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value."
       },
-      "linkThreeObject": {
+      "linkCurveRotation": {
         "type": {
           "name": "union",
           "value": [
             {
-              "name": "object"
-            },
-            {
-              "name": "func"
+              "name": "number"
             },
             {
               "name": "string"
@@ -1314,75 +1152,260 @@
           ]
         },
         "required": false,
-        "description": "object to display (instead of normal link)"
-      },
-      "linkThreeObjectExtend": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "bool"
-            },
-            {
-              "name": "func"
-            },
-            {
-              "name": "string"
-            }
-          ]
-        },
-        "required": false,
-        "description": "also show normal link"
-      },
-      "linkCanvasObjectMode": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "func"
-            },
-            {
-              "name": "string"
-            }
-          ]
-        },
-        "required": false,
-        "description": ""
+        "description": "Link object accessor function, attribute or a numeric constant for the rotation along the line axis to apply to the curve. Has no effect on straight lines. At 0 rotation, the curve is oriented in the direction of the intersection with the XY plane. The rotation angle (in radians) will rotate the curved line clockwise around the \"start-to-end\" axis from this reference orientation."
       },
       "linkDirectionalArrowLength": {
         "type": {
-          "name": "number"
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
         },
         "required": false,
-        "description": "link arrow length"
+        "description": "Link object accessor function, attribute or a numeric constant for the length of the arrow head indicating the link directionality. The arrow is displayed directly over the link line, and points in the direction of source > target. A value of 0 hides the arrow."
+      },
+      "linkDirectionalArrowColor": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Link object accessor function or attribute for the color of the arrow head."
       },
       "linkDirectionalArrowRelPos": {
         "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Link object accessor function, attribute or a numeric constant for the longitudinal position of the arrow head along the link line, expressed as a ratio between 0 and 1, where 0 indicates immediately next to the source node, 1 next to the target node, and 0.5 right in the middle."
+      },
+      "linkDirectionalArrowResolution": {
+        "type": {
           "name": "number"
         },
         "required": false,
-        "description": "link arrow position"
+        "description": "Geometric resolution of the arrow head, expressed in how many slice segments to divide the cone base circumference. Higher values yield smoother arrows."
       },
-      "zoomOut": {
+      "linkDirectionalParticles": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Link object accessor function, attribute or a numeric constant for the number of particles (small spheres) to display over the link line. The particles are distributed equi-spaced along the line, travel in the direction source > target, and can be used to indicate link directionality."
+      },
+      "linkDirectionalParticleSpeed": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Link object accessor function, attribute or a numeric constant for the directional particles speed, expressed as the ratio of the link length to travel per frame. Values above 0.5 are discouraged."
+      },
+      "linkDirectionalParticleWidth": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Link object accessor function, attribute or a numeric constant for the directional particles width. Values are rounded to the nearest decimal for indexing purposes."
+      },
+      "linkDirectionalParticleColor": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": "Link object accessor function or attribute for the directional particles color."
+      },
+      "linkDirectionalParticleResolution": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Geometric resolution of each 3D directional particle, expressed in how many slice segments to divide the circumference. Higher values yield smoother particles."
+      },
+      "emitParticle": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "An alternative mechanism for generating particles, this method emits a non-cyclical single particle within a specific link. The emitted particle shares the styling (speed, width, color) of the regular particle props. A valid link object that is included in graphData should be passed as a single parameter."
+      },
+      "rendererConfig": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Configuration parameters to pass to the ThreeJS WebGLRenderer constructor. This prop only has an effect on component mount. 3D only"
+      },
+      "pauseAnimation": {
         "type": {
           "name": "bool"
         },
         "required": false,
-        "description": "zoom"
+        "description": "Pauses the rendering cycle of the component, effectively freezing the current view and cancelling all user interaction. This method can be used to save performance in circumstances when a static image is sufficient."
       },
-      "center": {
+      "resumeAnimation": {
         "type": {
           "name": "bool"
         },
         "required": false,
-        "description": ""
+        "description": "Resumes the rendering cycle of the component, and re-enables the user interaction. This method can be used together with pauseAnimation for performance optimization purposes."
+      },
+      "centerAt": {
+        "type": {
+          "name": "array"
+        },
+        "required": false,
+        "description": "Set the coordinates of the center of the viewport. This method can be used to perform panning on the 2D canvas programmatically. Each of the x, y coordinates is optional, allowing for motion in just one dimension. An optional 3rd argument defines the duration of the transition (in ms) to animate the canvas motion."
+      },
+      "zoom": {
+        "type": {
+          "name": "array"
+        },
+        "required": false,
+        "description": "Set the 2D canvas zoom amount. The zoom is defined in terms of the scale transform of each px. A value of 1 indicates unity, larger values zoom in and smaller values zoom out. An optional 2nd argument defines the duration of the transition (in ms) to animate the canvas motion. By default the zoom is set to a value inversely proportional to the amount of nodes in the system."
+      },
+      "zoomToFit": {
+        "type": {
+          "name": "array"
+        },
+        "required": false,
+        "description": "Automatically zooms/pans the canvas so that all of the nodes fit inside it. If no nodes are found no action is taken. It accepts two optional arguments: the first defines the duration of the transition (in ms) to animate the canvas motion (default: 0ms). The second argument is the amount of padding (in px) between the edge of the canvas and the outermost node (default: 10px). The third argument specifies a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful for focusing on a portion of the graph. 2D, 3D"
+      },
+      "cameraPosition": {
+        "type": {
+          "name": "array"
+        },
+        "required": false,
+        "description": "Re-position the camera, in terms of x, y, z coordinates. Each of the coordinates is optional, allowing for motion in just some dimensions. The optional second argument can be used to define the direction that the camera should aim at, in terms of an {x,y,z} point in the 3D space. The 3rd optional argument defines the duration of the transition (in ms) to animate the camera motion. A value of 0 (default) moves the camera immediately to the final position. By default the camera will face the center of the graph at a z distance proportional to the amount of nodes in the system. 3D"
+      },
+      "refresh": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Redraws all the nodes/links. 3D, VR, AR"
+      },
+      "numDimensions": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Not applicable to 2D mode. Number of dimensions to run the force simulation on. 3D, VR, AR"
+      },
+      "forceEngine": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Which force-simulation engine to use (d3 or ngraph)."
+      },
+      "dagMode": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially)."
+      },
+      "dagLevelDistance": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "If dagMode is engaged, this specifies the distance between the different graph depths."
+      },
+      "d3AlphaMin": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Sets the simulation alpha min parameter. Only applicable if using the d3 simulation engine."
+      },
+      "d3AlphaDecay": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Sets the simulation intensity decay parameter. Only applicable if using the d3 simulation engine."
+      },
+      "d3VelocityDecay": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Nodes' velocity decay that simulates the medium resistance. Only applicable if using the d3 simulation engine."
+      },
+      "ngraphPhysics": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Specify custom physics configuration for ngraph, according to its configuration object syntax. Only applicable if using the ngraph simulation engine."
+      },
+      "warmupTicks": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "Number of layout engine cycles to dry-run at ignition before starting to render."
+      },
+      "cooldownTicks": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "How many build-in frames to render before stopping and freezing the layout engine."
       },
       "cooldownTime": {
         "type": {
           "name": "number"
         },
         "required": false,
-        "description": "cooldown time"
+        "description": "How long (ms) to render for before stopping and freezing the layout engine."
       },
       "d3Force_define": {
         "type": {
@@ -1398,96 +1421,132 @@
         "required": false,
         "description": "object to call a method on an existing simulation force. E.g.\nd3Force_call_method = {\n   \"name\": \"charge\", // the name to which the force is assigned\n   \"method\": \"strength\", // the name of a method to call on the force\n   \"method_args\": [-50], // array of args to pass to force method"
       },
-      "onNodeClick": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "onNodeClick"
-      },
-      "onNodeRightClick": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "onNodeRightClick"
-      },
-      "onNodeHover": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "onNodeHover"
-      },
-      "onLinkClick": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "onLinkClick"
-      },
-      "onLinkRightClick": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "onLinkRightClick"
-      },
-      "onLinkHover": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "onLinkHover"
-      },
-      "onBackgroundClick": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "onBackgroundClick"
-      },
-      "onBackgroundRightClick": {
-        "type": {
-          "name": "func"
-        },
-        "required": false,
-        "description": "onBackgroundRightClick"
-      },
-      "interactive": {
+      "d3ReheatSimulation": {
         "type": {
           "name": "bool"
         },
         "required": false,
-        "description": "toggle with a single control whether graph is interactive"
+        "description": "Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine."
       },
-      "enableZoomPanInteraction": {
+      "linkHoverPrecision": {
         "type": {
-          "name": "bool"
+          "name": "number"
         },
         "required": false,
-        "description": "enable zoom and panning? (2D)"
+        "description": "Whether to display the link label when gazing the link closely (low value) or from far away (high value)."
       },
-      "enableNavigationControls": {
+      "controlType": {
         "type": {
-          "name": "bool"
+          "name": "string"
         },
         "required": false,
-        "description": "enable navigation? (3D)"
-      },
-      "enablePointerInteraction": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "enable pointer interaction such as hover, click, drag?"
+        "description": "Which type of control to use to control the camera on 3D mode. Choice between trackball, orbit or fly."
       },
       "enableNodeDrag": {
         "type": {
           "name": "bool"
         },
         "required": false,
-        "description": "enable node drag? more efficient if false"
+        "description": "Whether to enable the user interaction to drag nodes by click-dragging. If enabled, every time a node is dragged the simulation is re-heated so the other nodes react to the changes. Only applicable if enablePointerInteraction is true."
+      },
+      "getGraphBbox": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Returns the current bounding box of the nodes in the graph, formatted as { x: [<num>, <num>], y: [<num>, <num>], z: [<num>, <num>] }. If no nodes are found, returns null. Accepts an optional argument to define a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful to calculate the bounding box of a portion of the graph.\nBounding box is saved as the graphBbox prop"
+      },
+      "heightRatio": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": "height of component as proportion of container"
+      },
+      "size": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "func"
+            },
+            {
+              "name": "object"
+            }
+          ]
+        },
+        "required": false,
+        "description": "provided react-sizeme. Contains an object with \"width\" and \"height\" attributes"
+      },
+      "active": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "whether or not session is active. Used to enable or disable warning browser dialog when closing"
+      },
+      "nodeURL": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The node attribute containing a URL"
+      },
+      "useNodeImg": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether or not to use the nodeImg. Overrides nodeIcon"
+      },
+      "nodeImg": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The node attribute containing url to image to display for each individual node"
+      },
+      "useNodeIcon": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "Whether or not to use the nodeIcon"
+      },
+      "nodeIcon": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The node attribute containing object with icon to display for each individual node."
+      },
+      "nodeIcon_fontsheets": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "object with keys being fonts (string) and values being CSS sheets"
+      },
+      "linkId": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "The link attribute containing the unique link id"
+      },
+      "interactive": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "toggle enableZoomPanInteraction, enablePointerInteraction, enableNavigationControls with a single control"
+      },
+      "updated": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": "whether or not graphData has changed. Internally, sets interactive to False until (mainly used internally)"
       },
       "nodeZoomId": {
         "type": {
@@ -1504,7 +1563,7 @@
           }
         },
         "required": false,
-        "description": ""
+        "description": "selected (clicked) nodes"
       },
       "nodeIdsDrag": {
         "type": {
@@ -1514,14 +1573,31 @@
           }
         },
         "required": false,
-        "description": ""
+        "description": "ids of nodes highlighted due to being dragged"
+      },
+      "nodeClicked": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "clicked node"
+      },
+      "nodeClickedViewpointCoordinates": {
+        "type": {
+          "name": "objectOf",
+          "value": {
+            "name": "number"
+          }
+        },
+        "required": false,
+        "description": "screen coordinates of clicked node"
       },
       "nodeRightClicked": {
         "type": {
           "name": "object"
         },
         "required": false,
-        "description": ""
+        "description": "right-clicked node"
       },
       "nodeRightClickedViewpointCoordinates": {
         "type": {
@@ -1531,7 +1607,45 @@
           }
         },
         "required": false,
-        "description": ""
+        "description": "screen coordinates of right-clicked node"
+      },
+      "nodeHovered": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "the currently hovered node"
+      },
+      "nodeHoveredViewpointCoordinates": {
+        "type": {
+          "name": "objectOf",
+          "value": {
+            "name": "number"
+          }
+        },
+        "required": false,
+        "description": "screen coordinates of hovered node"
+      },
+      "linkClicked": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "clicked link"
+      },
+      "linkRightClicked": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "right-clicked link"
+      },
+      "linkHovered": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "hovered link"
       },
       "linksSelected": {
         "type": {
@@ -1541,7 +1655,7 @@
           }
         },
         "required": false,
-        "description": ""
+        "description": "selected (clicked) links"
       },
       "linkIdsNodesDrag": {
         "type": {
@@ -1551,50 +1665,44 @@
           }
         },
         "required": false,
-        "description": ""
+        "description": "ids of links highlighted due to being dragged"
       },
-      "graknStatus": {
+      "nodeIdsHighlight": {
         "type": {
-          "name": "string"
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
         },
         "required": false,
-        "description": ""
+        "description": "ids of highlighted nodes (through searcha)"
       },
-      "maxDepth_neighbours_select": {
+      "nodeIdsVisible": {
         "type": {
-          "name": "number"
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
         },
         "required": false,
-        "description": ""
+        "description": "ids of visible nodes"
       },
-      "max_nodes_render": {
+      "linkIdsVisible": {
         "type": {
-          "name": "number"
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
         },
         "required": false,
-        "description": ""
-      },
-      "size": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "func"
-            },
-            {
-              "name": "object"
-            }
-          ]
-        },
-        "required": false,
-        "description": ""
+        "description": "ids of visible links"
       },
       "externalobject_source": {
         "type": {
           "name": "string"
         },
         "required": false,
-        "description": ""
+        "description": "externalobject_source:"
       },
       "externalobject_input": {
         "type": {
@@ -1618,14 +1726,7 @@
           ]
         },
         "required": false,
-        "description": ""
-      },
-      "nodeHovered": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": ""
+        "description": "externalobject_source:"
       },
       "centreCoordinates": {
         "type": {
@@ -1635,51 +1736,7 @@
           }
         },
         "required": false,
-        "description": ""
-      },
-      "graphData_changed": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": ""
-      },
-      "updated": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": ""
-      },
-      "nodeIdsHighlight": {
-        "type": {
-          "name": "arrayOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": ""
-      },
-      "nodeIdsVisible": {
-        "type": {
-          "name": "arrayOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": ""
-      },
-      "linkIdsFilter": {
-        "type": {
-          "name": "arrayOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": ""
+        "description": "origin coordinates"
       },
       "useCoordinates": {
         "type": {
@@ -1709,12 +1766,12 @@
         "required": false,
         "description": "gravity: not yet used, prop to change three gravity. Not used in 2D"
       },
-      "focused": {
+      "maxDepth_neighbours_select": {
         "type": {
-          "name": "bool"
+          "name": "number"
         },
         "required": false,
-        "description": "focused: whether component is focused"
+        "description": "max levels of neighbourhood selection around a node by repeat clicking"
       }
     }
   }
