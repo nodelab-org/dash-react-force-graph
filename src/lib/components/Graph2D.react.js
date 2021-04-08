@@ -1,6 +1,6 @@
 import { ForceGraph2D } from 'react-force-graph';
 import React, {useEffect, useRef, useState} from "react";
-import DatGui, {DatFolder,DatNumber} from 'react-dat-gui';
+import DatGui, {DatBoolean, DatColor, DatFolder,DatNumber} from 'react-dat-gui';
 // react-dat-gui renders correctly only when importing these styles
 import 'react-dat-gui/dist/index.css';
 
@@ -48,16 +48,25 @@ function Graph2D(props) {
     const fgRef = useRef(null);
 
     const [guiSettings,setGuiSettings] = useState({
-        "backgroundColor":"black",
-        "link":20,
+        "backgroundColor":props.backgroundColor,
+        "showNavInfo":props.showNavInfo,
+        "nodeRelSize":props.nodeRelSize,
+        "nodeOpacity":props.nodeOpacity,
+        "link":50,
         "charge":0,
-        "center":0.5
+        "center":1,
+        "useNodeImg":props.useNodeImg,
+        "useNodeIcon":props.useNodeIcon,
     })
 
       // Update current state with changes from controls
     const handleUpdate = newData => setGuiSettings({ ...guiSettings, ...newData });
     
     useEffect( () => {
+        props.setProps({backgroundColor:guiSettings.backgroundColor})
+        props.setProps({showNavInfo:guiSettings.showNavInfo})
+        props.setProps({nodeRelSize:guiSettings.nodeRelSize})
+        props.setProps({nodeOpacity:guiSettings.nodeOpacity})
         fgRef.current
             .d3Force('link')
             .distance(link => guiSettings.link)
@@ -68,6 +77,10 @@ function Graph2D(props) {
             .d3Force('center')
             .strength(() => guiSettings.center)
         fgRef.current.d3ReheatSimulation()
+        
+        props.setProps({useNodeImg:guiSettings.useNodeImg})
+        props.setProps({useNodeIcon:guiSettings.useNodeIcon})
+
     }, [guiSettings])
 
     let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
@@ -910,7 +923,7 @@ function Graph2D(props) {
                     nodeColor={nodeColorFunction}
                     nodeAutoColorBy={props.nodeAutoColorBy}
                     nodeOpacity={props.nodeOpacity}
-                    nodeResolution={props.nodeResolution}
+                    //nodeResolution={props.nodeResolution}
                     nodeCanvasObject={nodeCanvasObjectFunction}
                     nodeCanvasObjectMode={nodeCanvasObjectModeFunction}
                     /**
@@ -1028,9 +1041,21 @@ function Graph2D(props) {
                     data={guiSettings} 
                     onUpdate={handleUpdate}>
                     <DatFolder title='settings' closed={true}>
-                        <DatNumber path='link' label='link' min={0} max={100} step={1} />
-                        <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
-                        <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
+                        <DatFolder title='Container layout' closed={true}>
+                            <DatColor path='backgroundColor' label='backgroundColor'/>
+                            <DatBoolean path='showNavInfo' label='showNavInfo'/>
+                            </DatFolder>
+                        <DatFolder title='d3Force' closed={true}>
+                            <DatNumber path='link' label='link' min={0} max={100} step={1} />
+                            <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
+                            <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
+                            </DatFolder>
+                        <DatFolder title='Node styling' closed={true}>  
+                            <DatNumber path='nodeRelSize' label='nodeRelSize' min={1} max={25} step={1}/>
+                            <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/>
+                            <DatBoolean path='useNodeImg' label='useNodeImg'/>
+                            <DatBoolean path='useNodeIcon' label='useNodeIcon'/>
+                            </DatFolder>
                         </DatFolder>
                 </DatGui>
             </div>
