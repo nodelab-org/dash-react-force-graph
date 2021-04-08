@@ -3,6 +3,8 @@ import React, {useEffect, useRef} from "react";
 
 import PropTypes from 'prop-types';
 
+import validateColor from "validate-color";
+
 import importScript from '../customHooks/importScript.js';
 // import useFontFace from '../customhooks/useFontFace.js';
 
@@ -16,7 +18,7 @@ import importScript from '../customHooks/importScript.js';
 
 // import graphSharedProptypes from "../graph_shared_proptypes.js"
 
-import {darken, lighten, saturate} from 'polished';
+import {darken, invert, lighten, saturate} from 'polished';
 
 // https://github.com/ctrlplusb/react-sizeme
 import {withSize} from 'react-sizeme';
@@ -108,7 +110,7 @@ function Graph2D(props) {
     }
 
     const nodeColorFunction = (node => {
-        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         if (props.nodesSelected.length) {
           color = darken(0.1, color)
           if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
@@ -507,7 +509,7 @@ function Graph2D(props) {
         // https://www.w3schools.com/tags/canvas_globalalpha.asp
         // initialize color
         // provide a sensible default
-        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         const label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
         const size = 12;
         // ctx.globalAlpha = 0.9;
@@ -551,7 +553,7 @@ function Graph2D(props) {
         // paint node text background rectangle
         // is this necessary??
         ctx.fillStyle = color
-        let backgroundColor = !(props.backgroundColor===null)? props.backgroundColor : "#000000"
+        let backgroundColor = props.backgroundColor? validateColor(props.backgroundColor)? props.backgroundColor : "#000000" : "#000000"
         ctx.fillStyle = lighten(0.2,backgroundColor);
         // add padding
         const rectsize = size*0.2
@@ -616,7 +618,7 @@ function Graph2D(props) {
     }
     
     const linkColorFunction = link => {
-        let color = props.linkColor in link? link[props.linkColor] : "#ffffff";
+        let color = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(props.backgroundColor) : invert(props.backgroundColor)
         // is link selected?
         if (props.linksSelected.length) {
             color = darken(0.1, color)
@@ -709,12 +711,12 @@ function Graph2D(props) {
         ctx.translate(textPos.x, textPos.y);
         ctx.rotate(textAngle);
 
-        // ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-        // ctx.fillRect(- bckgDimensions[0] / 2, - bckgDimensions[1] / 2, ...bckgDimensions);
+        ctx.fillStyle = props.backgroundColor
+        ctx.fillRect(- bckgDimensions[0] / 2, - bckgDimensions[1] / 2, ...bckgDimensions);
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = props.linkColor;
+        ctx.fillStyle = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(props.backgroundColor) : invert(props.backgroundColor)
         ctx.fillText(label, 0, 0);
         ctx.restore();
     }

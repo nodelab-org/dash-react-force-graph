@@ -30,7 +30,8 @@
     "react-force-graph": "^1.40.3",
     "react-sizeme": "^2.6.12",
     "three-geo": "^1.4.3",
-    "three-spritetext": "^1.5.4"
+    "three-spritetext": "^1.5.4",
+    "validate-color": "^2.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
@@ -47,9 +48,9 @@
     "eslint-plugin-react": "^7.14.2",
     "npm": "^6.1.0",
     "prop-types": "^15.7.2",
-    "react": "^16.8.6",
+    "react": "^17.0.2",
     "react-docgen": "^4.1.1",
-    "react-dom": "^16.8.6",
+    "react-dom": "^17.0.2",
     "style-loader": "^0.23.1",
     "styled-jsx": "^3.2.1",
     "webpack": "4.36.1",

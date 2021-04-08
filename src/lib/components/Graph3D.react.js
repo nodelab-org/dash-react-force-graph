@@ -1,12 +1,13 @@
 import {ForceGraph3D} from 'react-force-graph';
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
+import validateColor from "validate-color";
 
 import importScript from '../customHooks/importScript.js';
 // import useFontFace from '../customhooks/useFontFace.js';
 // https://github.com/ctrlplusb/react-sizeme
 
-import {saturate, darken, lighten} from 'polished';
+import {darken, invert, lighten, saturate} from 'polished';
 
 import { withSize } from 'react-sizeme';
 
@@ -94,7 +95,7 @@ function Graph3D(props) {
     })
 
     const nodeColorFunction = (node => {
-        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         if (props.nodesSelected.length) {
           color = darken(0.1, color)
           if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
@@ -501,7 +502,7 @@ function Graph3D(props) {
     }//, [props.graphData, props.icon_fontsheets, props.nodeColor_common_supertype, props.nodeColor_common_type, props.nodeImg_attr_supertype, props.nodeImg_attr_type, props.nodeImg_common_supertype, props.nodeImg_common_type] )
 
     const nodeThreeObjectFunction = node => {
-        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         const label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
         const size = 12;
         const fontWeight="normal"
@@ -609,7 +610,7 @@ function Graph3D(props) {
     )
     
     const linkColorFunction = (link => {
-        let color = props.linkColor in link? link[props.linkColor] : "#ffffff";
+        let color = props.linkColor in link? validateColor(link[props.linkColor]) ? link[props.linkColor] : invert(props.backgroundColor) : invert(props.backgroundColor)
         // is link selected?
         if (props.linksSelected.length) {
             color = darken(0.1, color)
@@ -666,7 +667,7 @@ function Graph3D(props) {
     const linkThreeObjectFunction = link => {
         // extend link with text sprite
         const sprite = new SpriteText(link[props.linkLabel]);
-        let color = props.linkColor in link? link[props.linkColor]? link[props.linkColor] : "#ffffff" : "#ffffff"
+        let color = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] : invert(props.backgroundColor) : invert(props.backgroundColor)
         // is link selected?
         if (props.linksSelected.length) {
             color = darken(0.1, color)
@@ -709,7 +710,7 @@ function Graph3D(props) {
         props.setProps({enablePointerInteraction: props.interactive? true : false})
         props.setProps({enableNavigationControls: props.interactive? true : false})
     }
-    
+
     // three-geo: add terrain to scene
     useEffect(() => {
         if (props.externalobject_source && props.externalobject_input) {
