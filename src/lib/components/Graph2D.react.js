@@ -1,5 +1,8 @@
 import { ForceGraph2D } from 'react-force-graph';
-import React, {useEffect, useRef} from "react";
+import React, {useEffect, useRef, useState} from "react";
+import DatGui, {DatFolder,DatNumber} from 'react-dat-gui';
+// react-dat-gui renders correctly only when importing these styles
+import 'react-dat-gui/dist/index.css';
 
 import PropTypes from 'prop-types';
 
@@ -36,11 +39,36 @@ function Graph2D(props) {
     // https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
     // importScript("https://kit.fontawesome.com/a6e0eeba63.js");
     for (let key in props.nodeIcon_fontsheets) {
+        // graph gui
+        // importScript("//unpkg.com/d3-force")
         importScript(props.nodeIcon_fontsheets[key])
         // useFontFace(key, props.nodeIcon_fontsheets[key])
     }
 
     const fgRef = useRef(null);
+
+    const [guiSettings,setGuiSettings] = useState({
+        "backgroundColor":"black",
+        "link":20,
+        "charge":0,
+        "center":0.5
+    })
+
+      // Update current state with changes from controls
+    const handleUpdate = newData => setGuiSettings({ ...guiSettings, ...newData });
+    
+    useEffect( () => {
+        fgRef.current
+            .d3Force('link')
+            .distance(link => guiSettings.link)
+        fgRef.current
+            .d3Force('charge')
+            .strength(() => guiSettings.charge)
+        fgRef.current
+            .d3Force('center')
+            .strength(() => guiSettings.center)
+        fgRef.current.d3ReheatSimulation()
+    }, [guiSettings])
 
     let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
 
@@ -802,37 +830,37 @@ function Graph2D(props) {
     // },[props.refresh])
 
 
-    useEffect( () => {
-        // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
-        if (props.forceEngine === "d3") {
-           if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
+    // useEffect( () => {
+    //     // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
+    //     if (props.forceEngine === "d3") {
+    //        if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
 
-             if (props.d3Force_define.name) {
+    //          if (props.d3Force_define.name) {
 
-               if (props.d3Force_define.force) {
-                 // define force
+    //            if (props.d3Force_define.force) {
+    //              // define force
 
-                 fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
-               } else {
-                 // remove force
-                 fgRef.current.d3Force(props.d3Force_define.name, null)
-               }
-             }
-           }
-         }
-    },[props.d3Force_define])
+    //              fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
+    //            } else {
+    //              // remove force
+    //              fgRef.current.d3Force(props.d3Force_define.name, null)
+    //            }
+    //          }
+    //        }
+    //      }
+    // },[props.d3Force_define])
 
 
-    useEffect( () => {
-      // e.g. fgRef.current.d3Force('charge').strength(-70);
-      if (props.forceEngine === "d3") {
-        if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
-          if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
-            fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
-          }
-        }
-      }
-    },[props.d3Force_call])
+    // useEffect( () => {
+    //   // e.g. fgRef.current.d3Force('charge').strength(-70);
+    //   if (props.forceEngine === "d3") {
+    //     if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
+    //       if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
+    //         fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
+    //       }
+    //     }
+    //   }
+    // },[props.d3Force_call])
 
 
     useEffect( () => {
@@ -849,7 +877,7 @@ function Graph2D(props) {
 
     return (
         <div id={props.id}>
-            Graph2D:
+
                 <ForceGraph2D
                     ref={fgRef}
                     /**
@@ -995,6 +1023,17 @@ function Graph2D(props) {
                             })
                     }
             />
+            <div id = "dat-gui-div">
+                <DatGui 
+                    data={guiSettings} 
+                    onUpdate={handleUpdate}>
+                    <DatFolder title='settings' closed={true}>
+                        <DatNumber path='link' label='link' min={0} max={100} step={1} />
+                        <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
+                        <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
+                        </DatFolder>
+                </DatGui>
+            </div>
         </div>
     );
 }

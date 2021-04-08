@@ -27,6 +27,7 @@
     "d3": "^6.5.0",
     "polished": "^4.1.0",
     "ramda": "^0.26.1",
+    "react-dat-gui": "^4.1.1",
     "react-force-graph": "^1.40.3",
     "react-sizeme": "^2.6.12",
     "three-geo": "^1.4.3",

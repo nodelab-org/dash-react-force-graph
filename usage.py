@@ -89,16 +89,7 @@ app.layout = html.Div([
     html.Button("reheat", id="button-reheat"),
     html.Button("add random node", id="button-add"),
     html.Button("delete random node", id="button-delete"),
-    html.Br(),
-    dcc.Slider(
-        id="slider-d3Force-charge-strength",
-        min=-100,
-        max=100,
-        marks={i: '{}'.format(i) for i in range(-100,100,20)},
-        step=20,
-        value=0
-    ),
-    html.Br(),
+   
 
     dash_react_force_graph.Graph2D(
         id='graph2D',
@@ -111,24 +102,24 @@ app.layout = html.Div([
         nodeImg="__nodeImg",
         nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     ),
-    dash_react_force_graph.Graph3D(
-        id='graph3D',
-        graphData=graphData,
-        heightRatio=0.45,
-        nodeId="nodeId",
-        nodeLabel="__nodeLabel",
-        nodeColor="__nodeColor",
-        nodeIcon="__nodeIcon",
-        nodeImg="__nodeImg",
-        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
-    ),
+    # dash_react_force_graph.Graph3D(
+    #     id='graph3D',
+    #     graphData=graphData,
+    #     heightRatio=0.45,
+    #     nodeId="nodeId",
+    #     nodeLabel="__nodeLabel",
+    #     nodeColor="__nodeColor",
+    #     nodeIcon="__nodeIcon",
+    #     nodeImg="__nodeImg",
+    #     nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
+    # ),
     # html.Div(id='output-nodeHovered-2D'),
     html.H2("Graph2D"),
     html.Div(id='output-nodeClicked-2D'),
     html.Div(id='output-nodeRightClicked-2D'),
-    html.H2("Graph3D"),
-    html.Div(id='output-nodeClicked-3D'),
-    html.Div(id='output-nodeRightClicked-3D'),
+    # html.H2("Graph3D"),
+    # html.Div(id='output-nodeClicked-3D'),
+    # html.Div(id='output-nodeRightClicked-3D'),
     html.Br(),
     # html.Br(),
     # dash_react_force_graph.Graph3D(
@@ -164,14 +155,6 @@ def display_selected_nodes_2D( nodeClicked, nodeRightClicked):
 def reheat_graphData_2D(n_clicks):
     return True
 
-
-
-@app.callback(
-    Output('graph2D', 'd3Force_call'),
-[
-    Input('slider-d3Force-charge-strength', 'value')])
-def update_d3Force_charge_strength(slidervalue):
-    return {"name":"charge", "method":"strength", "method_args":[slidervalue]}
 
 @app.callback(Output('graph2D', 'graphData'),
     [
@@ -218,75 +201,75 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
 
 
 
-@app.callback(
-[
-    # Output('output-nodeHovered-2D', 'children'),
-    Output('output-nodeClicked-3D',  'children'),
-    Output('output-nodeRightClicked-3D',  'children'),
-],
-[
-    # Input('graph2D', 'nodeHovered'),
-    Input('graph3D', 'nodeClicked'),
-    Input('graph3D', 'nodeRightClicked'),
-])
-def display_selected_nodes_3D( nodeClicked, nodeRightClicked):
-    return ["clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
+# @app.callback(
+# [
+#     # Output('output-nodeHovered-2D', 'children'),
+#     Output('output-nodeClicked-3D',  'children'),
+#     Output('output-nodeRightClicked-3D',  'children'),
+# ],
+# [
+#     # Input('graph2D', 'nodeHovered'),
+#     Input('graph3D', 'nodeClicked'),
+#     Input('graph3D', 'nodeRightClicked'),
+# ])
+# def display_selected_nodes_3D( nodeClicked, nodeRightClicked):
+#     return ["clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
 
-@app.callback(
-    Output('graph3D', 'd3ReheatSimulation'),
-[
-    Input('button-reheat', 'n_clicks')])
-def reheat_graphData_3D(n_clicks):
-    return True
+# @app.callback(
+#     Output('graph3D', 'd3ReheatSimulation'),
+# [
+#     Input('button-reheat', 'n_clicks')])
+# def reheat_graphData_3D(n_clicks):
+#     return True
 
-@app.callback(
-    Output('graph3D', 'd3Force_call'),
-[
-    Input('slider-d3Force-charge-strength', 'value')])
-def update_d3Force_charge_strength(slidervalue):
-    return {"name":"charge", "method":"strength", "method_args":[slidervalue]}
+# @app.callback(
+#     Output('graph3D', 'd3Force_call'),
+# [
+#     Input('slider-d3Force-charge-strength', 'value')])
+# def update_d3Force_charge_strength(slidervalue):
+#     return {"name":"charge", "method":"strength", "method_args":[slidervalue]}
 
-@app.callback(Output('graph3D', 'graphData'),
-    [
-        Input('button-add', 'n_clicks'),
-        Input('button-delete', 'n_clicks')
-    ],
-    [
-        State("graph3D","graphData")
-    ])
-def add_delete_random_node_3D(n_clicks_add, n_clicks_delete, graphData):
-    ctx = dash.callback_context
+# @app.callback(Output('graph3D', 'graphData'),
+#     [
+#         Input('button-add', 'n_clicks'),
+#         Input('button-delete', 'n_clicks')
+#     ],
+#     [
+#         State("graph3D","graphData")
+#     ])
+# def add_delete_random_node_3D(n_clicks_add, n_clicks_delete, graphData):
+#     ctx = dash.callback_context
 
-    if not ctx.triggered:
-        raise PreventUpdate
-    else:
-        trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
+#     if not ctx.triggered:
+#         raise PreventUpdate
+#     else:
+#         trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-    graphData = rm_graphData_render_data(graphData, graph_lib="3D", coordinates_rm=[])
+#     graphData = rm_graphData_render_data(graphData, graph_lib="3D", coordinates_rm=[])
 
-    if trigger_id == "button-add":
-        newNodeId = max([int(node["nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
-        newNode = {"nodeId":newNodeId, "__nodeLabel":"new_node_".format(newNodeId), "__nodeColor":"orange"}
+#     if trigger_id == "button-add":
+#         newNodeId = max([int(node["nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
+#         newNode = {"nodeId":newNodeId, "__nodeLabel":"new_node_".format(newNodeId), "__nodeColor":"orange"}
 
-        if len(graphData["nodes"]):
-            ridx =  random.randrange(len(graphData["nodes"]))
-            newLinkId = max([int(link["id"]) for link in graphData["links"]])+1 if len(graphData["links"]) else 1
-            newLink = {"id":newLinkId, "source":newNode["nodeId"], "target": graphData["nodes"][ridx]["nodeId"], "label":"new_link".format(newLinkId)}
-            graphData["links"].append(newLink)
+#         if len(graphData["nodes"]):
+#             ridx =  random.randrange(len(graphData["nodes"]))
+#             newLinkId = max([int(link["id"]) for link in graphData["links"]])+1 if len(graphData["links"]) else 1
+#             newLink = {"id":newLinkId, "source":newNode["nodeId"], "target": graphData["nodes"][ridx]["nodeId"], "label":"new_link".format(newLinkId)}
+#             graphData["links"].append(newLink)
 
-        graphData["nodes"].append(newNode)
+#         graphData["nodes"].append(newNode)
 
-    elif trigger_id == "button-delete":
-        if not len(graphData["nodes"]):
-            raise PreventUpdate
+#     elif trigger_id == "button-delete":
+#         if not len(graphData["nodes"]):
+#             raise PreventUpdate
 
-        ridx =  random.randrange(len(graphData["nodes"]))
-        nodeDel = graphData["nodes"].pop(ridx)
+#         ridx =  random.randrange(len(graphData["nodes"]))
+#         nodeDel = graphData["nodes"].pop(ridx)
 
-        if len(graphData["links"]):
-            graphData["links"] = list(filter(lambda link: not nodeDel["nodeId"] in [link["source"], link["target"]], graphData["links"]))
+#         if len(graphData["links"]):
+#             graphData["links"] = list(filter(lambda link: not nodeDel["nodeId"] in [link["source"], link["target"]], graphData["links"]))
 
-    return graphData
+#     return graphData
 
 
 if __name__ == '__main__':
