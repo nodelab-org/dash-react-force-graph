@@ -81,6 +81,47 @@ function Graph3D(props) {
         props.setProps({enablePointerInteraction:false})
     },[props.graphData])
 
+    const nodeLabelFunction = node => props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
+    
+    const nodeVisibilityFunction = (node => {
+        let visible = true
+        if (props.nodeIdsVisible.length) {
+            if (props.nodeIdsVisible.indexOf(node[props.nodeId]) === -1) {
+                visible = false
+            }
+        }
+        return visible
+    })
+
+    const nodeColorFunction = (node => {
+        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        if (props.nodesSelected.length) {
+          color = darken(0.1, color)
+          if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+              color = saturate(0.2,color)
+              color = lighten(0.2, color)
+          }
+        }
+
+        if (props.nodeIdsHighlight.length) {
+            color = darken(0.1, color)
+            if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
+                //color = saturate(0.2,color)
+                color = lighten(0.2, color)
+            }
+        }
+        if (props.nodeIdsDrag.length) {
+            color = darken(0.1, color)
+            if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
+                //color = saturate(0.2, color)
+                color = lighten(0.2, color)
+            }
+        }
+        return color
+    })
+
+
+
     // add node neighbours to nodes
     useEffect( () => {
         // to each node, add a "__source" and "__target" attribute
@@ -98,14 +139,14 @@ function Graph3D(props) {
               const nodeIds = props.graphData.nodes.map(node=>node[props.nodeId])
               for (let link of props.graphData.links) {
 
-                  if (typeof(link.source)==="object") {
-                      link.source = link.source.id
+                  if (typeof(link[props.linkSource])==="object") {
+                      link[props.linkSource] = link[props.linkSource].id
                   }
-                  if (typeof(link.target)==="object") {
-                      link.target = link.target.id
+                  if (typeof(link[props.linkTarget])==="object") {
+                      link[props.linkTarget] = link[props.linkTarget].id
                   }
 
-                  const idx_source_node = nodeIds.indexOf(link.source)
+                  const idx_source_node = nodeIds.indexOf(link[props.linkSource])
                   // if not link[props.linkLabel] a key in node.__source, add new
                   if (!(props.linkLabel in link)) {
                       link[props.linkLabel] = link[props.linkId]
@@ -114,14 +155,14 @@ function Graph3D(props) {
                   if (!Object.keys(nodes[idx_source_node].__source).includes(link[props.linkLabel])) {
                       nodes[idx_source_node].__source[link[props.linkLabel]] = {}
                   }
-                  nodes[idx_source_node].__source[link[props.linkLabel]][link[props.linkId]] = link.target
+                  nodes[idx_source_node].__source[link[props.linkLabel]][link[props.linkId]] = link[props.linkTarget]
                   // if link[props.linkLabel] not in taget nodes.__source, add new
-                  const idx_target_node = nodeIds.indexOf(link.target)
+                  const idx_target_node = nodeIds.indexOf(link[props.linkTarget])
                   // if not link[props.linkLabel] a key in node.__source, add new
                   if (!Object.keys(nodes[idx_target_node].__target).includes(link[props.linkLabel])) {
                       nodes[idx_target_node].__target[link[props.linkLabel]] = {}
                   }
-                  nodes[idx_target_node].__target[link[props.linkLabel]][link[props.linkId]] = link.source
+                  nodes[idx_target_node].__target[link[props.linkLabel]][link[props.linkId]] = link[props.linkSource]
               }
           }
           props.setProps({graphData:{"nodes":nodes, "links":props.graphData.links}})
@@ -434,6 +475,7 @@ function Graph3D(props) {
         props.setProps({linksSelected:linksSelected_tmp});
     };
 
+       
     // zoom to node
     useEffect(() => {
         if (props.nodeZoomId) {
@@ -532,7 +574,6 @@ function Graph3D(props) {
             if (node[props.nodeIcon]) {
               const nodeIcon_obj = node[props.nodeIcon]
                 spriteImg = generateicon_fontsheetsprite(Object.values(nodeIcon_obj)[0], Object.keys(nodeIcon_obj)[0], size, darken(0.1,spriteText.color))
-                console.log(spriteImg)
             }
         }
         let out = null
@@ -552,7 +593,123 @@ function Graph3D(props) {
         return out
     }
 
+    const nodeThreeObjectExtendFunction = node => props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? false : true : true
+    
+    const linkVisibilityFunction = (link => {
+        let visible = true
+        if (props.nodeIdsVisible.length) {
+            // use nodeIdsVisible.length as criterion, since it shows whether or not a filter is applied.
+            // if we use links, often it will be empty, and no links will be invisible
+            if (props.linkIdsVisible.indexOf(link[props.linkId]) === -1) {
+                visible = false
+            }
+        }
+        return visible
+        }
+    )
+    
+    const linkColorFunction = (link => {
+        let color = props.linkColor in link? link[props.linkColor] : "#ffffff";
+        // is link selected?
+        if (props.linksSelected.length) {
+            color = darken(0.1, color)
+            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+                color = saturate(0.2,color)
+                color = lighten(0.1,color)
+            }
+        }
+        // is link connected to node being dragged?
+        if (props.linkIdsNodesDrag.length) {
+            color = darken(0.2, color)
+            if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
+                color = saturate(0.2,color)
+                color = lighten(0.2, color)
+            }
+        }
+        // are link source and target selected?
+        if (props.nodesSelected.length) {
+            color = darken(0.2, color)
+            if (props.nodesSelected.map(node => node[props.nodeId]).includes(link[props.linkSource]) && props.nodesSelected.map(node => node[props.nodeId]).includes(link[props.linkTarget])) {
+                color = saturate(0.2,color)
+                color = lighten(0.2, color)
+            }
+        }
+        return color
+    })
 
+    const linkWidthFunction = (link => {
+        let width = props.linkWidth
+        // is link selected?
+        if (props.linksSelected.length) {
+            width = width*0.9
+            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+                width = width*4
+            }
+        }
+        // is link highlighted?
+        if (props.linkIdsNodesDrag.length) {
+            width = width*0.9
+            if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
+                width = width*1.5
+            }
+        }
+        // are link source and target selected?
+        if (props.nodesSelected.length) {
+            width = width*0.9
+            if (props.nodesSelected.map(node => node[props.nodeId]).includes(link[props.linkSource]) && props.nodesSelected.map(node => node[props.nodeId]).includes(link[props.linkTarget])) {
+                width = width*1.5
+            }
+        }
+        return width
+    })
+
+    const linkThreeObjectFunction = link => {
+        // extend link with text sprite
+        const sprite = new SpriteText(link[props.linkLabel]);
+        let color = props.linkColor in link? link[props.linkColor]? link[props.linkColor] : "#ffffff" : "#ffffff"
+        // is link selected?
+        if (props.linksSelected.length) {
+            color = darken(0.1, color)
+            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+                color = saturate(0.2,color)
+                color = lighten(0.1,color)
+            }
+        }
+        // is link highlighted?
+        if (props.linkIdsNodesDrag.length) {
+            color = darken(0.3, color)
+            if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
+                color = saturate(0.2,color)
+                color = lighten(0.3, color)
+            }
+        }
+        // are link source and target selected?
+        if (props.nodesSelected.length) {
+            color = darken(0.3, color)
+            if (props.nodesSelected.map(node => node[props.nodeId]).includes(link[props.linkSource]) && props.nodesSelected.map(node => node[props.nodeId]).includes(link[props.linkTarget])) {
+                color = saturate(0.2,color)
+                color = lighten(0.2, color)
+            }
+        }
+        sprite.color = color
+        sprite.textHeight = 2;
+        return sprite;
+    }
+
+    const linkPositionUpdateFunction = (sprite, { start, end }) => {
+        const middlePos = Object.assign(...['x', 'y', 'z'].map(c => ({
+            [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
+        })));
+        // Position sprite
+        Object.assign(sprite.position, middlePos);
+    }
+
+    const onEngineStopFunction = () => {
+        props.setProps({enableZoomPanInteraction: props.interactive? true : false})
+        props.setProps({enablePointerInteraction: props.interactive? true : false})
+        props.setProps({enableNavigationControls: props.interactive? true : false})
+    }
+    
     // three-geo: add terrain to scene
     useEffect(() => {
         if (props.externalobject_source && props.externalobject_input) {
@@ -649,17 +806,15 @@ function Graph3D(props) {
        }
    },[props.zoomToFit])
 
-   // TODO GOT TO HERE
+   
+
     useEffect( () => {
         // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
         if (props.forceEngine === "d3") {
            if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
-             console.log("found all the keys")
              if (props.d3Force_define.name) {
-               console.log("the name value is not null")
                if (props.d3Force_define.force) {
                  // define force
-                 console.log("define force")
                  fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
                } else {
                  // remove force
@@ -676,7 +831,6 @@ function Graph3D(props) {
       if (props.forceEngine === "d3") {
         if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
           if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
-            //console.log("the name value is not null and nor is the method value")
             fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
           }
         }
@@ -724,171 +878,33 @@ function Graph3D(props) {
                     */
                     nodeRelSize={props.nodeRelSize}
                     nodeVal={props.nodeVal}
-                    nodeLabel={(node =>
-                        props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
-                        // node must contain id, so fall back on id as label
-                        )}
+                    nodeLabel={nodeLabelFunction}
                     // nodeDesc: "desc" // VR only
-                    nodeVisibility={(node => {
-                        let visible = true
-                        if (props.nodeIdsVisible.length) {
-                            if (props.nodeIdsVisible.indexOf(node[props.nodeId]) === -1) {
-                                visible = false
-                            }
-                        }
-                        return visible
-                    })}
-                    nodeColor={(node => {
-                        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
-                        if (props.nodesSelected.length) {
-                          color = darken(0.1, color)
-                          if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
-                              color = saturate(0.2,color)
-                              color = lighten(0.2, color)
-                          }
-                        }
-
-                        if (props.nodeIdsHighlight.length) {
-                            color = darken(0.1, color)
-                            if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
-                                //color = saturate(0.2,color)
-                                color = lighten(0.2, color)
-                            }
-                        }
-                        if (props.nodeIdsDrag.length) {
-                            color = darken(0.1, color)
-                            if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
-                                //color = saturate(0.2, color)
-                                color = lighten(0.2, color)
-                            }
-                        }
-                        return color
-                    })}
+                    nodeVisibility={nodeVisibilityFunction}
+                    nodeColor={nodeColorFunction}
                     nodeAutoColorBy={props.nodeAutoColorBy}
                     nodeOpacity={props.nodeOpacity}
                     nodeResolution={props.nodeResolution}
                     nodeThreeObject={nodeThreeObjectFunction}
-                    nodeThreeObjectExtend={(node => {
-                        return props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? false : true : true
-                    }
-                    )}
+                    nodeThreeObjectExtend={nodeThreeObjectExtendFunction}
                     /**
                     * link styling
                     */
                     linkLabel={props.linkLabel}
                     // linkDesc: "desc", // VR only,
-                    linkVisibility={(link => {
-                         let visible = true
-                         if (props.nodeIdsVisible.length) {
-                             // use nodeIdsVisible.length as criterion, since it shows whether or not a filter is applied.
-                             // if we use links, often it will be empty, and no links will be invisible
-                             if (props.linkIdsVisible.indexOf(link[props.linkId]) === -1) {
-                                 visible = false
-                             }
-                         }
-                         return visible
-                         }
-                     )}
-                     linkColor={(link => {
-                         let color = props.linkColor in link? link[props.linkColor] : "#ffffff";
-                         // is link selected?
-                         if (props.linksSelected.length) {
-                             color = darken(0.1, color)
-                             if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
-                                 color = saturate(0.2,color)
-                                 color = lighten(0.1,color)
-                             }
-                         }
-                         // is link connected to node being dragged?
-                         if (props.linkIdsNodesDrag.length) {
-                             color = darken(0.2, color)
-                             if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
-                                 color = saturate(0.2,color)
-                                 color = lighten(0.2, color)
-                             }
-                         }
-                         // are link source and target selected?
-                         if (props.nodesSelected.length) {
-                             color = darken(0.2, color)
-                             if (props.nodesSelected.map(node => node[props.nodeId]).includes(link.source) && props.nodesSelected.map(node => node[props.nodeId]).includes(link.target)) {
-                                 color = saturate(0.2,color)
-                                 color = lighten(0.2, color)
-                             }
-                         }
-                         return color
-                     })}
+                    linkVisibility={linkVisibilityFunction}
+                    linkColor={linkColorFunction}
                     // linkColor={(link => props.linksSelected.map(link => link[props.linkId]).indexOf(link[props.linkId]) === -1? saturate(1,props.linkColor) : transparentize(0.5, props.linkColor))}
                     linkAutoColorBy={props.linkAutoColorBy}
                     linkOpacity={props.linkOpacity}
                     linkLineDash={props.linkLineDash}
-                    linkWidth={(link => {
-                        let width = props.linkWidth
-                        // is link selected?
-                        if (props.linksSelected.length) {
-                            width = width*0.9
-                            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
-                                width = width*4
-                            }
-                        }
-                        // is link highlighted?
-                        if (props.linkIdsNodesDrag.length) {
-                            width = width*0.9
-                            if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
-                                width = width*1.5
-                            }
-                        }
-                        // are link source and target selected?
-                        if (props.nodesSelected.length) {
-                            width = width*0.9
-                            if (props.nodesSelected.map(node => node[props.nodeId]).includes(link.source) && props.nodesSelected.map(node => node[props.nodeId]).includes(link.target)) {
-                                width = width*1.5
-                            }
-                        }
-                        return width
-                    })}
+                    linkWidth={linkWidthFunction}
                     linkResolution={props.linkResolution}
                     linkCurvature={props.linkCurvature}
                     linkCurveRotation={props.linkCurveRotation} // 3D, VR, AR,
-                    linkThreeObject={link => {
-                        // extend link with text sprite
-                        const sprite = new SpriteText(link.linkLabel);
-                        let color = props.linkColor in link? link[props.linkColor]? link[props.linkColor] : "#ffffff" : "#ffffff"
-                        // is link selected?
-                        if (props.linksSelected.length) {
-                            color = darken(0.1, color)
-                            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
-                                color = saturate(0.2,color)
-                                color = lighten(0.1,color)
-                            }
-                        }
-                        // is link highlighted?
-                        if (props.linkIdsNodesDrag.length) {
-                            color = darken(0.3, color)
-                            if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
-                                color = saturate(0.2,color)
-                                color = lighten(0.3, color)
-                            }
-                        }
-                        // are link source and target selected?
-                        if (props.nodesSelected.length) {
-                            color = darken(0.3, color)
-                            if (props.nodesSelected.map(node => node[props.nodeId]).includes(link.source) && props.nodesSelected.map(node => node[props.nodeId]).includes(link.target)) {
-                                color = saturate(0.2,color)
-                                color = lighten(0.2, color)
-                            }
-                        }
-                        sprite.color = color
-                        sprite.textHeight = 2;
-                        return sprite;
-                        }}
+                    linkThreeObject={linkThreeObjectFunction}
                     linkThreeObjectExtend={props.linkThreeObjectExtend}
-                    linkPositionUpdate={(sprite, { start, end }) => {
-                        const middlePos = Object.assign(...['x', 'y', 'z'].map(c => ({
-                            [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-                        })));
-                        // Position sprite
-                        Object.assign(sprite.position, middlePos);
-                    }}
+                    linkPositionUpdate={linkPositionUpdateFunction}
                     linkDirectionalArrowLength={props.linkDirectionalArrowLength}
                     linkDirectionalArrowColor={props.linkDirectionalArrowColor}
                     linkDirectionalArrowRelPos={props.linkDirectionalArrowRelPos}
@@ -921,11 +937,7 @@ function Graph3D(props) {
                     cooldownTicks={props.cooldownTicks}
                     cooldownTime={props.cooldownTime}
                     // onEngineTick: // TODO: function
-                    onEngineStop={()=>{
-                        props.setProps({enableZoomPanInteraction: props.interactive? true : false})
-                        props.setProps({enablePointerInteraction: props.interactive? true : false})
-                        props.setProps({enableNavigationControls: props.interactive? true : false})
-                    }}
+                    onEngineStop={onEngineStopFunction}
                     // d3Force={() => {
                     //     // if (props.node_attr_label || props.nodeImg) {
                     //         ('charge').strength(-50)}
