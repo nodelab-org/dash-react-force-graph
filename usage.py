@@ -62,25 +62,25 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=["x","y","z"])
 
 graphData = {
     "nodes":[
-        {"nodeId":"node1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"node2", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"node3",  "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"node4",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"node5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200"},
-        {"nodeId":"node6",  "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300"},
-        {"nodeId":"node7",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"node8",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"node9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
+        {"nodeId":"1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"2", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"3",  "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"4",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
+        {"nodeId":"5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200"},
+        {"nodeId":"6",  "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300"},
+        {"nodeId":"7",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
+        {"nodeId":"8",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
+        {"nodeId":"9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
         ],
     "links":[
-        {"id":"link1", "label":"employee", "source":"node1", "target":"node7"},
-        {"id":"link2", "label":"employee", "source":"node2", "target":"node7"},
-        {"id":"link3", "label":"employer", "source":"node5", "target":"node7"},
-        {"id":"link4", "label":"employee", "source":"node3", "target":"node8"},
-        {"id":"link5", "label":"employer", "source":"node4", "target":"node8"},
-        {"id":"link6", "label":"employee", "source":"node6", "target":"node8"},
-        {"id":"link7", "label":"neighbour", "source":"node2", "target":"node9"},
-        {"id":"link8", "label":"neighbour", "source":"node4", "target":"node9"},
+        {"id":"1", "label":"employee", "source":"1", "target":"7"},
+        {"id":"2", "label":"employee", "source":"2", "target":"7"},
+        {"id":"3", "label":"employer", "source":"5", "target":"7"},
+        {"id":"4", "label":"employee", "source":"3", "target":"8"},
+        {"id":"5", "label":"employer", "source":"4", "target":"8"},
+        {"id":"6", "label":"employee", "source":"6", "target":"8"},
+        {"id":"7", "label":"neighbour", "source":"2", "target":"9"},
+        {"id":"8", "label":"neighbour", "source":"4", "target":"9"},
         ]#
     }
 
