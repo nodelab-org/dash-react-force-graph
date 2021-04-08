@@ -86,7 +86,7 @@ function Graph2D(props) {
             }
          }
          props.setProps({graphData:{"nodes": nodesUpdated, "links":props.graphData.links}})
-    },[props.useCoordinates, props.pixelUnitRatio,props.graphData, props.centreCoordinates])
+    },[props.useCoordinates, props.pixelUnitRatio, props.graphData, props.centreCoordinates])
 
     // when loading new graphData and rendering engine is running, disable interactivity
     useEffect( () => {
@@ -238,7 +238,7 @@ function Graph2D(props) {
                 // node already selected
                 const neighbourNodeIds = get_node_neighbour_ids(node, props.maxDepth_neighbours_select)
 
-                let neighbourNodes = neighbourNodeIds.length > 0 ? neighbourNodeIds.map(neighbourNodeId => nodesById[neighbourNodeId]) : []
+                let neighbourNodes = neighbourNodeIds.length? neighbourNodeIds.map(neighbourNodeId => nodesById[neighbourNodeId]) : []
                 if  (neighbourNodeIds.length > 0) {
                     neighbourNodes.map(neighbourNode => neighbourNode[props.nodeId] === node[props.nodeId]? null : nodesSelected_tmp.push(neighbourNode))
                 }
@@ -369,7 +369,6 @@ function Graph2D(props) {
     };
 
     const handleNodeHover = node => {
-
         if (node) {
             props.setProps({nodeHovered:node})
             props.setProps({nodeHoveredViewpointCoordinates:fgRef.current.graph2ScreenCoords(node.x,node.y)})
@@ -416,8 +415,8 @@ function Graph2D(props) {
         props.setProps({updated:false})
     }, [props.nodeIdsDrag, props.nodesSelected])
 
-    const handleLinkClick = (link,event) => {
 
+    const handleLinkClick = (link,event) => {
         // as a sideeffect, reset linkRightClicked
         props.setProps({linkRightClicked:null});
         props.setProps({linkClicked:link});
@@ -470,7 +469,7 @@ function Graph2D(props) {
         // https://www.w3schools.com/tags/canvas_globalalpha.asp
         // initialize color
         // provide a sensible default
-        let fillStyle = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
         const label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
         const size = 12;
         // ctx.globalAlpha = 0.9;
@@ -481,11 +480,11 @@ function Graph2D(props) {
         if (props.nodesSelected.length) {
             // make all other nodes more transparent
             // ctx.globalAlpha -= 0.3
-            fillStyle = darken(0.1, fillStyle)
+            color = darken(0.1, color)
             if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                 // ctx.globalAlpha = 1
-                fillStyle = saturate(0.2,fillStyle)
-                fillStyle = lighten(0.2, fillStyle)
+                color = saturate(0.2,color)
+                color = lighten(0.2, color)
                 fontSize = fontSize*1.2
             }
         }
@@ -493,27 +492,27 @@ function Graph2D(props) {
         if (props.nodeIdsDrag.length) {
              // make all other nodes more transparent
             // ctx.globalAlpha -= 0.3
-            fillStyle = darken(0.1, fillStyle)
+            color = darken(0.1, color)
             if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
                 // ctx.globalAlpha = 1
-                fillStyle = lighten(0.2, fillStyle)
+                color = lighten(0.2, color)
                 ctx.fontWeight="bold"
             }
         }
 
         if (props.nodeIdsHighlight.length) {
             // ctx.globalAlpha -= 0.3
-            fillStyle = darken(0.1, fillStyle)
+            color = darken(0.1, color)
             if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
                 //ctx.globalAlpha = 1
-                fillStyle = lighten(0.2, fillStyle)
+                color = lighten(0.2, color)
                 ctx.fontWeight="bold"
             }
         }
 
         // paint node text background rectangle
         // is this necessary??
-        ctx.fillStyle = fillStyle
+        ctx.fillStyle = color
         let backgroundColor = !(props.backgroundColor===null)? props.backgroundColor : "#000000"
         ctx.fillStyle = lighten(0.2,backgroundColor);
         // add padding
@@ -528,7 +527,7 @@ function Graph2D(props) {
                 if (typeof(img_src)==="string" && (img_src.includes("http") || img_src.includes("www"))) {
                     const img = new Image();
                     img.src = img_src
-                    ctx.fillStyle = fillStyle
+                    ctx.fillStyle = color;
                     ctx.drawImage(img, node.x - size / 2, node.y-size, size, size);
                 }
             }
@@ -542,7 +541,7 @@ function Graph2D(props) {
             if (node[props.nodeIcon]) {
                 const nodeIcon_obj = node[props.nodeIcon]
                 ctx.font = `${size}px ${Object.keys(nodeIcon_obj)[0]}`
-                ctx.fillStyle = fillStyle;
+                ctx.fillStyle = color;
                 ctx.fillText(`${Object.values(nodeIcon_obj)[0]}`, node.x, node.y-size/1.7, size);
             }
         }
@@ -560,7 +559,7 @@ function Graph2D(props) {
         if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
             ctx.font = `${fontSize}px Sans-Serif bold`;
         }
-        ctx.fillStyle = fillStyle
+        ctx.fillStyle = color;
         ctx.fillText(label, node.x, node.y);
     }
 
@@ -618,6 +617,7 @@ function Graph2D(props) {
         }
     },[props.zoom])
 
+
     useEffect( () => {
         if (props.zoomToFit){
             fgRef.current.zoomToFit(...props.zoomToFit)
@@ -636,6 +636,7 @@ function Graph2D(props) {
     //     }
     //     props.setProps({refresh:false})
     // },[props.refresh])
+
 
     useEffect( () => {
         // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
@@ -719,7 +720,6 @@ function Graph2D(props) {
                     // nodeDesc: "desc" // VR only
                     nodeVisibility={(node => {
                         let visible = true
-
                         if (props.nodeIdsVisible.length) {
                             if (props.nodeIdsVisible.indexOf(node[props.nodeId]) === -1) {
                                 visible = false
@@ -728,9 +728,7 @@ function Graph2D(props) {
                         return visible
                     })}
                     nodeColor={(node => {
-
                         let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
-
                         if (props.nodesSelected.length) {
                           color = darken(0.1, color)
                           if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
@@ -762,7 +760,6 @@ function Graph2D(props) {
                     nodeCanvasObjectMode={(node => {
                         return props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? "replace" : "after" : "after"
                     })}
-
                     /**
                     * link styling
                     */
@@ -890,8 +887,6 @@ function Graph2D(props) {
                     warmupTicks={props.warmupTicks}
                     cooldownTicks={props.cooldownTicks}
                     cooldownTime={props.cooldownTime}
-
-                    // Math.max(0.8*1000*Math.log10(props.graphData.nodes.length),1)
                     // onEngineTick: // TODO: function
                     onEngineStop={()=>{
                         props.setProps({enableZoomPanInteraction: props.interactive? true : false})
@@ -922,7 +917,6 @@ function Graph2D(props) {
                     // onZoom // TODO: function
                     // onZoomEnd // TODO: function
                     controlType={props.controlType}
-
                     enableNodeDrag={props.enableNodeDrag}
                     // enableZoomPanInteraction // overridden by 'interactive' parameter
                     // enableNavigationControls // overridden by 'interactive' parameter

@@ -1,11 +1,17 @@
+import {ForceGraph3D} from 'react-force-graph';
 import React, {useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
-import {ForceGraph3D} from 'react-force-graph';
+
 import importScript from '../customHooks/importScript.js';
 // import useFontFace from '../customhooks/useFontFace.js';
 // https://github.com/ctrlplusb/react-sizeme
-import { withSize } from 'react-sizeme';
+
 import {saturate, darken, lighten} from 'polished';
+
+import { withSize } from 'react-sizeme';
+
+// import graphSharedProptypes from "../graph_shared_proptypes.js"
+import objSharedProps from "../shared_props_defaults.js"
 
 // THREE imports
 // import {SpriteIcon} from "./SpriteIcon.react.js"
@@ -15,11 +21,11 @@ import ThreeGeo from 'three-geo';
 // import * as material_UI from '@material-ui/icon_fontsheets'; // doesn't work: Module not found: Error: Can't resolve '@material-ui/icon_fontsheets' in '/Users/rkm916/Sync/projects/2020-dashforcegraph/src/lib/components'
 // see https://stackoverflow.com/questions/42051588/wildcard-or-asterisk-vs-named-or-selective-import-es6-javascript
 
-// import graphSharedProptypes from "../graph_shared_proptypes.js"
-import objSharedProps from "../shared_props_defaults.js"
-
 // use react resize-me to make canvas container width responsive
-const withSizeHOC = withSize({monitorWidth:true, monitorHeight:false, noPlaceholder:true})
+const withSizeHOC = withSize({
+    "monitorWidth":true,
+    "monitorHeight":false,
+    "noPlaceholder":true})
 
 function Graph3D(props) {
 
@@ -33,17 +39,17 @@ function Graph3D(props) {
 
     const fgRef = useRef(null);
 
-    var nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node.id, node]));
+    let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
 
     // display standard browser warning before navigating away from page
     // https://stackoverflow.com/questions/1119289/how-to-show-the-are-you-sure-you-want-to-navigate-away-from-this-page-when-ch
     useEffect( () => {
-        if (props.graknStatus === "on") {
+        if (props.active && props.graphData.nodes.length>0) {
             window.onbeforeunload = () => true
         } else {
             window.onbeforeunload = () => false
         }
-    },[props.graphData, props.graknStatus])
+      },[props.graphData, props.active])
 
 
     // set node coordinates
@@ -75,27 +81,76 @@ function Graph3D(props) {
         props.setProps({enablePointerInteraction:false})
     },[props.graphData])
 
+    // add node neighbours to nodes
+    useEffect( () => {
+        // to each node, add a "__source" and "__target" attribute
+        // each containing a dict, with linkLabels as keys, and values being dicts of {linkid1:nodeid1, linkid2:nodeid2..}
+        // e.g. "__source":{"linkLabel1":{linkid343":"nodeid121"}, "linkLabel2":{..}}}
+        if (props.graphData.nodes.length) {
+          const nodes = []
+          // initialise __source and __target while copying nodes
+          for (let node of props.graphData.nodes) {
+              node.__source = {}
+              node.__target = {}
+              nodes.push(node)
+          }
+          if (props.graphData.links.length) {
+              const nodeIds = props.graphData.nodes.map(node=>node[props.nodeId])
+              for (let link of props.graphData.links) {
+
+                  if (typeof(link.source)==="object") {
+                      link.source = link.source.id
+                  }
+                  if (typeof(link.target)==="object") {
+                      link.target = link.target.id
+                  }
+
+                  const idx_source_node = nodeIds.indexOf(link.source)
+                  // if not link[props.linkLabel] a key in node.__source, add new
+                  if (!(props.linkLabel in link)) {
+                      link[props.linkLabel] = link[props.linkId]
+                  }
+
+                  if (!Object.keys(nodes[idx_source_node].__source).includes(link[props.linkLabel])) {
+                      nodes[idx_source_node].__source[link[props.linkLabel]] = {}
+                  }
+                  nodes[idx_source_node].__source[link[props.linkLabel]][link[props.linkId]] = link.target
+                  // if link[props.linkLabel] not in taget nodes.__source, add new
+                  const idx_target_node = nodeIds.indexOf(link.target)
+                  // if not link[props.linkLabel] a key in node.__source, add new
+                  if (!Object.keys(nodes[idx_target_node].__target).includes(link[props.linkLabel])) {
+                      nodes[idx_target_node].__target[link[props.linkLabel]] = {}
+                  }
+                  nodes[idx_target_node].__target[link[props.linkLabel]][link[props.linkId]] = link.source
+              }
+          }
+          props.setProps({graphData:{"nodes":nodes, "links":props.graphData.links}})
+        }
+    },[props.graphData])
 
     const get_node_neighbour_ids = (node, depth) => {
         /**
         * @usage: extract the ids of neighbours from the "__source" and "__target" items in the node object.
-        *           If all the nodes with these ids are alupdated in nodesSelected (if not null), call recursively on the
-        *           nodes with these ids until the neighbourNodeIds_unique contain 'new' nodes that weren't alupdated in nodesSelected
+        *           If all the nodes with these ids are already in nodesSelected (if not null), call recursively on the
+        *           nodes with these ids until the neighbourNodeIds_unique contain 'new' nodes that weren't already in nodesSelected
         */
         if (depth===0) {
             return []
         };
+
         const neighbourNodeIds = []
-        if (Object.keys(node).includes("__source")) {
-            if (Object.keys(node.__source).length > 0) {
+        if ("__source" in node) {
+        // if (Object.keys(node).includes("__source")) {
+            if (Object.keys(node.__source).length) {
                 for (let key in node.__source){
                     // iterate over roles
                     Object.values(node.__source[key]).map(nodeId => neighbourNodeIds.push(nodeId))
                 }
             }
         };
-        if (Object.keys(node).includes("__target")) {
-            if (Object.keys(node.__target).length > 0) {
+        if ("__target" in node) {
+        // if (Object.keys(node).includes("__target")) {
+            if (Object.keys(node.__target).length) {
                 for (let key in node.__target){
                     // iterate over roles
                     Object.values(node.__target[key]).map(nodeId => neighbourNodeIds.push(nodeId))
@@ -103,26 +158,26 @@ function Graph3D(props) {
             };
         };
 
-        var neighbourNodeIds_unique = [...new Set(neighbourNodeIds)]
+        let neighbourNodeIds_unique = neighbourNodeIds.length? [...new Set(neighbourNodeIds)] : []
 
-        if (props.nodesSelected !== null) {
-            if (props.nodesSelected.length>0) {
-                if (neighbourNodeIds_unique.length) {
-                    if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
-                        // retrieve the nodes matching the neighbourNodeIds
-                        const neighbourNodes_unique = neighbourNodeIds_unique.map(nnidu => nodesById[nnidu])
-                        for (let neighbourNode_unique of neighbourNodes_unique) {
-                            neighbourNodeIds_unique = neighbourNodeIds_unique.concat(get_node_neighbour_ids(neighbourNode_unique, depth-1))
-                        }
-                    }
+        if (neighbourNodeIds_unique.length) {
+            // if all the neighbour nodes are already selected
+            if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns[props.nodeId]).includes(nnid))) {
+
+                // retrieve the nodes matching the neighbourNodeIds
+                const neighbourNodes_unique = neighbourNodeIds_unique.map(nnidu => nodesById[nnidu])
+                for (let neighbourNode_unique of neighbourNodes_unique) {
+                    neighbourNodeIds_unique = neighbourNodeIds_unique.concat(get_node_neighbour_ids(neighbourNode_unique, depth-1))
                 }
             }
         }
-        neighbourNodeIds_unique = [...new Set(neighbourNodeIds_unique)]
+
+        //}
+        neighbourNodeIds_unique = neighbourNodeIds_unique.length? [...new Set(neighbourNodeIds_unique)] : []
 
         // if no new nodes were added, return empty array
         if (neighbourNodeIds_unique.length) {
-            if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns.id).includes(nnid))) {
+            if (neighbourNodeIds_unique.every(nnid => props.nodesSelected.map(ns => ns[props.nodeId]).includes(nnid))) {
                 neighbourNodeIds_unique.splice(0,neighbourNodeIds_unique.length)
             }
         }
@@ -130,167 +185,190 @@ function Graph3D(props) {
     };
 
      // https://github.com/vasturiano/force-graph/blob/master/example/multi-selection/index.html
-    const handleNodeClick = (node,event) => {
+     const handleNodeClick = (node,event) => {
+         /**
+          * set props
+         */
+         // reset nodeRightClicked
+         props.setProps({nodeRightClicked:null});
+         props.setProps({nodeRightClickedViewpointCoordinates:null})
+         // set props
+         props.setProps({nodeClicked:node});
+         props.setProps({nodeClickedViewpointCoordinates:fgRef.current.graph2ScreenCoords(node.x,node.y)})
 
-        // reset nodeRightClicked (kludge)
-        props.setProps({nodeRightClicked:null});
+         /**
+          * node selection
+         */
 
-        // deep copy props.nodesSelected
-        const nodesSelected_tmp = []
+         // deep copy props.nodesSelected
+         const nodesSelected_tmp = []
+         for (let node_tmp of props.nodesSelected) {
+             nodesSelected_tmp.push(node_tmp)
+         }
+         const nodeIndex = nodesSelected_tmp.map(node => node[props.nodeId]).indexOf(node[props.nodeId])
 
-        for (let node_tmp of props.nodesSelected) {
-            nodesSelected_tmp.push(node_tmp)
-        }
-        const nodeIndex = nodesSelected_tmp.map(node => node.id).indexOf(node.id)
-        if (event.shiftKey) {
-            // multi-selection
-            if (nodeIndex === -1) {
-                nodesSelected_tmp.push(node);
-            } else {
-                nodesSelected_tmp.splice(nodeIndex,1)
-            };
-        } else {
+         if (event.shiftKey) {
+             // multi-selection
+             if (nodeIndex === -1) {
+                 nodesSelected_tmp.push(node);
+             } else {
+                 nodesSelected_tmp.splice(nodeIndex,1)
+             };
+         } else {
+             // not shift
+             if (nodeIndex === -1) {
+                 // node not in nodesSelected
+                 nodesSelected_tmp.splice(0,nodesSelected_tmp.length)
+                 nodesSelected_tmp.push(node);
+             } else {
+                 // node already selected
+                 const neighbourNodeIds = get_node_neighbour_ids(node, props.maxDepth_neighbours_select)
 
-            //props.setProps({nodeClicked:node});
-            // const click = props.click+1
-            // props.setProps({click:click});
-            // const nodeCoordinates = fgRef.current.graph2ScreenCoords(node.x,node.y,node.z)
-            //props.setProps({nodeClickedViewpointCoordinates:nodeCoordinates})
+                 let neighbourNodes = neighbourNodeIds.length? neighbourNodeIds.map(neighbourNodeId => nodesById[neighbourNodeId]) : []
+                 if  (neighbourNodeIds.length > 0) {
+                     neighbourNodes.map(neighbourNode => neighbourNode[props.nodeId] === node[props.nodeId]? null : nodesSelected_tmp.push(neighbourNode))
+                 }
+             }
+         }
+         props.setProps({nodesSelected:nodesSelected_tmp});
+     };
 
-            // not shift
-            if (nodeIndex === -1) {
-                // node not in nodesSelected
-                nodesSelected_tmp.splice(0,nodesSelected_tmp.length)
-                nodesSelected_tmp.push(node);
-            } else {
-                // node alupdated selected
+     const handleNodeRightClick = node=> {
+         props.setProps({nodeRightClicked:node});
+         props.setProps({nodeRightClickedViewpointCoordinates:fgRef.current.graph2ScreenCoords(node.x,node.y)})
+         // reset node clicked
+         props.setProps({nodeClicked:null});
+         props.setProps({nodeClickedViewpointCoordinates:null});
+     }
 
-                const neighbourNodeIds = get_node_neighbour_ids(node, props.maxDepth_neighbours_select)
-                var neighbourNodes = neighbourNodeIds.length > 0 ? neighbourNodeIds.map(neighbourNodeId => nodesById[neighbourNodeId]) : []
-                if  (neighbourNodeIds.length > 0) {
-                    neighbourNodes.map(neighbourNode => neighbourNode.id === node.id? null : nodesSelected_tmp.push(neighbourNode))
-                }
+     const handleLinkRightClick = link => {
+         props.setProps({linkRightClicked:link});
+         props.setProps({linkClicked:null});
+     }
 
-            }
+     const handleNodeDrag = (node, translate) => {
+         // reset nodeRightClicked (kludge)
+         // props.setProps({nodeClicked:null});
+         // props.setProps({nodeRightClicked:null});
 
-        }
+         props.setProps({nodeIdsDrag:[]});
+         props.setProps({linkIdsNodesDrag:[]});
+         /**
+          * highlight dragged node and immediate neighbours
+          */
+         if (node!==null) {
+             const neighbourNodeIds = []
+             const linkIds = []
+             if ("__source" in node) {
+             // if (Object.keys(node).includes("__source")) {
+                 if (Object.keys(node.__source).length > 0) {
+                     for (let key in node.__source){
+                         // iterate over roles
+                         Object.values(node.__source[key]).map(nodeId => neighbourNodeIds.push(nodeId))
+                         Object.keys(node.__source[key]).map(linkId => linkIds.push(linkId))
+                     }
+                 }
+             };
+             if ("__target" in node) {
+             // if (Object.keys(node).includes("__target")) {
+                 if (Object.keys(node.__target).length > 0) {
+                     for (let key in node.__target){
+                         // iterate over roles
+                         Object.values(node.__target[key]).map(nodeId => neighbourNodeIds.push(nodeId))
+                         Object.keys(node.__target[key]).map(linkId => linkIds.push(linkId))
+                     }
+                 }
+             };
 
-        props.setProps({nodesSelected:nodesSelected_tmp});
+             // two-step highlighting for some nodes
+             // if (node.__supertype === "entity" && !node.__is_type) {
+             //     // if entity highlight second step neighbours
+             //     const n = neighbourNodeIds.length
 
-    };
+             //     for (let i = 0; i < n; i++) {
+             //         let nnid = neighbourNodeIds[i]
+             //         let neighbourNode = nodesById[nnid]
 
-    const handleNodeRightClick = node=> {
+             //         if (Object.keys(neighbourNode).includes("__source")) {
+             //             if (Object.keys(neighbourNode.__source).length > 0) {
+             //                 for (let key in neighbourNode.__source){
+             //                     // iterate over roles
+             //                     Object.values(neighbourNode.__source[key]).map(nodeId => neighbourNodeIds.push(nodeId))
+             //                     Object.keys(neighbourNode.__source[key]).map(linkId => linkIds.push(linkId))
+             //                 }
+             //             }
+             //         };
 
-        // props.setProps({nodeClicked:null});
-        //props.setProps({nodeAltClicked:null});
-        props.setProps({nodeRightClicked:node});
-        //console.log("props.nodeRightClicked")
-        console.log(props.nodeRightClicked)
+             //         if (Object.keys(neighbourNode).includes("__target")) {
+             //             if (Object.keys(neighbourNode.__target).length > 0) {
+             //                 for (let key in neighbourNode.__target){
+             //                     // iterate over roles
+             //                     Object.values(neighbourNode.__target[key]).map(nodeId => neighbourNodeIds.push(nodeId))
+             //                     Object.keys(neighbourNode.__target[key]).map(linkId => linkIds.push(linkId))
+             //                 }
+             //             }
+             //         };
+             //     }
+             // }
+             // assign unique ids to nodeIdsDrag prop
+             neighbourNodeIds.push(node[props.nodeId])
+             const nodeIdsDragNew = neighbourNodeIds.length? [...new Set(neighbourNodeIds)] : []
+             props.setProps({nodeIdsDrag:nodeIdsDragNew});
+             props.setProps({linkIdsNodesDrag:linkIds});
 
-        const nodeCoordinates = fgRef.current.graph2ScreenCoords(node.x,node.y, node.z)
-        props.setProps({nodeRightClickedViewpointCoordinates:nodeCoordinates})
-        console.log("props.nodeRightClickedViewpointCoordinates")
-        console.log(props.nodeRightClickedViewpointCoordinates)
+             /**
+              * drag all selected nodes and fix in place afterwards
+              */
+             // from https://github.com/vasturiano/force-graph/blob/master/example/multi-selection/index.html
+             if (props.nodesSelected.length) {
+                 const nodesSelectedIds = props.nodesSelected.map(node=>node[props.nodeId])
+                 // moving a selected node?
+                 if (nodesSelectedIds.includes(node[props.nodeId])) {
+                     // then move all other selected nodes as well
+                     props.nodesSelected
+                         .filter(nodeSelected => nodeSelected !== node)
+                         .forEach(node => ['x', 'y', 'z'].forEach(coord => node[`f${coord}`] = node[coord] + translate[coord])); // translate other nodes by same amount => selNode !== node).forEach(node => ['x', 'y'].forEach(coord => node[`f${coord}`] = node[coord] + translate[coord])); // translate other nodes by same amount
+                 };
+             }
 
-        // const rightClick = props.rightClick+1
-        // console.log("rightClick:")
-        // console.log(rightClick)
-        // props.setProps({rightClick:rightClick});
-    }
+         }
+     };
 
+     // fix dragged nodes in place
+     const handleNodeDragEnd = (node, translate) => {
+         props.setProps({nodeIdsDrag:[]});
+         props.setProps({linkIdsNodesDrag:[]});
 
-    const handleNodeDrag = (node, translate) => {
-
-        // reset nodeRightClicked (kludge)
-        // props.setProps({nodeClicked:null});
-        // props.setProps({nodeRightClicked:null});
-
-        props.setProps({nodeIdsDrag:[]});
-        props.setProps({linkIdsDrag:[]});
-
-        console.log("node:")
-        console.log(node)
-
-        if (node!==null) {
-
-            const neighbourNodeIds = []
-            const linkIds = []
-
-            if (Object.keys(node).includes("__source")) {
-                if (Object.keys(node.__source).length > 0) {
-                    for (let key in node.__source){
-                        // iterate over roles
-                        Object.values(node.__source[key]).map(nodeId => neighbourNodeIds.push(nodeId))
-                        Object.keys(node.__source[key]).map(linkId => linkIds.push(linkId))
-                    }
-                }
-            };
-
-            if (Object.keys(node).includes("__target")) {
-                if (Object.keys(node.__target).length > 0) {
-                    for (let key in node.__target){
-                        // iterate over roles
-                        Object.values(node.__target[key]).map(nodeId => neighbourNodeIds.push(nodeId))
-                        Object.keys(node.__target[key]).map(linkId => linkIds.push(linkId))
-                    }
-                }
-            };
-
-            if (node.__supertype === "entity" && !node.__is_type) {
-                // if entity highlight second step neighbours
-                const n = neighbourNodeIds.length
-
-                for (let i = 0; i < n; i++) {
-                    let nnid = neighbourNodeIds[i]
-                    let neighbourNode = nodesById[nnid]
-
-                    if (Object.keys(neighbourNode).includes("__source")) {
-                        if (Object.keys(neighbourNode.__source).length > 0) {
-                            for (let key in neighbourNode.__source){
-                                // iterate over roles
-                                Object.values(neighbourNode.__source[key]).map(nodeId => neighbourNodeIds.push(nodeId))
-                                Object.keys(neighbourNode.__source[key]).map(linkId => linkIds.push(linkId))
-                            }
-                        }
-                    };
-
-                    if (Object.keys(neighbourNode).includes("__target")) {
-                        if (Object.keys(neighbourNode.__target).length > 0) {
-                            for (let key in neighbourNode.__target){
-                                // iterate over roles
-                                Object.values(neighbourNode.__target[key]).map(nodeId => neighbourNodeIds.push(nodeId))
-                                Object.keys(neighbourNode.__target[key]).map(linkId => linkIds.push(linkId))
-                            }
-                        }
-                    };
-                }
-            }
-            // assign unique ids to nodeIdsDrag prop
-            neighbourNodeIds.push(node.id)
-
-            console.log("new nodeIdsDrag:")
-            console.log(neighbourNodeIds)
-
-            props.setProps({nodeIdsDrag:[...new Set(neighbourNodeIds)]});
-            props.setProps({linkIdsNodesDrag:linkIds});
-        }
-    };
-
-    const handleNodeDragEnd = (node, translate) => {
-
-        props.setProps({nodeIdsDrag:[]});
-        props.setProps({linkIdsNodesDrag:[]});
-
-        node.fx = node.x;
-        node.fy = node.y;
-        node.fz = node.z;
-
-    };
+         // from https://github.com/vasturiano/force-graph/blob/master/example/multi-selection/index.html
+         // if (props.nodesSelected.length) {
+         //     const nodesSelectedIds = props.nodesSelected.map(node=>node[props.nodeId])
+         //     // moving a selected node?
+         //     if (nodesSelectedIds.includes(node[props.nodeId])) {
+         //         props.nodesSelected
+         //             .filter(nodeSelected => nodeSelected !== node)
+         //             .forEach(node => ['x', 'y'].forEach(coord => node[`f${coord}`] = undefined)); // unfix controlled nodes
+         //     }
+         // }
+         node.fx = node.x;
+         node.fy = node.y;
+         node.fz = node.z;
+         // node.fz = node.z;
+     };
 
 
-    const handleNodeHover = node => {
-        props.setProps({nodeHovered:node})
-    }
+     const handleNodeHover = node => {
+         if (node) {
+             props.setProps({nodeHovered:node})
+             props.setProps({nodeHoveredViewpointCoordinates:fgRef.current.graph2ScreenCoords(node.x,node.y,node.z)})
+         } else {
+             props.setProps({nodeHovered:null})
+             props.setProps({nodeHoveredViewpointCoordinates:null})
+         }
+     };
+
+     const handleLinkHover = link => {
+         link? props.setProps({linkHovered:link}) : props.setProps({linkHovered:null})
+     };
 
     // set centreCoordinates
     // useEffect( () => {
@@ -301,32 +379,26 @@ function Graph3D(props) {
 
 
     const handleBackgroundClick = event => {
-
-        //props.setProps({nodeAltClicked:null});
-        // props.setProps({nodeClicked:null});
-        // props.setProps({nodeClickedViewpointCoordinates:null});
+        props.setProps({nodeClicked:null})
+        props.setProps({nodeClickedViewpointCoordinates:null})
         props.setProps({nodeRightClicked:null});
         props.setProps({nodeRightClickedViewpointCoordinates:null});
-
-
-        console.log("handleBackgroundClick")
-
-       // if (event.altKey) {
-            // const altClick = props.altClick+1
-            // props.setProps({altClick:altClick});
-            props.setProps({altClickCoordinates:{"x":event.clientX, "y": event.clientY}})
-       // } else {
-            //props.setProps({nodeAltClicked:null});
-            props.setProps({nodesSelected:[]});
-            props.setProps({linksSelected:[]});
-       // }
+        props.setProps({linkClicked:null})
+        props.setProps({linkRightClicked:null});
+        props.setProps({nodesSelected:[]});
+        props.setProps({linksSelected:[]});
     };
 
-
-    useEffect(()=> {
-        props.setProps({graphData_changed:true})
-    }, [props.graphData])
-
+    const handleBackgroundRightClick = event => {
+        props.setProps({nodeClicked:null})
+        props.setProps({nodeClickedViewpointCoordinates:null})
+        props.setProps({nodeRightClicked:null});
+        props.setProps({nodeRightClickedViewpointCoordinates:null});
+        props.setProps({linkClicked:null})
+        props.setProps({linkRightClicked:null});
+        props.setProps({nodesSelected:[]});
+        props.setProps({linksSelected:[]});
+    };
 
     useEffect(()=> {
         props.setProps({updated:false})
@@ -335,12 +407,9 @@ function Graph3D(props) {
 
     const handleLinkClick = (link,event) => {
 
-        // as a sideeffect, reset nodeRightClicked (kludge)
-        props.setProps({nodeRightClicked:null});
-
-        // if (event.altKey) {
-        //     props.setProps({altClickCoordinates:{"x":event.clientX, "y": event.clientY}})
-        // }
+        // as a sideeffect, reset linkRightClicked
+        props.setProps({linkRightClicked:null});
+        props.setProps({linkClicked:link});
 
         // deep copy props.nodesSelected
         const linksSelected_tmp = []
@@ -348,7 +417,7 @@ function Graph3D(props) {
         for (let link_tmp of props.linksSelected) {
             linksSelected_tmp.push(link_tmp)
         }
-        const linkIndex = linksSelected_tmp.map(link => link.id).indexOf(link.id)
+        const linkIndex = linksSelected_tmp.map(link => link[props.linkId]).indexOf(link[props.linkId])
 
         if (event.shiftKey) {
             // multi-selection
@@ -365,44 +434,9 @@ function Graph3D(props) {
         props.setProps({linksSelected:linksSelected_tmp});
     };
 
-
-    useEffect( () => {
-        // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
-        if (props.forceEngine === "d3") {
-           if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
-             console.log("found all the keys")
-             if (props.d3Force_define.name) {
-               console.log("the name value is not null")
-               if (props.d3Force_define.force) {
-                 // define force
-                 console.log("define force")
-                 fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
-               } else {
-                 // remove force
-                 fgRef.current.d3Force(props.d3Force_define.name, null)
-               }
-             }
-           }
-         }
-    },[props.d3Force_define])
-
-
-    useEffect( () => {
-      // e.g. fgRef.current.d3Force('charge').strength(-70);
-      if (props.forceEngine === "d3") {
-        if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
-          if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
-            //console.log("the name value is not null and nor is the method value")
-            fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
-          }
-        }
-      }
-    },[props.d3Force_call])
-
-
     // zoom to node
     useEffect(() => {
-        if (props.nodeZoomId !== null) {
+        if (props.nodeZoomId) {
             const distance = 40;
             const distRatio = 1 + distance/Math.hypot(nodesById[props.nodeZoomId].x, nodesById[props.nodeZoomId].y, nodesById[props.nodeZoomId].z);
             fgRef.current.cameraPosition(
@@ -413,37 +447,37 @@ function Graph3D(props) {
         }
     },[props.nodeZoomId])
 
-    // prepare icon_fontsheets
 
+    // prepare icon_fontsheets
     const generateicon_fontsheetsprite = (iconName, fontFace, size, color) => {
-        const spriteImg = new SpriteText(iconName);// `${Object.values(icon_src)[0]}`);
+        const spriteImg = new SpriteText(iconName);
         spriteImg.material.depthWrite = false;
-        spriteImg.color = color; // spriteText.color;
+        spriteImg.color = color;
         spriteImg.textHeight = size;
         spriteImg.fontFace = fontFace
         return(spriteImg)
     }//, [props.graphData, props.icon_fontsheets, props.nodeColor_common_supertype, props.nodeColor_common_type, props.nodeImg_attr_supertype, props.nodeImg_attr_type, props.nodeImg_common_supertype, props.nodeImg_common_type] )
 
     const nodeThreeObjectFunction = node => {
-
-        var color = props.nodeColor in node? node[props.nodeColor] : node.__type in props.nodeColor_common_type? props.nodeColor_common_type[node.__type] : node.__supertype in props.nodeColor_common_supertype? props.nodeColor_common_supertype[node.__supertype] : node.color;
-        const label = props.nodeLabel in node? node.__type+"-"+node[props.nodeLabel] : node.__type+"-"+node.id;
+        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        const label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
         const size = 12;
-        var opacity = 0.9;
+        const fontWeight="normal"
+        let opacity = 0.9;
 
         const spriteText = new SpriteText(label);
 
         spriteText.color =  color;
-        spriteText.fontWeight = "normal";
+        spriteText.fontWeight = fontWeight
         spriteText.textHeight = 3;
 
         // adapt style parameters if node is selected and/or highlighted
         if (props.nodesSelected.length) {
             // make all other nodes more transparent
-            opacity -= 0.3
+            opacity -= 0.2
+            spriteText.color = darken(0.1, spriteText.color)
             //spriteText.color = darken(0.3, spriteText.color)
-
-            if (props.nodesSelected.map(node => node.id).indexOf(node.id) !== -1) {
+            if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                 opacity = 1
                 // spriteText.color = opacify(0.4, spriteText.color)
                 spriteText.color = saturate(0.2,spriteText.color)
@@ -454,12 +488,13 @@ function Graph3D(props) {
         }
         if (props.nodeIdsDrag.length) {
              // make all other nodes more transparent
-            opacity -= 0.3
+            opacity -= 0.2;
+            spriteText.color = darken(0.1, spriteText.color);
             // spriteText.color = transparentize(0.3, spriteText.color)
-            if (props.nodeIdsDrag.indexOf(node.id) !== -1) {
+            if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
                 opacity = 1
                 // spriteText.color = opacify(0.4, spriteText.color)
-                spriteText.color = saturate(0.2, spriteText.color)
+                // spriteText.color = saturate(0.2, spriteText.color)
                 spriteText.color = lighten(0.2, spriteText.color)
                 spriteText.fontWeight = "bold"
 
@@ -467,18 +502,19 @@ function Graph3D(props) {
         }
 
         if (props.nodeIdsHighlight.length) {
-            opacity -= 0.3
-            if (props.nodeIdsHighlight.indexOf(node.id) !== -1) {
+            opacity -= 0.2
+            spriteText.color  = darken(0.1,spriteText.color)
+            if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
                 opacity = 1
                 spriteText.color = lighten(0.2, spriteText.color)
                 spriteText.fontWeight="bold"
             }
         }
 
-        var img_src = null
-        var spriteImg
-        if (props.useNodeImg) {
-            img_src = node.__type in props.nodeImg_attr_type? node[props.nodeImg_attr_type[node.__type]] : node.__supertype in props.nodeImg_attr_supertype? node[props.nodeImg_attr_supertype[node.__supertype]] : props.nodeImg in node? node[props.nodeImg] : node.__type in props.nodeImg_common_type? props.nodeImg_common_type[node.__type] :  node.__supertype in props.nodeImg_common_supertype? props.nodeImg_common_supertype[node.__supertype] : null
+        let img_src = null
+        let spriteImg = null
+        if (props.nodeImg in node && props.useNodeImg) {
+            img_src = node[props.nodeImg]
             if (typeof(img_src)==="string" && (img_src.includes("http") || img_src.includes("www"))) {
                 // if URL, get image and make it into a sprite
                 const map = new THREE.TextureLoader().load(img_src); // "https://picsum.photos/100/100/?random"); //
@@ -492,29 +528,30 @@ function Graph3D(props) {
                 spriteImg.color =  darken(0.1, spriteText.color)
             }
         }
-        if (img_src === null && props.useNodeIcon) {
-            const icon_src = node.__type in props.nodeIcon_attr_type? node[props.nodeIcon_attr_type[node.__type]] : node.__supertype in props.nodeIcon_attr_supertype? node[props.nodeIcon_attr_supertype[node.__supertype]] : props.nodeIcon in node? node[props.nodeIcon] : node.__type in props.nodeIcon_common_type? props.nodeIcon_common_type[node.__type] :  node.__supertype in props.nodeIcon_common_supertype? props.nodeIcon_common_supertype[node.__supertype] : null
-            if (typeof(icon_src)==="object") {
-                spriteImg = generateicon_fontsheetsprite(Object.values(icon_src)[0], Object.keys(icon_src)[0], size, darken(0.1,spriteText.color))
+        if (img_src === null & props.nodeIcon in node & props.useNodeIcon) {
+            if (node[props.nodeIcon]) {
+              const nodeIcon_obj = node[props.nodeIcon]
+                spriteImg = generateicon_fontsheetsprite(Object.values(nodeIcon_obj)[0], Object.keys(nodeIcon_obj)[0], size, darken(0.1,spriteText.color))
+                console.log(spriteImg)
             }
         }
-        var out
-        if (spriteImg!==null) {
-            var group = new THREE.Group();
-            const pos_adj1 = new THREE.Vector3( 0, -5, 0 );
-            const pos_adj2 = new THREE.Vector3( 0, 5, 0 );
-            spriteText.position.add(pos_adj1)
-            spriteImg.position.add(pos_adj2)
-            group.add( spriteText );
-            group.add( spriteImg );
-            out = group;
-            // return spriteImg
+        let out = null
+        if (spriteImg) {
+            // let group = new THREE.Group();
+            // const pos_adj1 = new THREE.Vector3( 0, -5, 0 );
+            // const pos_adj2 = new THREE.Vector3( 0, 5, 0 );
+            // spriteText.position.add(pos_adj1)
+            // spriteImg.position.add(pos_adj2)
+            // group.add( spriteText );
+            // group.add( spriteImg );
+            // out = group;
+            out = spriteImg
         } else {
             out = spriteText
         }
         return out
-
     }
+
 
     // three-geo: add terrain to scene
     useEffect(() => {
@@ -576,269 +613,347 @@ function Graph3D(props) {
     }
     }, [props.externalobject_source,props.externalobject_input])
 
+    /**
+     * call methods via higher order component props
+     */
+
+   useEffect( () => {
+       if (!props.emitParticle===null){
+           fgRef.current.emitParticle(props.emitParticle)
+       }
+   },[props.emitParticle])
+
+     useEffect( () => {
+         if (props.pauseAnimation){
+             fgRef.current.pauseAnimation()
+         }
+         props.setProps({resumeAnimation:false})
+     },[props.pauseAnimation])
+
+     useEffect( () => {
+         if (props.resumeAnimation){
+             fgRef.current.resumeAnimation()
+         }
+         props.setProps({pauseAnimation:false})
+     },[props.resumeAnimation])
+
+   useEffect( () => {
+       if (props.centerAt){
+           fgRef.current.centerAt(...props.centerAt)
+       }
+   },[props.centerAt])
+
+   useEffect( () => {
+       if (props.zoomToFit){
+           fgRef.current.zoomToFit(...props.zoomToFit)
+       }
+   },[props.zoomToFit])
+
+   // TODO GOT TO HERE
+    useEffect( () => {
+        // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
+        if (props.forceEngine === "d3") {
+           if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
+             console.log("found all the keys")
+             if (props.d3Force_define.name) {
+               console.log("the name value is not null")
+               if (props.d3Force_define.force) {
+                 // define force
+                 console.log("define force")
+                 fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
+               } else {
+                 // remove force
+                 fgRef.current.d3Force(props.d3Force_define.name, null)
+               }
+             }
+           }
+         }
+    },[props.d3Force_define])
+
+
+    useEffect( () => {
+      // e.g. fgRef.current.d3Force('charge').strength(-70);
+      if (props.forceEngine === "d3") {
+        if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
+          if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
+            //console.log("the name value is not null and nor is the method value")
+            fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
+          }
+        }
+      }
+    },[props.d3Force_call])
+
+    useEffect( () => {
+        if (props.d3ReheatSimulation && props.forceEngine === "d3"){
+            fgRef.current.d3ReheatSimulation()
+        }
+    },[props.d3ReheatSimulation])
+
+    useEffect( () => {
+        if (props.getGraphBbox){
+            props.setProps({graphBbox:fgRef.current.getGraphBbox()})
+        }
+    },[props.getGraphBbox])
 
     return (
         <div id={props.id}>
             Graph3D:
                 <ForceGraph3D
                     ref={fgRef}
+                    /**
+                    * data input
+                    */
+                    // props
                     graphData={props.graphData}
-                    // Container layout
+                    nodeId={props.nodeId}
+                    linkSource={props.linkSource}
+                    linkTarget={props.linkTarget}
+                    /**
+                    * container layout
+                    */
+                    // props
                     width={props.size.width}
                     height={window.innerHeight*props.heightRatio}
                     backgroundColor={props.backgroundColor}
-                    // node styling
+                    showNavInfo={props.showNavInfo}
+                    // yOffset: 1.5, // AR
+                    // glScale: 200 // AR
+                    // markerAttrs: { preset: 'hiro' } // AR
+                    /**
+                    * node styling
+                    */
+                    nodeRelSize={props.nodeRelSize}
+                    nodeVal={props.nodeVal}
+                    nodeLabel={(node =>
+                        props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
+                        // node must contain id, so fall back on id as label
+                        )}
+                    // nodeDesc: "desc" // VR only
+                    nodeVisibility={(node => {
+                        let visible = true
+                        if (props.nodeIdsVisible.length) {
+                            if (props.nodeIdsVisible.indexOf(node[props.nodeId]) === -1) {
+                                visible = false
+                            }
+                        }
+                        return visible
+                    })}
                     nodeColor={(node => {
-                        var color = props.nodeColor in node? node[props.nodeColor] : node.__type in props.nodeColor_common_type? props.nodeColor_common_type[node.__type] : node.__supertype in props.nodeColor_common_supertype? props.nodeColor_common_supertype[node.__supertype] : node.color;
-
-                        if (props.nodesSelected.map(node => node.id).indexOf(node.id) !== -1) {
-                            color = saturate(0.2,color)
-                            color = lighten(0.2, color)
+                        let color = props.nodeColor in node? node[props.nodeColor]? node[props.nodeColor] : "#0000ff" : "#0000ff"
+                        if (props.nodesSelected.length) {
+                          color = darken(0.1, color)
+                          if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+                              color = saturate(0.2,color)
+                              color = lighten(0.2, color)
+                          }
                         }
 
                         if (props.nodeIdsHighlight.length) {
-                            if (props.nodeIdsHighlight.indexOf(node.id) !== -1) {
-                                color = saturate(0.2,color)
+                            color = darken(0.1, color)
+                            if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
+                                //color = saturate(0.2,color)
                                 color = lighten(0.2, color)
                             }
                         }
-
                         if (props.nodeIdsDrag.length) {
-                           if (props.nodeIdsDrag.indexOf(node.id) !== -1) {
-                               color = saturate(0.2, color)
-                               color = lighten(0.2, color)
-                           }
-                       }
-
-                        return color
-                    })}
-                    nodeVisibility={(node => {
-                        var visible = true
-
-                        if (props.nodeIdsVisible.length) {
-                            if (props.nodeIdsVisible.indexOf(node.id) === -1) {
-                                visible = false
+                            color = darken(0.1, color)
+                            if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
+                                //color = saturate(0.2, color)
+                                color = lighten(0.2, color)
                             }
                         }
-                        return visible
+                        return color
                     })}
-                    nodeRelSize={props.nodeRelSize}
-                    nodeLabel={(node =>
-                        node.__type in props.nodeLabel_attr_type? node[props.nodeLabel_attr_type[node.__type]] : node.__supertype in props.nodeLabel_attr_supertype? node[props.nodeLabel_attr_supertype[node.__supertype]] : props.nodeLabel in node? node.__type + "-" + node[props.nodeLabel] : node.__type + "-" + node.id)}
                     nodeAutoColorBy={props.nodeAutoColorBy}
-                    nodeOpacity={props.nodeOpacity}//{(node => props.node_attr_opacity in node? node[props.node_attr_opacity] : props.nodeOpacity)}
+                    nodeOpacity={props.nodeOpacity}
+                    nodeResolution={props.nodeResolution}
                     nodeThreeObject={nodeThreeObjectFunction}
                     nodeThreeObjectExtend={(node => {
-                        //return !(props.nodeImg in node || node.__type in props.nodeImg_type || node.__supertype in props.nodeImg_supertype)
-                        return (props.useNodeImg && (node.__type in props.nodeImg_attr_type || node.__supertype in props.nodeImg_attr_supertype || props.nodeImg in node || node.__type in props.nodeImg_common_type || node.__supertype in props.nodeImg_common_supertype)) ||  (props.useNodeIcon && (node.__type in props.nodeIcon_attr_type || node.__supertype in props.nodeIcon_attr_supertype || props.nodeIcon in node || node.__type in props.nodeIcon_common_type || node.__supertype in props.nodeIcon_common_supertype))? false : true;
+                        return props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? false : true : true
                     }
                     )}
-                    // link styling
+                    /**
+                    * link styling
+                    */
                     linkLabel={props.linkLabel}
-                    linkColor={(link => {
-                        var color = props.linkColor in link? link[props.linkColor] : link.__type in props.linkColor_attr_type? props.linkColor_attr_type[link.__type] : link.__supertype in props.linkColor_attr_supertype? props.linkColor_attr_supertype[link.__supertype] : "#ffffff";
-
-                        // is link selected?
-                         if (props.linksSelected.length) {
-                            color = darken(0.1, color)
-                            if (props.linksSelected.indexOf(link.id) !== -1) {
-                                color = saturate(0.2,color)
-                            }
-                        }
-
-                        // is link highlighted?
-                        if (props.linkIdsNodesDrag.length) {
-                            color = darken(0.2, color)
-                            if (props.linkIdsNodesDrag.indexOf(link.id) !== -1) {
-                                color = saturate(0.2,color)
-                                color = lighten(0.2, color)
-                            }
-                        }
-
-                        // are link source and target selected?
-                        if (props.nodesSelected.length) {
-                            color = darken(0.2, color)
-                            if (props.nodesSelected.map(node => node.id).includes(link.source) && props.nodesSelected.map(node => node.id).includes(link.target)) {
-                                color = saturate(0.2,color)
-                                color = lighten(0.2, color)
-                            }
-
-                        }
-
-                        return color
-                    })}
+                    // linkDesc: "desc", // VR only,
                     linkVisibility={(link => {
-                        var visible = true
-
-                        if (props.nodeIdsVisible.length) {
-                            // use nodeIdsVisible.length as criterion, since it shows whether or not a filter is applied.
-                            // if we use links, often it will be empty, and no links will be invisible
-                            if (props.linkIdsFilter.indexOf(link.id) === -1) {
-                                visible = false
-                            }
-                        }
-                        return visible
-                    })}
-                    // linkColor={(link => props.linksSelected.map(link => link.id).indexOf(link.id) === -1? saturate(1,props.linkColor) : transparentize(0.5, props.linkColor))}
+                         let visible = true
+                         if (props.nodeIdsVisible.length) {
+                             // use nodeIdsVisible.length as criterion, since it shows whether or not a filter is applied.
+                             // if we use links, often it will be empty, and no links will be invisible
+                             if (props.linkIdsVisible.indexOf(link[props.linkId]) === -1) {
+                                 visible = false
+                             }
+                         }
+                         return visible
+                         }
+                     )}
+                     linkColor={(link => {
+                         let color = props.linkColor in link? link[props.linkColor] : "#ffffff";
+                         // is link selected?
+                         if (props.linksSelected.length) {
+                             color = darken(0.1, color)
+                             if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+                                 color = saturate(0.2,color)
+                                 color = lighten(0.1,color)
+                             }
+                         }
+                         // is link connected to node being dragged?
+                         if (props.linkIdsNodesDrag.length) {
+                             color = darken(0.2, color)
+                             if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
+                                 color = saturate(0.2,color)
+                                 color = lighten(0.2, color)
+                             }
+                         }
+                         // are link source and target selected?
+                         if (props.nodesSelected.length) {
+                             color = darken(0.2, color)
+                             if (props.nodesSelected.map(node => node[props.nodeId]).includes(link.source) && props.nodesSelected.map(node => node[props.nodeId]).includes(link.target)) {
+                                 color = saturate(0.2,color)
+                                 color = lighten(0.2, color)
+                             }
+                         }
+                         return color
+                     })}
+                    // linkColor={(link => props.linksSelected.map(link => link[props.linkId]).indexOf(link[props.linkId]) === -1? saturate(1,props.linkColor) : transparentize(0.5, props.linkColor))}
                     linkAutoColorBy={props.linkAutoColorBy}
                     linkOpacity={props.linkOpacity}
+                    linkLineDash={props.linkLineDash}
                     linkWidth={(link => {
-                        var width = props.linkWidth
-
+                        let width = props.linkWidth
                         // is link selected?
                         if (props.linksSelected.length) {
                             width = width*0.9
-                            if (props.linksSelected.map(link=>link.id).indexOf(link.id) !== -1) {
+                            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
                                 width = width*4
                             }
                         }
-
                         // is link highlighted?
                         if (props.linkIdsNodesDrag.length) {
                             width = width*0.9
-                            if (props.linkIdsNodesDrag.indexOf(link.id) !== -1) {
+                            if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
                                 width = width*1.5
                             }
                         }
-
                         // are link source and target selected?
                         if (props.nodesSelected.length) {
                             width = width*0.9
-                            if (props.nodesSelected.map(node => node.id).includes(link.source) && props.nodesSelected.map(node => node.id).includes(link.target)) {
+                            if (props.nodesSelected.map(node => node[props.nodeId]).includes(link.source) && props.nodesSelected.map(node => node[props.nodeId]).includes(link.target)) {
                                 width = width*1.5
                             }
-
                         }
                         return width
-                        })}
-                    //linkWidth={(link => highlightNodes.indexOf(link.source) == -1? 0.5 : 3)}
+                    })}
+                    linkResolution={props.linkResolution}
                     linkCurvature={props.linkCurvature}
+                    linkCurveRotation={props.linkCurveRotation} // 3D, VR, AR,
                     linkThreeObject={link => {
                         // extend link with text sprite
                         const sprite = new SpriteText(link.linkLabel);
-                        var color = props.linkColor in link? link[props.linkColor] : link.__type in props.linkColor_attr_type? props.linkColor_attr_type[link.__type] : link.__supertype in props.linkColor_attr_supertype? props.linkColor_attr_supertype[link.__supertype] : "#ffffff";
-
+                        let color = props.linkColor in link? link[props.linkColor]? link[props.linkColor] : "#ffffff" : "#ffffff"
                         // is link selected?
-                         // is link selected?
-                         if (props.linksSelected.length) {
+                        if (props.linksSelected.length) {
                             color = darken(0.1, color)
-                            if (props.linksSelected.map(link=>link.id).indexOf(link.id) !== -1) {
+                            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
                                 color = saturate(0.2,color)
                                 color = lighten(0.1,color)
                             }
                         }
-
                         // is link highlighted?
                         if (props.linkIdsNodesDrag.length) {
                             color = darken(0.3, color)
-                            if (props.linkIdsNodesDrag.indexOf(link.id) !== -1) {
+                            if (props.linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
                                 color = saturate(0.2,color)
                                 color = lighten(0.3, color)
                             }
                         }
-
                         // are link source and target selected?
                         if (props.nodesSelected.length) {
                             color = darken(0.3, color)
-                            if (props.nodesSelected.map(node => node.id).includes(link.source) && props.nodesSelected.map(node => node.id).includes(link.target)) {
+                            if (props.nodesSelected.map(node => node[props.nodeId]).includes(link.source) && props.nodesSelected.map(node => node[props.nodeId]).includes(link.target)) {
                                 color = saturate(0.2,color)
                                 color = lighten(0.2, color)
                             }
-
                         }
-
-                        // if (props.nodeIdsHighlight.length) {
-                        //     if (props.nodeIdsHighlight.includes(link.source) || props.nodeIdsHighlight.includes(link.target)) {
-                        //         color = saturate(0.2,color)
-                        //         color = lighten(0.2, color)
-                        //     }
-                        // }
-
-                        // if (props.nodeIdsDrag.length) {
-                        //     if (props.nodeIdsDrag.includes(link.source) || props.nodeIdsDrag.includes(link.target)) {
-                        //        color = saturate(0.2, color)
-                        //        color = lighten(0.2, color)
-                        //    }
-                        // }
-
                         sprite.color = color
                         sprite.textHeight = 2;
                         return sprite;
                         }}
+                    linkThreeObjectExtend={props.linkThreeObjectExtend}
                     linkPositionUpdate={(sprite, { start, end }) => {
                         const middlePos = Object.assign(...['x', 'y', 'z'].map(c => ({
                             [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
                         })));
-
                         // Position sprite
                         Object.assign(sprite.position, middlePos);
                     }}
-                    linkThreeObjectExtend={props.linkThreeObjectExtend}
                     linkDirectionalArrowLength={props.linkDirectionalArrowLength}
+                    linkDirectionalArrowColor={props.linkDirectionalArrowColor}
                     linkDirectionalArrowRelPos={props.linkDirectionalArrowRelPos}
-                    // Render control
-                    // zoomToFit={props.zoomToFit}
-                    // Force engine (d3-force) configuration
-                    cooldownTime={props.cooldownTime} // Math.max(0.8*1000*Math.log10(props.graphData.nodes.length),1)
+                    linkDirectionalArrowResolution={props.linkDirectionalArrowResolution}
+                    linkDirectionalParticles={props.linkDirectionalParticles}
+                    linkDirectionalParticleSpeed={props.linkDirectionalParticleSpeed}
+                    linkDirectionalParticleWidth={props.linkDirectionalParticleSpeed}
+                    linkDirectionalParticleColor={props.linkDirectionalParticleColor}
+                    linkDirectionalParticleResolution={props.linkDirectionalParticleResolution}
+                    /**
+                    * Render control
+                    */
+                    rendererConfig={props.rendererConfig}
+                    // onRenderFramePre={onRenderFramePre} # 2D only
+                    // onRenderFramePost={props.onRenderFramePost}
+                    /**
+                    * Render control
+                    */
+                    // numDimensions={props.numDimensions}
+                    forceEngine={props.forceEngine}
+                    dagMode={props.dagMode}
+                    dagLevelDistance={props.dagLevelDistance}
+                    // dagNodeFilter: // TODO: function
+                    // onDagError: // TODO: function
+                    d3AlphaMin={props.d3AlphaMin}
+                    d3AlphaDecay={props.d3AlphaDecay}
+                    d3VelocityDecay={props.d3VelocityDecay}
+                    ngraphPhysics={props.ngraphPhysics}
+                    warmupTicks={props.warmupTicks}
+                    cooldownTicks={props.cooldownTicks}
+                    cooldownTime={props.cooldownTime}
+                    // onEngineTick: // TODO: function
+                    onEngineStop={()=>{
+                        props.setProps({enableZoomPanInteraction: props.interactive? true : false})
+                        props.setProps({enablePointerInteraction: props.interactive? true : false})
+                        props.setProps({enableNavigationControls: props.interactive? true : false})
+                    }}
                     // d3Force={() => {
                     //     // if (props.node_attr_label || props.nodeImg) {
                     //         ('charge').strength(-50)}
                     //     // }
                     //     }
-                    //zoom={props.zoom}
-                    //centerAt={props.centerAt}
-                    onEngineStop={()=>{
-
-                        props.setProps({enableNavigationControls: props.interactive? true : false})
-                        props.setProps({enablePointerInteraction: props.interactive? true : false})
-
-                        // props.setProps({nodesSelected:[]})
-                        // props.setProps({updated:updated+1}) failed since it seems to fire continuously at init
-                        if (props.graphData_changed) {
-                            props.setProps({updated:true})
-                        }
-                        props.setProps({graphData_changed:false})
-                        // // Center on node rightclicked or else middle of canvas
-                        if (props.nodeRightClicked !== null) {
-                            // //     // need to obtain the node's new coordinates!
-                            // //     fgRef.current.centerAt(props.nodeRightClicked.x, props.nodeRightClicked.y, 250);
-                            // const node = nodesById[props.nodeRightClicked.id]
-                            // const distance = 40;
-                            // const distRatio = 1 + distance/Math.hypot(node.x, node.y, node.z);
-                            // fgRef.current.cameraPosition({
-                            //     x: node.x * distRatio,
-                            //     y: node.y * distRatio,
-                            //     z: node.z * distRatio
-                            // }, 750);
-                            // props.setProps({nodeRightClicked:null})
-                        }
-                        else {
-                            if (props.center) {
-                                fgRef.current.cameraPosition({
-                                    x:0,
-                                    y:0,
-                                    z:0
-                                }, 500)
-                                props.setProps({center:false})
-                            }
-                        }
-
-
-
-                    }}
-                    // Interaction
+                    /**
+                    * interaction
+                    */
                     onNodeClick={handleNodeClick}
                     onNodeRightClick={handleNodeRightClick}
-                    controlType={"trackball"}
                     onNodeHover={handleNodeHover}
-                    onLinkClick={handleLinkClick}
-                    // onLinkHover={handleLinkHover}
-                    enableNavigationControls={props.enableNavigationControls}
-                    enablePointerInteraction={props.enablePointerInteraction}
-                    enableNodeDrag={props.enableNodeDrag}
+                    // onNodeCenterHover // not exposed, VR and AR
                     onNodeDrag={handleNodeDrag}
                     onNodeDragEnd={handleNodeDragEnd}
+                    onLinkClick={handleLinkClick}
+                    onLinkRightClick={handleLinkRightClick}
+                    onLinkHover={handleLinkHover}
+                    // onLinkCenterHover // not exposed
                     onBackgroundClick={handleBackgroundClick}
+                    onBackgroundRightClick={handleBackgroundRightClick}
+                    linkHoverPrecision={props.linkHoverPrecision}
+                    // onZoom // TODO: function
+                    // onZoomEnd // TODO: function
+                    controlType={props.controlType}
+                    enableNodeDrag={props.enableNodeDrag}
+                    // enableZoomPanInteraction // overridden by 'interactive' parameter
+                    // enableNavigationControls // overridden by 'interactive' parameter
+                    // enablePointerInteraction // overridden by 'interactive' parameter
                     onChange={
                         /*
                         * Send the new value to the parent component.
@@ -851,14 +966,6 @@ function Graph3D(props) {
                         */
                         e => props.setProps({
                             graphData: e.target.graphData,
-                            //center: e.target.center,
-                            //cooldownTime: e.target.cooldownTime,
-                            //nodesSelected: e.target.nodesSelected,
-                            //rightClick: e.target.rightClick,
-                            //nodeRightClicked: e.target.nodeRightClicked,
-                            //nodeAltClicked: e.target.nodeAltClicked,
-                            //nodeZoomId: e.target.nodeZoomId,
-                            //graknStatus: e.target.graknStatus,
                             })
                     }
            />
@@ -1811,7 +1918,7 @@ const graphSharedProptypes = {
 
 };
 
-Graph3D.propTypes = graphSharedProptypes 
+Graph3D.propTypes = graphSharedProptypes
 
 objSharedProps.id = "Graph3D"
 
