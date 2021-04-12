@@ -64,17 +64,6 @@ Keyword arguments:
 - `warmupTicks` (Real; optional): Number of layout engine cycles to dry-run at ignition before starting to render.
 - `cooldownTicks` (Real; optional): How many build-in frames to render before stopping and freezing the layout engine.
 - `cooldownTime` (Real; optional): How long (ms) to render for before stopping and freezing the layout engine.
-- `d3Force_define` (Dict; optional): object to define a new force on the simulation. E.g.
-d3Force_define = {
-   "name": "charge", // the name to which the force is (to be) assigned
-   "force": "strength", // the force, e.g "forceManyBody" or "forceCenter" (omit the 'd3' object) Pass a null value to remove the force from the simulation
-   "force_args": [], // arguments to pass to force, e.g. links to forceLink. No functions, e.g. of node, allowed (currently)
-}
-- `d3Force_call` (Dict; optional): object to call a method on an existing simulation force. E.g.
-d3Force_call_method = {
-   "name": "charge", // the name to which the force is assigned
-   "method": "strength", // the name of a method to call on the force
-   "method_args": [-50], // array of args to pass to force method
 - `d3ReheatSimulation` (Bool; optional): Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine.
 - `linkHoverPrecision` (Real; optional): Whether to display the link label when gazing the link closely (low value) or from far away (high value).
 - `controlType` (String; optional): Which type of control to use to control the camera on 3D mode. Choice between trackball, orbit or fly.
@@ -120,7 +109,7 @@ Bounding box is saved as the graphBbox prop
 - `maxDepth_neighbours_select` (Real; optional): max levels of neighbourhood selection around a node by repeat clicking
 """
 function dash_graph2d(; kwargs...)
-        available_props = Symbol[:id, :graphData, :nodeId, :linkSource, :linkTarget, :backgroundColor, :showNavInfo, :nodeRelSize, :nodeVal, :nodeLabel, :nodeDesc, :nodeColor, :nodeAutoColorBy, :nodeOpacity, :nodeResolution, :linkLabel, :linkDesc, :linkColor, :linkAutoColorBy, :linkOpacity, :linkLineDash, :linkWidth, :linkResolution, :linkCurvature, :linkCurveRotation, :linkDirectionalArrowLength, :linkDirectionalArrowColor, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticles, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :emitParticle, :rendererConfig, :pauseAnimation, :resumeAnimation, :centerAt, :zoom, :zoomToFit, :cameraPosition, :refresh, :numDimensions, :forceEngine, :dagMode, :dagLevelDistance, :d3AlphaMin, :d3AlphaDecay, :d3VelocityDecay, :ngraphPhysics, :warmupTicks, :cooldownTicks, :cooldownTime, :d3Force_define, :d3Force_call, :d3ReheatSimulation, :linkHoverPrecision, :controlType, :enableNodeDrag, :getGraphBbox, :heightRatio, :size, :active, :nodeURL, :useNodeImg, :nodeImg, :useNodeIcon, :nodeIcon, :nodeIcon_fontsheets, :linkId, :interactive, :updated, :nodeZoomId, :nodesSelected, :nodeIdsDrag, :nodeClicked, :nodeClickedViewpointCoordinates, :nodeRightClicked, :nodeRightClickedViewpointCoordinates, :nodeHovered, :nodeHoveredViewpointCoordinates, :linkClicked, :linkRightClicked, :linkHovered, :linksSelected, :linkIdsNodesDrag, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsVisible, :externalobject_source, :externalobject_input, :centreCoordinates, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :maxDepth_neighbours_select]
+        available_props = Symbol[:id, :graphData, :nodeId, :linkSource, :linkTarget, :backgroundColor, :showNavInfo, :nodeRelSize, :nodeVal, :nodeLabel, :nodeDesc, :nodeColor, :nodeAutoColorBy, :nodeOpacity, :nodeResolution, :linkLabel, :linkDesc, :linkColor, :linkAutoColorBy, :linkOpacity, :linkLineDash, :linkWidth, :linkResolution, :linkCurvature, :linkCurveRotation, :linkDirectionalArrowLength, :linkDirectionalArrowColor, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticles, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :emitParticle, :rendererConfig, :pauseAnimation, :resumeAnimation, :centerAt, :zoom, :zoomToFit, :cameraPosition, :refresh, :numDimensions, :forceEngine, :dagMode, :dagLevelDistance, :d3AlphaMin, :d3AlphaDecay, :d3VelocityDecay, :ngraphPhysics, :warmupTicks, :cooldownTicks, :cooldownTime, :d3ReheatSimulation, :linkHoverPrecision, :controlType, :enableNodeDrag, :getGraphBbox, :heightRatio, :size, :active, :nodeURL, :useNodeImg, :nodeImg, :useNodeIcon, :nodeIcon, :nodeIcon_fontsheets, :linkId, :interactive, :updated, :nodeZoomId, :nodesSelected, :nodeIdsDrag, :nodeClicked, :nodeClickedViewpointCoordinates, :nodeRightClicked, :nodeRightClickedViewpointCoordinates, :nodeHovered, :nodeHoveredViewpointCoordinates, :linkClicked, :linkRightClicked, :linkHovered, :linksSelected, :linkIdsNodesDrag, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsVisible, :externalobject_source, :externalobject_input, :centreCoordinates, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :maxDepth_neighbours_select]
         wild_props = Symbol[]
         return Component("dash_graph2d", "Graph2D", "dash_react_force_graph", available_props, wild_props; kwargs...)
 end

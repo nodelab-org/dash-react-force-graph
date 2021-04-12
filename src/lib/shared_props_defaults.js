@@ -117,8 +117,8 @@ const objSharedProps = {
     // onEngineTick: // TODO: function
     // onEngineStop: // TODO: function
     // methods
-    d3Force_define: {"name":null, "force":null, "force_args":null},
-    d3Force_call: {"name":null, "method":null, "method_args":null},
+    // d3Force_define: {"name":null, "force":null, "force_args":null},
+    // d3Force_call: {"name":null, "method":null, "method_args":null},
 
     d3ReheatSimulation: false,
 

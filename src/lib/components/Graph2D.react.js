@@ -53,7 +53,7 @@ function Graph2D(props) {
         "nodeRelSize":props.nodeRelSize,
         "nodeOpacity":props.nodeOpacity,
         "link":50,
-        "charge":0,
+        "charge":-50,
         "center":1,
         "useNodeImg":props.useNodeImg,
         "useNodeIcon":props.useNodeIcon,
@@ -83,7 +83,13 @@ function Graph2D(props) {
 
     }, [guiSettings])
 
-    let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
+    const [nodesById, setNodesById] = useState(null)
+    
+    useEffect( () => {
+        setNodesById(Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node])))
+    },[props.graphData])
+
+    //let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
 
     // display standard browser warning before navigating away from page
     // https://stackoverflow.com/questions/1119289/how-to-show-the-are-you-sure-you-want-to-navigate-away-from-this-page-when-ch
@@ -94,7 +100,6 @@ function Graph2D(props) {
             window.onbeforeunload = () => false
         }
       },[props.graphData, props.active])
-
 
     // attempt to detect whether component focused, didn't get it to work
     // useEffect(() => {
@@ -153,7 +158,7 @@ function Graph2D(props) {
     const nodeColorFunction = (node => {
         let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         if (props.nodesSelected.length) {
-          color = darken(0.1, color)
+          color = darken(0.2, color)
           if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
               color = saturate(0.2,color)
               color = lighten(0.2, color)
@@ -161,17 +166,17 @@ function Graph2D(props) {
         }
 
         if (props.nodeIdsHighlight.length) {
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
                 //color = saturate(0.2,color)
                 color = lighten(0.2, color)
             }
         }
         if (props.nodeIdsDrag.length) {
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
                 //color = saturate(0.2, color)
-                color = lighten(0.2, color)
+                color = lighten(0.3, color)
             }
         }
         return color
@@ -561,7 +566,7 @@ function Graph2D(props) {
         if (props.nodesSelected.length) {
             // make all other nodes more transparent
             // ctx.globalAlpha -= 0.3
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                 // ctx.globalAlpha = 1
                 color = saturate(0.2,color)
@@ -573,17 +578,17 @@ function Graph2D(props) {
         if (props.nodeIdsDrag.length) {
              // make all other nodes more transparent
             // ctx.globalAlpha -= 0.3
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
                 // ctx.globalAlpha = 1
-                color = lighten(0.2, color)
+                color = lighten(0.3, color)
                 ctx.fontWeight="bold"
             }
         }
 
         if (props.nodeIdsHighlight.length) {
             // ctx.globalAlpha -= 0.3
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
                 //ctx.globalAlpha = 1
                 color = lighten(0.2, color)
@@ -608,7 +613,7 @@ function Graph2D(props) {
                 if (typeof(img_src)==="string" && (img_src.includes("http") || img_src.includes("www"))) {
                     const img = new Image();
                     img.src = img_src
-                    ctx.fillStyle = color;
+                    //ctx.fillStyle = color;
                     ctx.drawImage(img, node.x - size / 2, node.y-size, size, size);
                 }
             }
@@ -662,10 +667,10 @@ function Graph2D(props) {
         let color = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(props.backgroundColor) : invert(props.backgroundColor)
         // is link selected?
         if (props.linksSelected.length) {
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
                 color = saturate(0.2,color)
-                color = lighten(0.1,color)
+                color = lighten(0.2,color)
             }
         }
         // is link connected to node being dragged?
@@ -972,6 +977,8 @@ function Graph2D(props) {
                     /**
                     * Render control
                     */
+                    // extraRenderers={extraRenderers} // not needed as canvas works, 
+                    // but maybe to align with 3D?
                     rendererConfig={props.rendererConfig}
                     onRenderFramePre={onRenderFramePre}
                     // onRenderFramePost={props.onRenderFramePost}
@@ -993,11 +1000,7 @@ function Graph2D(props) {
                     cooldownTime={props.cooldownTime}
                     // onEngineTick: // TODO: function
                     onEngineStop={onEngineStopFunction}
-                    // d3Force={() => {
-                    //     // if (props.node_attr_label || props.nodeImg) {
-                    //         ('charge').strength(-50)}
-                    //     // }
-                    //     }
+                    d3Force={() => {('charge').strength(-50)}}
                     /**
                     * interaction
                     */
@@ -1646,7 +1649,7 @@ const graphSharedProptypes = {
      * }
      */
 
-    "d3Force_define": PropTypes.object,
+    //"d3Force_define": PropTypes.object,
 
         /**
      * object to call a method on an existing simulation force. E.g.
@@ -1657,7 +1660,7 @@ const graphSharedProptypes = {
      *
      */
 
-    "d3Force_call": PropTypes.object,
+    //"d3Force_call": PropTypes.object,
 
     /**
      * Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine.

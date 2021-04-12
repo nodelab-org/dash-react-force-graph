@@ -15,7 +15,7 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=["x","y","z"])
     '''
     @usage remove the data inserted into graphData by react-force-graph components.
     @param graphData: graphData used by react-force-graph
-    @param graph_lib: one of "2D", "3D" (not yet "AR", "VR")
+    @param graph_lib: one of "2D", "2D" (not yet "AR", "VR")
     @param coordinates_rm: which coordinates to remove
     @return graphData, with data removed
     '''
@@ -24,12 +24,12 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=["x","y","z"])
 
     # do not remove indexColor?
     nodes_keys_rm = ["index", "vx","vy"]
-    if graph_lib == "3D":
+    if graph_lib == "2D":
         nodes_keys_rm.append("vz")
 
     links_keys_rm = ["index","__controlPoints"]
 
-    if graph_lib == "3D":
+    if graph_lib == "2D":
         nodes_keys_rm.append("__threeObj")
         links_keys_rm += ["__arrowObj",   "__curve", "__lineObj"]
 
@@ -86,7 +86,6 @@ graphData = {
 
 app.layout = html.Div([
     html.Br(),
-    html.Button("reheat", id="button-reheat"),
     html.Button("add random node", id="button-add"),
     html.Button("delete random node", id="button-delete"),
    
@@ -94,7 +93,7 @@ app.layout = html.Div([
     dash_react_force_graph.Graph2D(
         id='graph2D',
         graphData=graphData,
-        heightRatio=0.45,
+        heightRatio=0.8,
         nodeId="nodeId",
         nodeLabel="__nodeLabel",
         nodeColor="__nodeColor",
@@ -102,8 +101,8 @@ app.layout = html.Div([
         nodeImg="__nodeImg",
         nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     ),
-    # dash_react_force_graph.Graph3D(
-    #     id='graph3D',
+    # dash_react_force_graph.Graph2D(
+    #     id='graph2D',
     #     graphData=graphData,
     #     heightRatio=0.45,
     #     nodeId="nodeId",
@@ -114,23 +113,22 @@ app.layout = html.Div([
     #     nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     # ),
     # html.Div(id='output-nodeHovered-2D'),
-    html.H2("Graph2D"),
     html.Div(id='output-nodeClicked-2D'),
     html.Div(id='output-nodeRightClicked-2D'),
-    # html.H2("Graph3D"),
-    # html.Div(id='output-nodeClicked-3D'),
-    # html.Div(id='output-nodeRightClicked-3D'),
+    # html.H2("Graph2D"),
+    # html.Div(id='output-nodeClicked-2D'),
+    # html.Div(id='output-nodeRightClicked-2D'),
     html.Br(),
     # html.Br(),
-    # dash_react_force_graph.Graph3D(
-    #     id='graph3D',
+    # dash_react_force_graph.Graph2D(
+    #     id='graph2D',
     #     graphData=graphData,
     #     heightRatio=0.45,
     #     nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     # ),
-    # html.Div(id='output-nodeHovered-3D'),
-    # html.Div(id='output-nodeClicked-3D'),
-    # html.Div(id='output-nodeRightClicked-3D'),
+    # html.Div(id='output-nodeHovered-2D'),
+    # html.Div(id='output-nodeClicked-2D'),
+    # html.Div(id='output-nodeRightClicked-2D'),
 ])
 
 
@@ -148,12 +146,6 @@ app.layout = html.Div([
 def display_selected_nodes_2D( nodeClicked, nodeRightClicked):
     return ["clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
 
-@app.callback(
-    Output('graph2D', 'd3ReheatSimulation'),
-[
-    Input('button-reheat', 'n_clicks')])
-def reheat_graphData_2D(n_clicks):
-    return True
 
 
 @app.callback(Output('graph2D', 'graphData'),
@@ -204,40 +196,40 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
 # @app.callback(
 # [
 #     # Output('output-nodeHovered-2D', 'children'),
-#     Output('output-nodeClicked-3D',  'children'),
-#     Output('output-nodeRightClicked-3D',  'children'),
+#     Output('output-nodeClicked-2D',  'children'),
+#     Output('output-nodeRightClicked-2D',  'children'),
 # ],
 # [
 #     # Input('graph2D', 'nodeHovered'),
-#     Input('graph3D', 'nodeClicked'),
-#     Input('graph3D', 'nodeRightClicked'),
+#     Input('graph2D', 'nodeClicked'),
+#     Input('graph2D', 'nodeRightClicked'),
 # ])
-# def display_selected_nodes_3D( nodeClicked, nodeRightClicked):
+# def display_selected_nodes_2D( nodeClicked, nodeRightClicked):
 #     return ["clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
 
 # @app.callback(
-#     Output('graph3D', 'd3ReheatSimulation'),
+#     Output('graph2D', 'd3ReheatSimulation'),
 # [
 #     Input('button-reheat', 'n_clicks')])
-# def reheat_graphData_3D(n_clicks):
+# def reheat_graphData_2D(n_clicks):
 #     return True
 
 # @app.callback(
-#     Output('graph3D', 'd3Force_call'),
+#     Output('graph2D', 'd3Force_call'),
 # [
 #     Input('slider-d3Force-charge-strength', 'value')])
 # def update_d3Force_charge_strength(slidervalue):
 #     return {"name":"charge", "method":"strength", "method_args":[slidervalue]}
 
-# @app.callback(Output('graph3D', 'graphData'),
+# @app.callback(Output('graph2D', 'graphData'),
 #     [
 #         Input('button-add', 'n_clicks'),
 #         Input('button-delete', 'n_clicks')
 #     ],
 #     [
-#         State("graph3D","graphData")
+#         State("graph2D","graphData")
 #     ])
-# def add_delete_random_node_3D(n_clicks_add, n_clicks_delete, graphData):
+# def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
 #     ctx = dash.callback_context
 
 #     if not ctx.triggered:
@@ -245,7 +237,7 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
 #     else:
 #         trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
 
-#     graphData = rm_graphData_render_data(graphData, graph_lib="3D", coordinates_rm=[])
+#     graphData = rm_graphData_render_data(graphData, graph_lib="2D", coordinates_rm=[])
 
 #     if trigger_id == "button-add":
 #         newNodeId = max([int(node["nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1

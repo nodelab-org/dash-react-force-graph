@@ -519,20 +519,6 @@
         "required": false,
         "description": "How long (ms) to render for before stopping and freezing the layout engine."
       },
-      "d3Force_define": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "object to define a new force on the simulation. E.g.\nd3Force_define = {\n   \"name\": \"charge\", // the name to which the force is (to be) assigned\n   \"force\": \"strength\", // the force, e.g \"forceManyBody\" or \"forceCenter\" (omit the 'd3' object) Pass a null value to remove the force from the simulation\n   \"force_args\": [], // arguments to pass to force, e.g. links to forceLink. No functions, e.g. of node, allowed (currently)\n}"
-      },
-      "d3Force_call": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "object to call a method on an existing simulation force. E.g.\nd3Force_call_method = {\n   \"name\": \"charge\", // the name to which the force is assigned\n   \"method\": \"strength\", // the name of a method to call on the force\n   \"method_args\": [-50], // array of args to pass to force method"
-      },
       "d3ReheatSimulation": {
         "type": {
           "name": "bool"
@@ -1406,20 +1392,6 @@
         },
         "required": false,
         "description": "How long (ms) to render for before stopping and freezing the layout engine."
-      },
-      "d3Force_define": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "object to define a new force on the simulation. E.g.\nd3Force_define = {\n   \"name\": \"charge\", // the name to which the force is (to be) assigned\n   \"force\": \"strength\", // the force, e.g \"forceManyBody\" or \"forceCenter\" (omit the 'd3' object) Pass a null value to remove the force from the simulation\n   \"force_args\": [], // arguments to pass to force, e.g. links to forceLink. No functions, e.g. of node, allowed (currently)\n}"
-      },
-      "d3Force_call": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "object to call a method on an existing simulation force. E.g.\nd3Force_call_method = {\n   \"name\": \"charge\", // the name to which the force is assigned\n   \"method\": \"strength\", // the name of a method to call on the force\n   \"method_args\": [-50], // array of args to pass to force method"
       },
       "d3ReheatSimulation": {
         "type": {

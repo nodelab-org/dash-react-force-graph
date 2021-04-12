@@ -1,8 +1,7 @@
 import {ForceGraph3D} from 'react-force-graph';
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import validateColor from "validate-color";
-
 import importScript from '../customHooks/importScript.js';
 // import useFontFace from '../customhooks/useFontFace.js';
 // https://github.com/ctrlplusb/react-sizeme
@@ -18,6 +17,7 @@ import objSharedProps from "../shared_props_defaults.js"
 // import {SpriteIcon} from "./SpriteIcon.react.js"
 import SpriteText from 'three-spritetext';
 import * as THREE from 'THREE';
+import {CSS2DRenderer, CSS2DObject} from 'three-css2drender'
 import ThreeGeo from 'three-geo';
 // import * as material_UI from '@material-ui/icon_fontsheets'; // doesn't work: Module not found: Error: Can't resolve '@material-ui/icon_fontsheets' in '/Users/rkm916/Sync/projects/2020-dashforcegraph/src/lib/components'
 // see https://stackoverflow.com/questions/42051588/wildcard-or-asterisk-vs-named-or-selective-import-es6-javascript
@@ -40,7 +40,48 @@ function Graph3D(props) {
 
     const fgRef = useRef(null);
 
-    let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
+    const [guiSettings,setGuiSettings] = useState({
+        "backgroundColor":props.backgroundColor,
+        "showNavInfo":props.showNavInfo,
+        "nodeRelSize":props.nodeRelSize,
+        "nodeOpacity":props.nodeOpacity,
+        "link":50,
+        "charge":-50,
+        "center":1,
+        "useNodeImg":props.useNodeImg,
+        "useNodeIcon":props.useNodeIcon,
+    })
+
+      // Update current state with changes from controls
+    const handleUpdate = newData => setGuiSettings({ ...guiSettings, ...newData });
+    
+    useEffect( () => {
+        props.setProps({backgroundColor:guiSettings.backgroundColor})
+        props.setProps({showNavInfo:guiSettings.showNavInfo})
+        props.setProps({nodeRelSize:guiSettings.nodeRelSize})
+        props.setProps({nodeOpacity:guiSettings.nodeOpacity})
+        fgRef.current
+            .d3Force('link')
+            .distance(link => guiSettings.link)
+        fgRef.current
+            .d3Force('charge')
+            .strength(() => guiSettings.charge)
+        fgRef.current
+            .d3Force('center')
+            .strength(() => guiSettings.center)
+        fgRef.current.d3ReheatSimulation()
+        
+        props.setProps({useNodeImg:guiSettings.useNodeImg})
+        props.setProps({useNodeIcon:guiSettings.useNodeIcon})
+
+    }, [guiSettings])
+
+    const [nodesById, setNodesById] = useState(null)
+    
+    useEffect( () => {
+        setNodesById(Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node])))
+    },[props.graphData])
+    //let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
 
     // display standard browser warning before navigating away from page
     // https://stackoverflow.com/questions/1119289/how-to-show-the-are-you-sure-you-want-to-navigate-away-from-this-page-when-ch
@@ -97,7 +138,7 @@ function Graph3D(props) {
     const nodeColorFunction = (node => {
         let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         if (props.nodesSelected.length) {
-          color = darken(0.1, color)
+          color = darken(0.2, color)
           if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
               color = saturate(0.2,color)
               color = lighten(0.2, color)
@@ -105,17 +146,17 @@ function Graph3D(props) {
         }
 
         if (props.nodeIdsHighlight.length) {
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
                 //color = saturate(0.2,color)
                 color = lighten(0.2, color)
             }
         }
         if (props.nodeIdsDrag.length) {
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
                 //color = saturate(0.2, color)
-                color = lighten(0.2, color)
+                color = lighten(0.3, color)
             }
         }
         return color
@@ -500,6 +541,150 @@ function Graph3D(props) {
         spriteImg.fontFace = fontFace
         return(spriteImg)
     }//, [props.graphData, props.icon_fontsheets, props.nodeColor_common_supertype, props.nodeColor_common_type, props.nodeImg_attr_supertype, props.nodeImg_attr_type, props.nodeImg_common_supertype, props.nodeImg_common_type] )
+    
+    const nodeThreeObjectFunctionHtml = node => {
+        let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        let label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
+        const size = 12;
+        const fontWeight="normal"
+        //let opacity = 0.9;
+
+        if (props.nodesSelected.length) {
+            // make all other nodes more transparent
+            //opacity -= 0.2
+            color = darken(0.2, color)
+            //color = darken(0.3, color)
+            if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+                //opacity = 1
+                // color = opacify(0.4, color)
+                color = saturate(0.2,color)
+                color = lighten(0.2, color)
+                size += 2
+
+            }
+        }
+
+        if (props.nodeIdsDrag.length) {
+             // make all other nodes more transparent
+            //opacity -= 0.2;
+            color = darken(0.2, color);
+            // color = transparentize(0.3, color)
+            if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
+                opacity = 1
+                // color = opacify(0.4, color)
+                // color = saturate(0.2, color)
+                color = lighten(0.3, color)
+                //fontWeight = "bold"
+
+            }
+        }
+
+        if (props.nodeIdsHighlight.length) {
+            //opacity -= 0.2
+            color  = darken(0.2,color)
+            if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
+                //opacity = 1
+                color = lighten(0.2, color)
+                //fontWeight="bold"
+            }
+        }
+
+        const nodeElParent = document.createElement('div');
+        // add image?
+        let img_src = null
+        if (props.nodeImg in node && props.useNodeImg) {
+            img_src = node[props.nodeImg]
+            if (typeof(img_src)==="string" && (img_src.includes("http") || img_src.includes("www"))) {
+                // if URL, get image 
+                const nodeElImg = document.createElement('img')
+                nodeElImg.src  = img_src
+                nodeElImg.style.height = `${size}px` // todo adjust as necessary
+                //nodeElImg.style.opacity = opacity 
+                nodeElParent.appendChild(nodeElImg)
+            }
+        }
+        // add icon?
+        if (img_src === null & props.nodeIcon in node & props.useNodeIcon) {
+            if (node[props.nodeIcon]) {
+                const nodeElIcon = document.createElement('div')
+                nodeElIcon.textContent = Object.values(node[props.nodeIcon])[0]
+                nodeElIcon.style.fontFace = Object.keys(node[props.nodeIcon])[0]
+                nodeElIcon.style.color = darken(0.1,color)
+                nodeElIcon.style.fontSize = size
+                //nodeElIcon.style.opacity = opacity
+                nodeElParent.appendChild(nodeElIcon)
+            }
+        }
+        // label
+        const nodeElLabel = document.createElement('div');
+        nodeElLabel.textContent = label
+        nodeElLabel.style.color = color 
+        nodeElLabel.style.fontSize = size
+        nodeElLabel.style.fontWeight = fontWeight 
+        //nodeElLabel.style.opacity = opacity
+        // TODO: add fontFace
+        nodeElParent.appendChild(nodeElLabel)
+
+        nodeElParent.className = 'node-label';
+
+        return new CSS2DObject(nodeElParent);
+    }
+
+    const nodeThreeObjectFunctionAlt = node => {
+        let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
+        let label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
+        const size = 12;
+        const fontWeight="normal"
+        let opacity = 0.9;
+
+        let spriteText = new SpriteText(label);
+
+        spriteText.color =  color;
+        spriteText.fontWeight = fontWeight
+        spriteText.textHeight = size;
+
+        // adapt style parameters if node is selected and/or highlighted
+        if (props.nodesSelected.length) {
+            // make all other nodes more transparent
+            opacity -= 0.2
+            spriteText.color = darken(0.2, spriteText.color)
+            //spriteText.color = darken(0.3, spriteText.color)
+            if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+                opacity = 1
+                // spriteText.color = opacify(0.4, spriteText.color)
+                spriteText.color = saturate(0.2,spriteText.color)
+                spriteText.color = lighten(0.2, spriteText.color)
+                spriteText.textHeight += 2
+
+            }
+        }
+        if (props.nodeIdsDrag.length) {
+             // make all other nodes more transparent
+            opacity -= 0.2;
+            spriteText.color = darken(0.2, spriteText.color);
+            // spriteText.color = transparentize(0.3, spriteText.color)
+            if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
+                opacity = 1
+                // spriteText.color = opacify(0.4, spriteText.color)
+                // spriteText.color = saturate(0.2, spriteText.color)
+                spriteText.color = lighten(0.3, spriteText.color)
+                spriteText.fontWeight = "bold"
+
+            }
+        }
+
+        if (props.nodeIdsHighlight.length) {
+            opacity -= 0.2
+            spriteText.color  = darken(0.2,spriteText.color)
+            if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
+                opacity = 1
+                spriteText.color = lighten(0.2, spriteText.color)
+                spriteText.fontWeight="bold"
+            }
+        }
+
+        return spriteText
+    }
 
     const nodeThreeObjectFunction = node => {
         let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
@@ -518,7 +703,7 @@ function Graph3D(props) {
         if (props.nodesSelected.length) {
             // make all other nodes more transparent
             opacity -= 0.2
-            spriteText.color = darken(0.1, spriteText.color)
+            spriteText.color = darken(0.2, spriteText.color)
             //spriteText.color = darken(0.3, spriteText.color)
             if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                 opacity = 1
@@ -532,13 +717,13 @@ function Graph3D(props) {
         if (props.nodeIdsDrag.length) {
              // make all other nodes more transparent
             opacity -= 0.2;
-            spriteText.color = darken(0.1, spriteText.color);
+            spriteText.color = darken(0.2, spriteText.color);
             // spriteText.color = transparentize(0.3, spriteText.color)
             if (props.nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
                 opacity = 1
                 // spriteText.color = opacify(0.4, spriteText.color)
                 // spriteText.color = saturate(0.2, spriteText.color)
-                spriteText.color = lighten(0.2, spriteText.color)
+                spriteText.color = lighten(0.3, spriteText.color)
                 spriteText.fontWeight = "bold"
 
             }
@@ -546,7 +731,7 @@ function Graph3D(props) {
 
         if (props.nodeIdsHighlight.length) {
             opacity -= 0.2
-            spriteText.color  = darken(0.1,spriteText.color)
+            spriteText.color  = darken(0.2,spriteText.color)
             if (props.nodeIdsHighlight.indexOf(node[props.nodeId]) !== -1) {
                 opacity = 1
                 spriteText.color = lighten(0.2, spriteText.color)
@@ -579,15 +764,14 @@ function Graph3D(props) {
         }
         let out = null
         if (spriteImg) {
-            // let group = new THREE.Group();
-            // const pos_adj1 = new THREE.Vector3( 0, -5, 0 );
-            // const pos_adj2 = new THREE.Vector3( 0, 5, 0 );
-            // spriteText.position.add(pos_adj1)
-            // spriteImg.position.add(pos_adj2)
-            // group.add( spriteText );
-            // group.add( spriteImg );
-            // out = group;
-            out = spriteImg
+            let group = new THREE.Group();
+            const pos_adj1 = new THREE.Vector3( 0, -5, 0 );
+            const pos_adj2 = new THREE.Vector3( 0, 5, 0 );
+            spriteText.position.add(pos_adj1)
+            spriteImg.position.add(pos_adj2)
+            group.add( spriteText );
+            group.add( spriteImg );
+            out = group;
         } else {
             out = spriteText
         }
@@ -613,10 +797,10 @@ function Graph3D(props) {
         let color = props.linkColor in link? validateColor(link[props.linkColor]) ? link[props.linkColor] : invert(props.backgroundColor) : invert(props.backgroundColor)
         // is link selected?
         if (props.linksSelected.length) {
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
                 color = saturate(0.2,color)
-                color = lighten(0.1,color)
+                color = lighten(0.2,color)
             }
         }
         // is link connected to node being dragged?
@@ -670,10 +854,10 @@ function Graph3D(props) {
         let color = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] : invert(props.backgroundColor) : invert(props.backgroundColor)
         // is link selected?
         if (props.linksSelected.length) {
-            color = darken(0.1, color)
+            color = darken(0.2, color)
             if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
                 color = saturate(0.2,color)
-                color = lighten(0.1,color)
+                color = lighten(0.2,color)
             }
         }
         // is link highlighted?
@@ -704,6 +888,7 @@ function Graph3D(props) {
         // Position sprite
         Object.assign(sprite.position, middlePos);
     }
+
 
     const onEngineStopFunction = () => {
         props.setProps({enableZoomPanInteraction: props.interactive? true : false})
@@ -809,34 +994,34 @@ function Graph3D(props) {
 
    
 
-    useEffect( () => {
-        // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
-        if (props.forceEngine === "d3") {
-           if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
-             if (props.d3Force_define.name) {
-               if (props.d3Force_define.force) {
-                 // define force
-                 fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
-               } else {
-                 // remove force
-                 fgRef.current.d3Force(props.d3Force_define.name, null)
-               }
-             }
-           }
-         }
-    },[props.d3Force_define])
+    // useEffect( () => {
+    //     // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
+    //     if (props.forceEngine === "d3") {
+    //        if ("name" in props.d3Force_define & "force" in props.d3Force_define & "force_args" in props.d3Force_define) {
+    //          if (props.d3Force_define.name) {
+    //            if (props.d3Force_define.force) {
+    //              // define force
+    //              fgRef.current.d3Force(props.d3Force_define.name, forceFunction(...props.d3Force_define.force_args))
+    //            } else {
+    //              // remove force
+    //              fgRef.current.d3Force(props.d3Force_define.name, null)
+    //            }
+    //          }
+    //        }
+    //      }
+    // },[props.d3Force_define])
 
 
-    useEffect( () => {
-      // e.g. fgRef.current.d3Force('charge').strength(-70);
-      if (props.forceEngine === "d3") {
-        if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
-          if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
-            fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
-          }
-        }
-      }
-    },[props.d3Force_call])
+    // useEffect( () => {
+    //   // e.g. fgRef.current.d3Force('charge').strength(-70);
+    //   if (props.forceEngine === "d3") {
+    //     if ("name" in props.d3Force_call & "method" in props.d3Force_call & "method_args" in props.d3Force_call) {
+    //       if (props.d3Force_call.name !== null & props.d3Force_call.method !== null) {
+    //         fgRef.current.d3Force(props.d3Force_call.name)[props.d3Force_call.method](...props.d3Force_call.method_args)
+    //       }
+    //     }
+    //   }
+    // },[props.d3Force_call])
 
     useEffect( () => {
         if (props.d3ReheatSimulation && props.forceEngine === "d3"){
@@ -849,6 +1034,8 @@ function Graph3D(props) {
             props.setProps({graphBbox:fgRef.current.getGraphBbox()})
         }
     },[props.getGraphBbox])
+
+    //const extraRenderers = [new THREE.CSS2DRenderer()];
 
     return (
         <div id={props.id}>
@@ -886,8 +1073,8 @@ function Graph3D(props) {
                     nodeAutoColorBy={props.nodeAutoColorBy}
                     nodeOpacity={props.nodeOpacity}
                     nodeResolution={props.nodeResolution}
-                    nodeThreeObject={nodeThreeObjectFunction}
-                    nodeThreeObjectExtend={nodeThreeObjectExtendFunction}
+                    nodeThreeObject={nodeThreeObjectFunctionHtml}
+                    nodeThreeObjectExtend={true}//{nodeThreeObjectExtendFunction}
                     /**
                     * link styling
                     */
@@ -919,6 +1106,8 @@ function Graph3D(props) {
                     * Render control
                     */
                     rendererConfig={props.rendererConfig}
+                    extraRenderers={[new CSS2DRenderer()]}
+                    //extraRenderers={extraRenderers}
                     // onRenderFramePre={onRenderFramePre} # 2D only
                     // onRenderFramePost={props.onRenderFramePost}
                     /**
@@ -939,11 +1128,7 @@ function Graph3D(props) {
                     cooldownTime={props.cooldownTime}
                     // onEngineTick: // TODO: function
                     onEngineStop={onEngineStopFunction}
-                    // d3Force={() => {
-                    //     // if (props.node_attr_label || props.nodeImg) {
-                    //         ('charge').strength(-50)}
-                    //     // }
-                    //     }
+                    d3Force={() => {('charge').strength(-50)}}
                     /**
                     * interaction
                     */
@@ -982,6 +1167,29 @@ function Graph3D(props) {
                             })
                     }
            />
+           <div id = "dat-gui-div">
+                <DatGui 
+                    data={guiSettings} 
+                    onUpdate={handleUpdate}>
+                    <DatFolder title='settings' closed={true}>
+                        <DatFolder title='Container layout' closed={true}>
+                            <DatColor path='backgroundColor' label='backgroundColor'/>
+                            <DatBoolean path='showNavInfo' label='showNavInfo'/>
+                            </DatFolder>
+                        <DatFolder title='d3Force' closed={true}>
+                            <DatNumber path='link' label='link' min={0} max={100} step={1} />
+                            <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
+                            <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
+                            </DatFolder>
+                        <DatFolder title='Node styling' closed={true}>  
+                            <DatNumber path='nodeRelSize' label='nodeRelSize' min={1} max={25} step={1}/>
+                            <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/>
+                            <DatBoolean path='useNodeImg' label='useNodeImg'/>
+                            <DatBoolean path='useNodeIcon' label='useNodeIcon'/>
+                            </DatFolder>
+                        </DatFolder>
+                </DatGui>
+            </div>
         </div>
     );
 
@@ -1571,7 +1779,7 @@ const graphSharedProptypes = {
      * }
      */
 
-    "d3Force_define": PropTypes.object,
+    //"d3Force_define": PropTypes.object,
 
         /**
      * object to call a method on an existing simulation force. E.g.
@@ -1582,7 +1790,7 @@ const graphSharedProptypes = {
      *
      */
 
-    "d3Force_call": PropTypes.object,
+    //"d3Force_call": PropTypes.object,
 
     /**
      * Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine.
