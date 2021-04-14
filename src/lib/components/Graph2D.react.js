@@ -61,7 +61,7 @@ function Graph2D(props) {
 
       // Update current state with changes from controls
     const handleUpdate = newData => setGuiSettings({ ...guiSettings, ...newData });
-    
+
     useEffect( () => {
         props.setProps({backgroundColor:guiSettings.backgroundColor})
         props.setProps({showNavInfo:guiSettings.showNavInfo})
@@ -77,14 +77,14 @@ function Graph2D(props) {
             .d3Force('center')
             .strength(() => guiSettings.center)
         fgRef.current.d3ReheatSimulation()
-        
+
         props.setProps({useNodeImg:guiSettings.useNodeImg})
         props.setProps({useNodeIcon:guiSettings.useNodeIcon})
 
     }, [guiSettings])
 
     const [nodesById, setNodesById] = useState(null)
-    
+
     useEffect( () => {
         setNodesById(Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node])))
     },[props.graphData])
@@ -144,7 +144,7 @@ function Graph2D(props) {
     },[props.graphData])
 
     const nodeLabelFunction = node => props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
-    
+
     const nodeVisibilityFunction = node => {
         let visible = true
         if (props.nodeIdsVisible.length) {
@@ -650,7 +650,7 @@ function Graph2D(props) {
     }
 
     const nodeCanvasObjectModeFunction = node => props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? "replace" : "after" : "after"
-    
+
     const linkVisibilityFunction = link => {
         let visible = true
         if (props.nodeIdsVisible.length) {
@@ -662,7 +662,7 @@ function Graph2D(props) {
         }
         return visible
     }
-    
+
     const linkColorFunction = link => {
         let color = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(props.backgroundColor) : invert(props.backgroundColor)
         // is link selected?
@@ -748,7 +748,7 @@ function Graph2D(props) {
         ctx.font = '1px Sans-Serif';
         const fontSize = Math.min(MAX_FONT_SIZE, maxTextLength / ctx.measureText(label).width);
         ctx.font = `${fontSize}px Sans-Serif`;
-        
+
         const textWidth = ctx.measureText(label).width;
         const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.2); // some padding
 
@@ -771,6 +771,16 @@ function Graph2D(props) {
         props.setProps({enableZoomPanInteraction: props.interactive? true : false})
         props.setProps({enablePointerInteraction: props.interactive? true : false})
         props.setProps({enableNavigationControls: props.interactive? true : false})
+        // fix nodes in place?
+        // no doesn't work.
+        // need to go through props.graphData?
+        // const n = fgRef.current.graphData.nodes.length
+        // if (n) {
+        //     for (let i = 0; i < n; i++) {
+        //         props.graphData.nodes[i].fx = props.graphData.nodes[i].x
+        //         props.graphData.nodes[i].fy = props.graphData.nodes[i].y
+        //     }
+        // }
     }
 
     // draw backgroundImage
@@ -977,7 +987,7 @@ function Graph2D(props) {
                     /**
                     * Render control
                     */
-                    // extraRenderers={extraRenderers} // not needed as canvas works, 
+                    // extraRenderers={extraRenderers} // not needed as canvas works,
                     // but maybe to align with 3D?
                     rendererConfig={props.rendererConfig}
                     onRenderFramePre={onRenderFramePre}
@@ -1040,8 +1050,8 @@ function Graph2D(props) {
                     }
             />
             <div id = "dat-gui-div">
-                <DatGui 
-                    data={guiSettings} 
+                <DatGui
+                    data={guiSettings}
                     onUpdate={handleUpdate}>
                     <DatFolder title='settings' closed={true}>
                         <DatFolder title='Container layout' closed={true}>
@@ -1051,9 +1061,9 @@ function Graph2D(props) {
                         <DatFolder title='d3Force' closed={true}>
                             <DatNumber path='link' label='link' min={0} max={100} step={1} />
                             <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
-                            <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
+                            <DatNumber path='center' label='center' min={0} max={2} step={0.01} />
                             </DatFolder>
-                        <DatFolder title='Node styling' closed={true}>  
+                        <DatFolder title='Node styling' closed={true}>
                             <DatNumber path='nodeRelSize' label='nodeRelSize' min={1} max={25} step={1}/>
                             <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/>
                             <DatBoolean path='useNodeImg' label='useNodeImg'/>

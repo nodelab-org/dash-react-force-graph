@@ -54,7 +54,7 @@ function Graph3D(props) {
 
       // Update current state with changes from controls
     const handleUpdate = newData => setGuiSettings({ ...guiSettings, ...newData });
-    
+
     useEffect( () => {
         props.setProps({backgroundColor:guiSettings.backgroundColor})
         props.setProps({showNavInfo:guiSettings.showNavInfo})
@@ -70,14 +70,14 @@ function Graph3D(props) {
             .d3Force('center')
             .strength(() => guiSettings.center)
         fgRef.current.d3ReheatSimulation()
-        
+
         props.setProps({useNodeImg:guiSettings.useNodeImg})
         props.setProps({useNodeIcon:guiSettings.useNodeIcon})
 
     }, [guiSettings])
 
     const [nodesById, setNodesById] = useState(null)
-    
+
     useEffect( () => {
         setNodesById(Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node])))
     },[props.graphData])
@@ -124,7 +124,7 @@ function Graph3D(props) {
     },[props.graphData])
 
     const nodeLabelFunction = node => props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
-    
+
     const nodeVisibilityFunction = (node => {
         let visible = true
         if (props.nodeIdsVisible.length) {
@@ -517,7 +517,7 @@ function Graph3D(props) {
         props.setProps({linksSelected:linksSelected_tmp});
     };
 
-       
+
     // zoom to node
     useEffect(() => {
         if (props.nodeZoomId) {
@@ -541,7 +541,7 @@ function Graph3D(props) {
         spriteImg.fontFace = fontFace
         return(spriteImg)
     }//, [props.graphData, props.icon_fontsheets, props.nodeColor_common_supertype, props.nodeColor_common_type, props.nodeImg_attr_supertype, props.nodeImg_attr_type, props.nodeImg_common_supertype, props.nodeImg_common_type] )
-    
+
     const nodeThreeObjectFunctionHtml = node => {
         let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         let label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
@@ -595,11 +595,11 @@ function Graph3D(props) {
         if (props.nodeImg in node && props.useNodeImg) {
             img_src = node[props.nodeImg]
             if (typeof(img_src)==="string" && (img_src.includes("http") || img_src.includes("www"))) {
-                // if URL, get image 
+                // if URL, get image
                 const nodeElImg = document.createElement('img')
                 nodeElImg.src  = img_src
                 nodeElImg.style.height = `${size}px` // todo adjust as necessary
-                //nodeElImg.style.opacity = opacity 
+                //nodeElImg.style.opacity = opacity
                 nodeElParent.appendChild(nodeElImg)
             }
         }
@@ -618,9 +618,9 @@ function Graph3D(props) {
         // label
         const nodeElLabel = document.createElement('div');
         nodeElLabel.textContent = label
-        nodeElLabel.style.color = color 
+        nodeElLabel.style.color = color
         nodeElLabel.style.fontSize = size
-        nodeElLabel.style.fontWeight = fontWeight 
+        nodeElLabel.style.fontWeight = fontWeight
         //nodeElLabel.style.opacity = opacity
         // TODO: add fontFace
         nodeElParent.appendChild(nodeElLabel)
@@ -779,7 +779,7 @@ function Graph3D(props) {
     }
 
     const nodeThreeObjectExtendFunction = node => props.nodeImg in node || props.nodeIcon in node? node[props.nodeImg] || node[props.nodeIcon] ? false : true : true
-    
+
     const linkVisibilityFunction = (link => {
         let visible = true
         if (props.nodeIdsVisible.length) {
@@ -792,7 +792,7 @@ function Graph3D(props) {
         return visible
         }
     )
-    
+
     const linkColorFunction = (link => {
         let color = props.linkColor in link? validateColor(link[props.linkColor]) ? link[props.linkColor] : invert(props.backgroundColor) : invert(props.backgroundColor)
         // is link selected?
@@ -992,7 +992,7 @@ function Graph3D(props) {
        }
    },[props.zoomToFit])
 
-   
+
 
     // useEffect( () => {
     //     // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
@@ -1168,8 +1168,8 @@ function Graph3D(props) {
                     }
            />
            <div id = "dat-gui-div">
-                <DatGui 
-                    data={guiSettings} 
+                <DatGui
+                    data={guiSettings}
                     onUpdate={handleUpdate}>
                     <DatFolder title='settings' closed={true}>
                         <DatFolder title='Container layout' closed={true}>
@@ -1179,9 +1179,9 @@ function Graph3D(props) {
                         <DatFolder title='d3Force' closed={true}>
                             <DatNumber path='link' label='link' min={0} max={100} step={1} />
                             <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
-                            <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
+                            <DatNumber path='center' label='center' min={0} max={2} step={0.01} />
                             </DatFolder>
-                        <DatFolder title='Node styling' closed={true}>  
+                        <DatFolder title='Node styling' closed={true}>
                             <DatNumber path='nodeRelSize' label='nodeRelSize' min={1} max={25} step={1}/>
                             <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/>
                             <DatBoolean path='useNodeImg' label='useNodeImg'/>
