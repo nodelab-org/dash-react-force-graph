@@ -1,4 +1,6 @@
 import {ForceGraph3D} from 'react-force-graph';
+import {forceRadial} from 'd3-force';
+import DatGui, {DatBoolean, DatColor, DatFolder,DatNumber} from 'react-dat-gui';
 import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import validateColor from "validate-color";
@@ -40,6 +42,14 @@ function Graph3D(props) {
 
     const fgRef = useRef(null);
 
+    useEffect(() => {
+        // add radial force
+        // https://github.com/vasturiano/3d-force-graph/issues/228#
+        fgRef.current.d3Force(
+          'radial',forceRadial().radius(0).strength(0.05)) //Math.pow(Math.sqrt(node.x)+Math.sqrt(node.y),2)/2
+      }, []);
+
+    // settings
     const [guiSettings,setGuiSettings] = useState({
         "backgroundColor":props.backgroundColor,
         "showNavInfo":props.showNavInfo,
@@ -48,6 +58,7 @@ function Graph3D(props) {
         "link":50,
         "charge":-50,
         "center":1,
+        "radial":0.05,
         "useNodeImg":props.useNodeImg,
         "useNodeIcon":props.useNodeIcon,
     })
@@ -69,6 +80,9 @@ function Graph3D(props) {
         fgRef.current
             .d3Force('center')
             .strength(() => guiSettings.center)
+        fgRef.current
+            .d3Force('radial')
+            .strength(() => guiSettings.radial)
         fgRef.current.d3ReheatSimulation()
 
         props.setProps({useNodeImg:guiSettings.useNodeImg})
@@ -1128,7 +1142,7 @@ function Graph3D(props) {
                     cooldownTime={props.cooldownTime}
                     // onEngineTick: // TODO: function
                     onEngineStop={onEngineStopFunction}
-                    d3Force={() => {('charge').strength(-50)}}
+                    d3Force={() => {('charge').strength(-50).distanceMax(100)}}
                     /**
                     * interaction
                     */
@@ -1180,6 +1194,7 @@ function Graph3D(props) {
                             <DatNumber path='link' label='link' min={0} max={100} step={1} />
                             <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
                             <DatNumber path='center' label='center' min={0} max={2} step={0.01} />
+                            <DatNumber path='radial' label='radial' min={0} max={1} step={0.01} />
                             </DatFolder>
                         <DatFolder title='Node styling' closed={true}>
                             <DatNumber path='nodeRelSize' label='nodeRelSize' min={1} max={25} step={1}/>

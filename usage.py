@@ -23,7 +23,7 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=["x","y","z"])
     links_key = "edges" if graph_lib == "cytoscape" else "links"
 
     # do not remove indexColor?
-    nodes_keys_rm = ["index", "vx","vy"]
+    nodes_keys_rm = ["index", "vx","vy", "vz"]
     if graph_lib == "2D":
         nodes_keys_rm.append("vz")
 
@@ -77,8 +77,8 @@ graphData = {
         {"id":"2", "label":"employee", "source":"2", "target":"7"},
         {"id":"3", "label":"employer", "source":"5", "target":"7"},
         {"id":"4", "label":"employee", "source":"3", "target":"8"},
-        {"id":"5", "label":"employer", "source":"4", "target":"8"},
-        {"id":"6", "label":"employee", "source":"6", "target":"8"},
+        {"id":"5", "label":"employee", "source":"4", "target":"8"},
+        {"id":"6", "label":"employer", "source":"6", "target":"8"},
         {"id":"7", "label":"neighbour", "source":"2", "target":"9"},
         {"id":"8", "label":"neighbour", "source":"4", "target":"9"},
         ]#
@@ -88,7 +88,7 @@ app.layout = html.Div([
     html.Br(),
     html.Button("add random node", id="button-add"),
     html.Button("delete random node", id="button-delete"),
-   
+
 
     dash_react_force_graph.Graph2D(
         id='graph2D',
