@@ -18,7 +18,7 @@ const objSharedProps = {
     // props
     // width: null, // not exposed, responsive to container width
     // height: null, // not exposed, uses heightRatio prop instead
-    backgroundColor: "black",
+    backgroundColor: "#171227",
     showNavInfo: true, // 3D and VR
     // yOffset: 1.5, // AR
     // glScale: 200 // AR
