@@ -1,5 +1,6 @@
 import { ForceGraph2D } from 'react-force-graph';
 import React, {useEffect, useRef, useState} from "react";
+import forceRadial from 'd3';
 import DatGui, {DatBoolean, DatColor, DatFolder,DatNumber} from 'react-dat-gui';
 // react-dat-gui renders correctly only when importing these styles
 import 'react-dat-gui/dist/index.css';
@@ -49,7 +50,7 @@ function Graph2D(props) {
 
     // add forces
     useEffect( () => {
-      fgRef.current.d3Force('radial', d3.forceRadial(0));
+      fgRef.current.d3Force('radial', forceRadial(0));
     },[])
 
     // settings
