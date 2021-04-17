@@ -48,11 +48,6 @@ function Graph2D(props) {
 
     const fgRef = useRef(null);
 
-    // add forces
-    useEffect( () => {
-      fgRef.current.d3Force('radial', forceRadial(0));
-    },[])
-
     // settings
 
     const [guiSettings,setGuiSettings] = useState({
@@ -63,7 +58,7 @@ function Graph2D(props) {
         "link":50,
         "charge":-50,
         "center":1,
-        "radial":0,
+        "radial":0.1,
         "useNodeImg":props.useNodeImg,
         "useNodeIcon":props.useNodeIcon,
     })
@@ -1025,10 +1020,7 @@ function Graph2D(props) {
                     cooldownTime={props.cooldownTime}
                     // onEngineTick: // TODO: function
                     onEngineStop={onEngineStopFunction}
-                    d3Force={() => {
-                      ('charge').strength(-50)
-                      ('radial').strength(0.1)
-                    }}
+                    d3Force={('radial', forceRadial(0.1))}
                     /**
                     * interaction
                     */
