@@ -55,10 +55,10 @@ function Graph3D(props) {
         "showNavInfo":props.showNavInfo,
         "nodeRelSize":props.nodeRelSize,
         "nodeOpacity":props.nodeOpacity,
-        "link":50,
-        "charge":-50,
+        "link":60,
+        "charge":-75,
         "center":1,
-        "radial":0.05,
+        "radial":0.02,
         "useNodeImg":props.useNodeImg,
         "useNodeIcon":props.useNodeIcon,
     })
@@ -1142,7 +1142,7 @@ function Graph3D(props) {
                     cooldownTime={props.cooldownTime}
                     // onEngineTick: // TODO: function
                     onEngineStop={onEngineStopFunction}
-                    d3Force={() => {('charge').strength(-50).distanceMax(100)}}
+                    d3Force={() => {('charge').strength(-75).distanceMax(100)}}
                     /**
                     * interaction
                     */
