@@ -1,7 +1,7 @@
 import { ForceGraph2D } from 'react-force-graph';
 import React, {useEffect, useRef, useState} from "react";
 import {forceRadial} from 'd3-force';
-import DatGui, {DatBoolean, DatColor, DatFolder,DatNumber} from 'react-dat-gui';
+import DatGui, {DatBoolean, DatColor, DatFolder,DatNumber,DatSelect} from 'react-dat-gui';
 // react-dat-gui renders correctly only when importing these styles
 import 'react-dat-gui/dist/index.css';
 

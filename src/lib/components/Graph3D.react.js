@@ -1,6 +1,6 @@
 import {ForceGraph3D} from 'react-force-graph';
 import {forceRadial} from 'd3-force';
-import DatGui, {DatBoolean, DatColor, DatFolder,DatNumber} from 'react-dat-gui';
+import DatGui, {DatBoolean, DatColor, DatFolder,DatNumber,DatSelect} from 'react-dat-gui';
 import React, {useEffect, useRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import validateColor from "validate-color";
