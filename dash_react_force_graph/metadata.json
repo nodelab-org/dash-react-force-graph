@@ -456,9 +456,9 @@
         "required": false,
         "description": "Which force-simulation engine to use (d3 or ngraph)."
       },
-      "dagMode": {
+      "dagModeOn": {
         "type": {
-          "name": "string"
+          "name": "bool"
         },
         "required": false,
         "description": "Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially)."
@@ -469,6 +469,16 @@
         },
         "required": false,
         "description": "If dagMode is engaged, this specifies the distance between the different graph depths."
+      },
+      "dagNodeIds": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
+        },
+        "required": false,
+        "description": "array of string ids for nodes to include in DAG layout"
       },
       "d3AlphaMin": {
         "type": {
@@ -1330,9 +1340,9 @@
         "required": false,
         "description": "Which force-simulation engine to use (d3 or ngraph)."
       },
-      "dagMode": {
+      "dagModeOn": {
         "type": {
-          "name": "string"
+          "name": "bool"
         },
         "required": false,
         "description": "Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially)."
@@ -1343,6 +1353,16 @@
         },
         "required": false,
         "description": "If dagMode is engaged, this specifies the distance between the different graph depths."
+      },
+      "dagNodeIds": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
+        },
+        "required": false,
+        "description": "array of string ids for nodes to include in DAG layout"
       },
       "d3AlphaMin": {
         "type": {

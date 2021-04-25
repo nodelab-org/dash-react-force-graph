@@ -103,10 +103,12 @@ const objSharedProps = {
 
     numDimensions: 3, // 3D, VR, AR
     forceEngine: "d3",
-    dagMode: null,
+    // dagMode: null,
+    dagModeOn: false,
     dagLevelDistance: null,
-    // dagNodeFilter: // TODO: function
-    // onDagError: // TODO: function
+    // dagNodeFilter: // Implemented in Higher Order Component
+    // onDagError: // implemented in Higher Order Component
+    dagNodeIds: [],
     d3AlphaMin: 0,
     d3AlphaDecay: 0.0228,
     d3VelocityDecay: 0.4,

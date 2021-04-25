@@ -67,6 +67,7 @@ function Graph2D(props) {
         "radial":0.02,
         "useNodeImg":props.useNodeImg,
         "useNodeIcon":props.useNodeIcon,
+        "dagMode":"lr"
     })
 
       // Update current state with changes from controls
@@ -92,6 +93,8 @@ function Graph2D(props) {
         fgRef.current.d3ReheatSimulation()
         props.setProps({useNodeImg:guiSettings.useNodeImg})
         props.setProps({useNodeIcon:guiSettings.useNodeIcon})
+
+        fgRef.current.dagMode = props.dagModeOn? guiSettings.dagMode : null
 
     }, [guiSettings])
 
@@ -125,9 +128,6 @@ function Graph2D(props) {
     //     props.setProps({focused:document.activeElement === fgRef.current})
     //     //}
     // });
-
-
-
 
     // set node coordinates
     useEffect( () => {
@@ -816,6 +816,10 @@ function Graph2D(props) {
         }
     }
 
+    const dagNodeFilter = node => {dagNodeIds.contains(node[props.nodeId])? true : false}
+
+    // https://github.com/vasturiano/react-force-graph/issues/199
+    const onDagError = loopNodeIds => {}
     /**
      * call methods via higher order component props
      */
@@ -1012,10 +1016,10 @@ function Graph2D(props) {
                     */
                     // numDimensions={props.numDimensions}
                     forceEngine={props.forceEngine}
-                    dagMode={props.dagMode}
+                    // dagMode={dagMode}
                     dagLevelDistance={props.dagLevelDistance}
-                    // dagNodeFilter: // TODO: function
-                    // onDagError: // TODO: function
+                    dagNodeFilter={dagNodeFilter} // TODO: function
+                    onDagError={onDagError}
                     d3AlphaMin={props.d3AlphaMin}
                     d3AlphaDecay={props.d3AlphaDecay}
                     d3VelocityDecay={props.d3VelocityDecay}
@@ -1084,6 +1088,9 @@ function Graph2D(props) {
                             <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/>
                             <DatBoolean path='useNodeImg' label='useNodeImg'/>
                             <DatBoolean path='useNodeIcon' label='useNodeIcon'/>
+                            </DatFolder>
+                        <DatFolder title='Force engine configuration' closed = {true}>
+                            <DatSelect path='dagMode' label='dagMode' options={['td', 'bu', 'lr', 'rl', 'radialout', 'radialin']}/>
                             </DatFolder>
                         </DatFolder>
                 </DatGui>
@@ -1593,7 +1600,7 @@ const graphSharedProptypes = {
     /**
     * Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).
     */
-    "dagMode": PropTypes.string,
+    "dagModeOn": PropTypes.bool,
 
     /**
     * If dagMode is engaged, this specifies the distance between the different graph depths.
@@ -1609,6 +1616,12 @@ const graphSharedProptypes = {
     * Callback to invoke if a cycle is encountered while processing the data structure for a DAG layout. The loop segment of the graph is included for information, as an array of node ids. By default an exception will be thrown whenever a loop is encountered. You can override this method to handle this case externally and allow the graph to continue the DAG processing. Strict graph directionality is not guaranteed if a loop is encountered and the result is a best effort to establish a hierarchy.
     */
     // onDagError: PropTypes.func,
+
+    /**
+    * array of string ids for nodes to include in DAG layout
+    */
+
+    "dagNodeIds": PropTypes.arrayOf(PropTypes.string),
 
     /**
     * Sets the simulation alpha min parameter. Only applicable if using the d3 simulation engine.
