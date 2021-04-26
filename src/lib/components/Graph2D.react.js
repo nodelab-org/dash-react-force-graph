@@ -816,7 +816,7 @@ function Graph2D(props) {
         }
     }
 
-    const dagNodeFilter = node => {props.dagNodeIds.contains(node[props.nodeId])? true : false}
+    const dagNodeFilter = node => {props.dagNodeIds.contains(node[props.nodeId])? false : true}
 
     // https://github.com/vasturiano/react-force-graph/issues/199
     const onDagError = loopNodeIds => {}
