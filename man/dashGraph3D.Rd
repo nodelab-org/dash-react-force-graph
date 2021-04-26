@@ -30,17 +30,18 @@ linkDirectionalParticleResolution=NULL, emitParticle=NULL,
 rendererConfig=NULL, pauseAnimation=NULL,
 resumeAnimation=NULL, centerAt=NULL, zoom=NULL,
 zoomToFit=NULL, cameraPosition=NULL, refresh=NULL,
-numDimensions=NULL, forceEngine=NULL, dagModeOn=NULL,
-dagLevelDistance=NULL, dagNodeIds=NULL, d3AlphaMin=NULL,
-d3AlphaDecay=NULL, d3VelocityDecay=NULL, ngraphPhysics=NULL,
-warmupTicks=NULL, cooldownTicks=NULL, cooldownTime=NULL,
-d3ReheatSimulation=NULL, linkHoverPrecision=NULL,
-controlType=NULL, enableNodeDrag=NULL, getGraphBbox=NULL,
-heightRatio=NULL, size=NULL, active=NULL, nodeURL=NULL,
-useNodeImg=NULL, nodeImg=NULL, useNodeIcon=NULL,
-nodeIcon=NULL, nodeIcon_fontsheets=NULL, linkId=NULL,
-interactive=NULL, updated=NULL, nodeZoomId=NULL,
-nodesSelected=NULL, nodeIdsDrag=NULL, nodeClicked=NULL,
+numDimensions=NULL, forceEngine=NULL, dagMode=NULL,
+dagModeOn=NULL, dagLevelDistance=NULL, dagNodeIds=NULL,
+d3AlphaMin=NULL, d3AlphaDecay=NULL, d3VelocityDecay=NULL,
+ngraphPhysics=NULL, warmupTicks=NULL, cooldownTicks=NULL,
+cooldownTime=NULL, d3ReheatSimulation=NULL,
+linkHoverPrecision=NULL, controlType=NULL,
+enableNodeDrag=NULL, getGraphBbox=NULL, heightRatio=NULL,
+size=NULL, active=NULL, nodeURL=NULL, useNodeImg=NULL,
+nodeImg=NULL, useNodeIcon=NULL, nodeIcon=NULL,
+nodeIcon_fontsheets=NULL, linkId=NULL, interactive=NULL,
+updated=NULL, nodeZoomId=NULL, nodesSelected=NULL,
+nodeIdsDrag=NULL, nodeClicked=NULL,
 nodeClickedViewpointCoordinates=NULL, nodeRightClicked=NULL,
 nodeRightClickedViewpointCoordinates=NULL, nodeHovered=NULL,
 nodeHoveredViewpointCoordinates=NULL, linkClicked=NULL,
@@ -145,6 +146,8 @@ maxDepth_neighbours_select=NULL)
 \item{numDimensions}{Numeric. Not applicable to 2D mode. Number of dimensions to run the force simulation on. 3D, VR, AR}
 
 \item{forceEngine}{Character. Which force-simulation engine to use (d3 or ngraph).}
+
+\item{dagMode}{Character. Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).}
 
 \item{dagModeOn}{Logical. Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).}
 

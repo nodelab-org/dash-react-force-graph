@@ -456,6 +456,13 @@
         "required": false,
         "description": "Which force-simulation engine to use (d3 or ngraph)."
       },
+      "dagMode": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially)."
+      },
       "dagModeOn": {
         "type": {
           "name": "bool"
@@ -1339,6 +1346,13 @@
         },
         "required": false,
         "description": "Which force-simulation engine to use (d3 or ngraph)."
+      },
+      "dagMode": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially)."
       },
       "dagModeOn": {
         "type": {

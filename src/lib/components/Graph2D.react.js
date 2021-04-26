@@ -94,7 +94,7 @@ function Graph2D(props) {
         props.setProps({useNodeImg:guiSettings.useNodeImg})
         props.setProps({useNodeIcon:guiSettings.useNodeIcon})
 
-        fgRef.current.dagMode = props.dagModeOn? guiSettings.dagMode : null
+        props.setProps({dagMode:props.dagModeOn? guiSettings.dagMode : null})
 
     }, [guiSettings])
 
@@ -816,7 +816,7 @@ function Graph2D(props) {
         }
     }
 
-    const dagNodeFilter = node => {dagNodeIds.contains(node[props.nodeId])? true : false}
+    const dagNodeFilter = node => {props.dagNodeIds.contains(node[props.nodeId])? true : false}
 
     // https://github.com/vasturiano/react-force-graph/issues/199
     const onDagError = loopNodeIds => {}
@@ -1016,7 +1016,7 @@ function Graph2D(props) {
                     */
                     // numDimensions={props.numDimensions}
                     forceEngine={props.forceEngine}
-                    // dagMode={dagMode}
+                    dagMode={props.dagMode}
                     dagLevelDistance={props.dagLevelDistance}
                     dagNodeFilter={dagNodeFilter} // TODO: function
                     onDagError={onDagError}
@@ -1596,6 +1596,11 @@ const graphSharedProptypes = {
     * Which force-simulation engine to use (d3 or ngraph).
     */
     "forceEngine": PropTypes.string,
+
+    /**
+    * Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).
+    */
+    "dagMode": PropTypes.string,
 
     /**
     * Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).

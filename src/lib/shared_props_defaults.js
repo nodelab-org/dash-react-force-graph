@@ -103,7 +103,7 @@ const objSharedProps = {
 
     numDimensions: 3, // 3D, VR, AR
     forceEngine: "d3",
-    // dagMode: null,
+    dagMode: null,
     dagModeOn: false,
     dagLevelDistance: null,
     // dagNodeFilter: // Implemented in Higher Order Component
