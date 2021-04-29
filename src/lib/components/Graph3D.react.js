@@ -99,11 +99,6 @@ function Graph3D(props) {
 
     const [nodesById, setNodesById] = useState(null)
 
-    useEffect( () => {
-        setNodesById(Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node])))
-    },[props.graphData])
-    //let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
-
     // display standard browser warning before navigating away from page
     // https://stackoverflow.com/questions/1119289/how-to-show-the-are-you-sure-you-want-to-navigate-away-from-this-page-when-ch
     useEffect( () => {
@@ -229,6 +224,9 @@ function Graph3D(props) {
               }
           }
           props.setProps({graphData:{"nodes":nodes, "links":props.graphData.links}})
+        
+        setNodesById(Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node])))
+
         }
     },[props.graphData])
 
@@ -541,17 +539,94 @@ function Graph3D(props) {
 
     // zoom to node
     useEffect(() => {
-        if (props.nodeZoomId) {
-            const distance = 40;
-            const distRatio = 1 + distance/Math.hypot(nodesById[props.nodeZoomId].x, nodesById[props.nodeZoomId].y, nodesById[props.nodeZoomId].z);
-            fgRef.current.cameraPosition(
-            { x: nodesById[props.nodeZoomId].x * distRatio, y: nodesById[props.nodeZoomId].y * distRatio, z: nodesById[props.nodeZoomId].z * distRatio }, // new position
-            nodesById[props.nodeZoomId], // lookAt ({ x, y, z })
-            750  // ms transition duration
-            );
-        }
-    },[props.nodeZoomId])
 
+        if (props.graphData.nodes.length > 1) {
+            const nodesUpdated = []
+
+            if (props.nodeZoomId) {
+
+                const nodeZoom = nodesById[props.nodeZoomId]
+
+                const rel_node_ids = []
+                const rel_link_ids = [] 
+                
+                const rp_node_ids = []
+                const rp_link_ids = [] 
+
+                const rel_rp_node_ids = []
+                const rel_rp_link_ids = [] 
+
+                // iterate over node relations
+                for (let [role, obj] of Object.entries(nodeZoom.__source)) {
+                    console.log(obj)
+                    for (let [key, value] of Object.entries(obj)) {
+                        console.log(value)
+                        rel_link_ids.push(key)
+                        rel_node_ids.push(value)
+                    }
+                }
+
+                for (let [role, obj] of Object.entries(nodeZoom.__target)) {
+                    for (let [key, value] of Object.entries(obj)) {
+                        rp_link_ids.push(key)
+                        rp_node_ids.push(value)
+                    }
+                }
+
+                // add other role players
+                for (let rel_node_id of rel_node_ids) {
+                    let rel_node = nodesById[rel_node_id]
+                    // iterate over node relations
+                    for (let [role,obj] of Object.entries(rel_node.__target)) {
+                        for (let [key, value] of Object.entries(obj)) {
+                            rel_rp_link_ids.push(key)
+                            rel_rp_node_ids.push(value)
+                        }
+                    }  
+                }
+                
+                // place node relative to node zoom node
+                for (let node of props.graphData.nodes) {
+                    const delta_x = rel_node_ids.includes(node[props.nodeId])? 20 : rel_rp_node_ids.includes(node[props.nodeId])? 40 : rp_node_ids.includes(node[props.nodeId])? -20 : null 
+                    if (delta_x !== null) {
+                        node.fx = nodeZoom.x + delta_x
+                    }
+                    nodesUpdated.push(node)
+                }
+                console.log("rel_node_ids")
+                console.log(rel_node_ids)
+                console.log("rp_node_ids")
+                console.log(rp_node_ids)
+                console.log("rel_rp_node_ids")
+                console.log(rel_rp_node_ids)
+
+                const nodeIdsVisible = rel_node_ids.concat(rp_node_ids, rel_rp_node_ids)
+                nodeIdsVisible.push(props.nodeZoomId)
+
+                props.setProps({nodeIdsVisible:nodeIdsVisible})
+                props.setProps({linkIdsVisible:rel_link_ids.concat(rp_link_ids, rel_rp_link_ids)})
+                
+                // center camera
+                const distance = 40;
+                const distRatio = 1 + distance/Math.hypot(nodesById[props.nodeZoomId].x, nodesById[props.nodeZoomId].y, nodesById[props.nodeZoomId].z);
+                fgRef.current.cameraPosition(
+                { x: nodesById[props.nodeZoomId].x * distRatio, y: nodesById[props.nodeZoomId].y * distRatio, z: nodesById[props.nodeZoomId].z * distRatio }, // new position
+                nodesById[props.nodeZoomId], // lookAt ({ x, y, z })
+                750  // ms transition duration
+                );
+
+            } else {
+                for (let node of props.graphData.nodes) {
+                    delete node.fx
+                    // node.fz =props.centreCoordinates+props.pixelUnitRatio*node.__coord_z
+                    nodesUpdated.push(node)
+                }
+                props.setProps({nodeIdsVisible:[]})
+                props.setProps({linkIdsVisible:[]}) 
+            }
+            props.setProps({graphData:{"nodes": nodesUpdated, "links":props.graphData.links}})
+        }        
+    },[props.nodeZoomId])
 
     // prepare icon_fontsheets
     const generateicon_fontsheetsprite = (iconName, fontFace, size, color) => {

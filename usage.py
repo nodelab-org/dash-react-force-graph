@@ -1,4 +1,5 @@
 import dash
+import dash_core_components as dcc
 import dash_react_force_graph
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
@@ -88,7 +89,20 @@ app.layout = html.Div([
     html.Br(),
     html.Button("add random node", id="button-add"),
     html.Button("delete random node", id="button-delete"),
-
+    dcc.Dropdown(
+        id="dropdown",
+        options=[
+            {"label":"1","value":"1"},
+            {"label":"2","value":"2"},
+            {"label":"3","value":"3"},
+            {"label":"4","value":"4"},
+            {"label":"5","value":"5"},
+            {"label":"6","value":"6"},
+            {"label":"7","value":"7"},
+            {"label":"8","value":"8"},
+            {"label":"9","value":"9"},
+            {"label":"None","value":"None"},
+        ]),
 
     dash_react_force_graph.Graph2D(
         id='graph2D',
@@ -100,8 +114,8 @@ app.layout = html.Div([
         nodeIcon="__nodeIcon",
         nodeImg="__nodeImg",
         nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
-        dagModeOn=True,
-        dagMode="lr",
+        dagModeOn=False,
+        dagMode=None,
         dagNodeIds=["3","4","6","8","9"]
     ),
     # dash_react_force_graph.Graph2D(
@@ -136,6 +150,31 @@ app.layout = html.Div([
 
 
 @app.callback(
+    Output('dropdown',  'options'),
+[
+    Input('graph2D', 'graphData'),
+])
+def populate_node_dropdown(graphData):
+    return [{"label":node["nodeId"], "value":node["nodeId"]} for node in graphData["nodes"]]
+
+
+@app.callback(Output('graph2D',  'nodeZoomId'),
+[
+    Input('dropdown', 'value'),
+])
+def zoom_to_node(nodeZoomId):
+    ctx = dash.callback_context
+
+    if not ctx.triggered:
+        raise PreventUpdate
+
+    if nodeZoomId == "None":
+        nodeZoomId = None
+
+    return nodeZoomId
+
+
+@app.callback(
 [
     # Output('output-nodeHovered-2D', 'children'),
     Output('output-nodeClicked-2D',  'children'),
@@ -147,6 +186,7 @@ app.layout = html.Div([
     Input('graph2D', 'nodeRightClicked'),
 ])
 def display_selected_nodes_2D( nodeClicked, nodeRightClicked):
+    
     return ["clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
 
 
