@@ -46,7 +46,9 @@ function Graph3D(props) {
         // add radial force
         // https://github.com/vasturiano/3d-force-graph/issues/228#
         fgRef.current.d3Force(
-          'radial',forceRadial().radius(0).strength(0.05)) //Math.pow(Math.sqrt(node.x)+Math.sqrt(node.y),2)/2
+          'radial',forceRadial().radius(0).strength(0.01)) //Math.pow(Math.sqrt(node.x)+Math.sqrt(node.y),2)/2
+        // add some negative charge (nodes repel each other) and lower the effective distance
+        fgRef.current.d3Force('charge').strength(-50).distanceMax(100)
       }, []);
 
     // settings
@@ -55,10 +57,10 @@ function Graph3D(props) {
         "showNavInfo":props.showNavInfo,
         "nodeRelSize":props.nodeRelSize,
         "nodeOpacity":props.nodeOpacity,
-        "link":60,
-        "charge":-75,
+        "link":50,
+        "charge":-50,
         "center":1,
-        "radial":0.02,
+        "radial":0.00,
         "useNodeImg":props.useNodeImg,
         "useNodeIcon":props.useNodeIcon,
         "dagMode":"lr"
@@ -84,13 +86,14 @@ function Graph3D(props) {
         fgRef.current
             .d3Force('radial')
             .strength(() => guiSettings.radial)
-        fgRef.current.d3ReheatSimulation()
 
         props.setProps({useNodeImg:guiSettings.useNodeImg})
         props.setProps({useNodeIcon:guiSettings.useNodeIcon})
 
         props.setProps({dagMode:props.dagModeOn? guiSettings.dagMode : null})
 
+        fgRef.current.d3ReheatSimulation()
+        
     }, [guiSettings, props.dagModeOn])
 
     const [nodesById, setNodesById] = useState(null)
@@ -156,7 +159,7 @@ function Graph3D(props) {
         let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         if (props.nodesSelected.length) {
           color = darken(0.2, color)
-          if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+          if (props.nodesSelected.map(nodeSel => nodeSel[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
               color = saturate(0.2,color)
               color = lighten(0.2, color)
           }
@@ -305,7 +308,7 @@ function Graph3D(props) {
          for (let node_tmp of props.nodesSelected) {
              nodesSelected_tmp.push(node_tmp)
          }
-         const nodeIndex = nodesSelected_tmp.map(node => node[props.nodeId]).indexOf(node[props.nodeId])
+         const nodeIndex = nodesSelected_tmp.map(nodeSel => nodeSel[props.nodeId]).indexOf(node[props.nodeId])
 
          if (event.shiftKey) {
              // multi-selection
@@ -427,7 +430,7 @@ function Graph3D(props) {
                      // then move all other selected nodes as well
                      props.nodesSelected
                          .filter(nodeSelected => nodeSelected !== node)
-                         .forEach(node => ['x', 'y', 'z'].forEach(coord => node[`f${coord}`] = node[coord] + translate[coord])); // translate other nodes by same amount => selNode !== node).forEach(node => ['x', 'y'].forEach(coord => node[`f${coord}`] = node[coord] + translate[coord])); // translate other nodes by same amount
+                         .forEach(nodeSel => ['x', 'y', 'z'].forEach(coord => nodeSel[`f${coord}`] = nodeSel[coord] + translate[coord])); // translate other nodes by same amount => selNode !== node).forEach(node => ['x', 'y'].forEach(coord => node[`f${coord}`] = node[coord] + translate[coord])); // translate other nodes by same amount
                  };
              }
 
@@ -517,7 +520,7 @@ function Graph3D(props) {
         for (let link_tmp of props.linksSelected) {
             linksSelected_tmp.push(link_tmp)
         }
-        const linkIndex = linksSelected_tmp.map(link => link[props.linkId]).indexOf(link[props.linkId])
+        const linkIndex = linksSelected_tmp.map(linkSel => linkSel[props.linkId]).indexOf(link[props.linkId])
 
         if (event.shiftKey) {
             // multi-selection
@@ -571,7 +574,7 @@ function Graph3D(props) {
             //opacity -= 0.2
             color = darken(0.2, color)
             //color = darken(0.3, color)
-            if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+            if (props.nodesSelected.map(nodeSel => nodeSel[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                 //opacity = 1
                 // color = opacify(0.4, color)
                 color = saturate(0.2,color)
@@ -666,7 +669,7 @@ function Graph3D(props) {
             opacity -= 0.2
             spriteText.color = darken(0.2, spriteText.color)
             //spriteText.color = darken(0.3, spriteText.color)
-            if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+            if (props.nodesSelected.map(nodeSel => nodeSel[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                 opacity = 1
                 // spriteText.color = opacify(0.4, spriteText.color)
                 spriteText.color = saturate(0.2,spriteText.color)
@@ -722,7 +725,7 @@ function Graph3D(props) {
             opacity -= 0.2
             spriteText.color = darken(0.2, spriteText.color)
             //spriteText.color = darken(0.3, spriteText.color)
-            if (props.nodesSelected.map(node => node[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
+            if (props.nodesSelected.map(nodeSel => nodeSel[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
                 opacity = 1
                 // spriteText.color = opacify(0.4, spriteText.color)
                 spriteText.color = saturate(0.2,spriteText.color)
@@ -816,7 +819,7 @@ function Graph3D(props) {
         // is link selected?
         if (props.linksSelected.length) {
             color = darken(0.2, color)
-            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+            if (props.linksSelected.map(linkSel=>linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
                 color = saturate(0.2,color)
                 color = lighten(0.2,color)
             }
@@ -845,7 +848,7 @@ function Graph3D(props) {
         // is link selected?
         if (props.linksSelected.length) {
             width = width*0.9
-            if (props.linksSelected.map(link=>link[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+            if (props.linksSelected.map(linkSel=>linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
                 width = width*4
             }
         }
@@ -978,7 +981,9 @@ function Graph3D(props) {
    * call methods via higher order component props
    */
 
-   const dagNodeFilter = node => {props.dagNodeIds.contains(node[props.nodeId])? false : true}
+   const dagNodeFilter = node => {
+       return props.dagNodeIds.includes(node[props.nodeId])? true : false
+    }
 
    // https://github.com/vasturiano/react-force-graph/issues/199
    const onDagError = loopNodeIds => {}
@@ -1154,7 +1159,6 @@ function Graph3D(props) {
                     cooldownTime={props.cooldownTime}
                     // onEngineTick: // TODO: function
                     onEngineStop={onEngineStopFunction}
-                    d3Force={() => {('charge').strength(-75).distanceMax(100)}}
                     /**
                     * interaction
                     */

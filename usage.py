@@ -3,7 +3,7 @@ import dash_react_force_graph
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_html_components as html
-import dash_core_components as dcc
+# import dash_core_components as dcc
 import random
 
 app = dash.Dash(__name__,
@@ -90,7 +90,7 @@ app.layout = html.Div([
     html.Button("delete random node", id="button-delete"),
 
 
-    dash_react_force_graph.Graph2D(
+    dash_react_force_graph.Graph2Dalt(
         id='graph2D',
         graphData=graphData,
         heightRatio=0.8,
@@ -100,6 +100,9 @@ app.layout = html.Div([
         nodeIcon="__nodeIcon",
         nodeImg="__nodeImg",
         nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
+        dagModeOn=True,
+        dagMode="lr",
+        dagNodeIds=["1","2","3","4","5","6","7","8","9"]
     ),
     # dash_react_force_graph.Graph2D(
     #     id='graph2D',
