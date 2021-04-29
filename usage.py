@@ -90,7 +90,7 @@ app.layout = html.Div([
     html.Button("delete random node", id="button-delete"),
 
 
-    dash_react_force_graph.Graph2Dalt(
+    dash_react_force_graph.Graph2D(
         id='graph2D',
         graphData=graphData,
         heightRatio=0.8,
@@ -102,7 +102,7 @@ app.layout = html.Div([
         nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
         dagModeOn=True,
         dagMode="lr",
-        dagNodeIds=["1","2","3","4","5","6","7","8","9"]
+        dagNodeIds=["3","4","6","8","9"]
     ),
     # dash_react_force_graph.Graph2D(
     #     id='graph2D',

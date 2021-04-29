@@ -46,7 +46,7 @@ function Graph3D(props) {
         // add radial force
         // https://github.com/vasturiano/3d-force-graph/issues/228#
         fgRef.current.d3Force(
-          'radial',forceRadial().radius(0).strength(0.01)) //Math.pow(Math.sqrt(node.x)+Math.sqrt(node.y),2)/2
+          'radial',forceRadial().radius(0).strength(0.00)) //Math.pow(Math.sqrt(node.x)+Math.sqrt(node.y),2)/2
         // add some negative charge (nodes repel each other) and lower the effective distance
         fgRef.current.d3Force('charge').strength(-50).distanceMax(100)
       }, []);
@@ -63,6 +63,7 @@ function Graph3D(props) {
         "radial":0.00,
         "useNodeImg":props.useNodeImg,
         "useNodeIcon":props.useNodeIcon,
+        "dagModeOn":false,
         "dagMode":"lr"
     })
 
@@ -90,10 +91,10 @@ function Graph3D(props) {
         props.setProps({useNodeImg:guiSettings.useNodeImg})
         props.setProps({useNodeIcon:guiSettings.useNodeIcon})
 
-        props.setProps({dagMode:props.dagModeOn? guiSettings.dagMode : null})
+        props.setProps({dagMode:props.dagModeOn || guiSettings.dagModeOn? guiSettings.dagMode : null})
 
         fgRef.current.d3ReheatSimulation()
-        
+
     }, [guiSettings, props.dagModeOn])
 
     const [nodesById, setNodesById] = useState(null)
@@ -1219,6 +1220,7 @@ function Graph3D(props) {
                             <DatBoolean path='useNodeIcon' label='useNodeIcon'/>
                             </DatFolder>
                         <DatFolder title='Force engine configuration' closed = {true}>
+                            <DatBoolean path='datModeOn' label='datModeOn'/>
                             <DatSelect path='dagMode' label='dagMode' options={['td', 'bu', 'lr', 'rl', 'zout', 'zin', 'radialout', 'radialin']}/>
                             </DatFolder>
                         </DatFolder>
