@@ -548,88 +548,176 @@ function Graph2D(props) {
 
     // zoom to node
     useEffect(() => {
-
         if (props.graphData.nodes.length > 1) {
             const nodesUpdated = []
-
             if (props.nodeZoomId) {
-
                 const nodeZoom = nodesById[props.nodeZoomId]
-
-                const rel_node_ids = []
-                const rel_link_ids = [] 
                 
-                const rp_node_ids = []
-                const rp_link_ids = [] 
+                const set_rel_node_ids = new Set()
+                // dict of sets
+                const obj_rel_rp_node_ids = {}
+                const set_rel_rp_node_ids_all = new Set()
+                const set_rp_node_ids = new Set()
+                const nodeIdsVisible = []
+                const linkIdsVisible = []
 
-                const rel_rp_node_ids = []
-                const rel_rp_link_ids = [] 
+                if (Object.values(nodeZoom.__source).length) {
+                    for (let [role, obj] of Object.entries(nodeZoom.__source)) {
+                        for (let [link_id, rel_id] of Object.entries(obj)) {
+                            set_rel_node_ids.add(rel_id)
+                            linkIdsVisible.push(link_id)
+                            nodeIdsVisible.push(rel_id)
 
-                // iterate over node relations
-                for (let [role, obj] of Object.entries(nodeZoom.__source)) {
-                    console.log(obj)
-                    for (let [key, value] of Object.entries(obj)) {
-                        console.log(value)
-                        rel_link_ids.push(key)
-                        rel_node_ids.push(value)
-                    }
-                }
+                            console.log("rel node id")
+                            console.log(rel_id)
+                            let rel_node = nodesById[rel_id]
+                            obj_rel_rp_node_ids[rel_id] = new Set()
+                            if (Object.values(rel_node.__target).length) {
+                                for (let [role_1,obj_1] of Object.entries(rel_node.__target)) {
+                                    for (let [link_id_1, rp_id] of Object.entries(obj_1)) {
+                                        if (rp_id !== props.nodeZoomId && !set_rel_rp_node_ids_all.has(rp_id)) {
+                                            // only allow role players to be placed once
+                                            obj_rel_rp_node_ids[rel_id].add(rp_id)
+                                            set_rel_rp_node_ids_all.add(rp_id)
+                                            nodeIdsVisible.push(rp_id)
 
-                for (let [role, obj] of Object.entries(nodeZoom.__target)) {
-                    for (let [key, value] of Object.entries(obj)) {
-                        rp_link_ids.push(key)
-                        rp_node_ids.push(value)
-                    }
-                }
-
-                // add other role players
-                for (let rel_node_id of rel_node_ids) {
-                    let rel_node = nodesById[rel_node_id]
-                    // iterate over node relations
-                    for (let [role,obj] of Object.entries(rel_node.__target)) {
-                        for (let [key, value] of Object.entries(obj)) {
-                            rel_rp_link_ids.push(key)
-                            rel_rp_node_ids.push(value)
+                                            console.log("rel rp node id")
+                                            console.log(rp_id)
+                                        }
+                                        // .. but always make the link visible
+                                        linkIdsVisible.push(link_id_1)
+                                    }
+                                }   
+                            }
                         }
-                    }  
-                }
-                
-                // place node relative to node zoom node
-                for (let node of props.graphData.nodes) {
-                    const delta_x = rel_node_ids.includes(node[props.nodeId])? 20 : rel_rp_node_ids.includes(node[props.nodeId])? 40 : rp_node_ids.includes(node[props.nodeId])? -20 : null 
-                    if (delta_x !== null) {
-                        node.fx = nodeZoom.x + delta_x
                     }
+                }
+
+                if (Object.values(nodeZoom.__target).length) {
+                    for (let [role, obj] of Object.entries(nodeZoom.__target)) {
+                        for (let [link_id, rp_id] of Object.entries(obj)) {
+                            set_rp_node_ids.add(rp_id)
+                            linkIdsVisible.push(link_id)
+                            nodeIdsVisible.push(rp_id)
+
+                            console.log("rp node id")
+                            console.log(rp_id)
+                        }
+                    }
+                }
+                // place node relative to node zoom node
+                // spacing between nodes
+                const mar_x = 60
+                const mar_y_min = 25
+
+                const n_rel = set_rel_node_ids.size
+                // add space also for extra spaces between relations, to group their roleplayers
+                const sum = array => array.reduce(function(a, b) {return a + b}, 0);
+
+                const n_rel_rp = Object.values(obj_rel_rp_node_ids).length? sum(Object.values(obj_rel_rp_node_ids).map(rp_set => rp_set.size)) + Object.values(obj_rel_rp_node_ids).length/2 - 0.5 : 0
+                const n_rp = set_rp_node_ids.size
+
+                // compute min y value (top)
+                const height = Math.max(n_rel, n_rel_rp, n_rp) * mar_y_min
+                const y_min = nodeZoom.y - height/2
+
+                const mar_y_rel = n_rel > 0 ? height / n_rel : 0
+                const mar_y_rel_rp = n_rel_rp > 0 ? height / n_rel_rp : 0
+                const mar_y_rp = n_rel_rp > 0 ? height / n_rp : 0
+
+                let k_rel = 0.5
+                let k_rel_rp = 0.5
+                let k_rp = 0.5
+
+                for (let node of props.graphData.nodes) {
+                    if (node[props.nodeId] === props.nodeZoomId) {
+                        node.fx = node.x
+                        node.fy = node.y
+                    } else if (set_rel_node_ids.has(node[props.nodeId])) {
+                        node.fx = nodeZoom.x + mar_x
+                        node.fy = y_min + k_rel * mar_y_rel
+                        k_rel = k_rel + 1
+
+                        for (let rel_rp_node_id of obj_rel_rp_node_ids[node[props.nodeId]]) {
+                            const rel_rp_node = nodesById[rel_rp_node_id]
+                            rel_rp_node.fx = nodeZoom.x + mar_x * 2
+                            rel_rp_node.fy = y_min + k_rel_rp * mar_y_rel_rp
+                            nodesUpdated.push(rel_rp_node)
+                            k_rel_rp = k_rel_rp + 1
+                        }
+                        // add extra half space between rps of each rel
+                        k_rel_rp = k_rel_rp + 0.5
+
+                    } else if (set_rp_node_ids.has(node[props.nodeId])) {
+                        // in theory two relation nodes could be reciprocal role players 
+                        // but in that case, group with the relations rather than the roleplayers
+                        node.fx = nodeZoom.x - mar_x
+                        node.fy = y_min + k_rp * mar_y_rp
+                        k_rp = k_rp + 1
+                    }
+
                     nodesUpdated.push(node)
                 }
-                console.log("rel_node_ids")
-                console.log(rel_node_ids)
-                console.log("rp_node_ids")
-                console.log(rp_node_ids)
-                console.log("rel_rp_node_ids")
-                console.log(rel_rp_node_ids)
+                
+                // <DELETE
+                // for (let rel_node_id of set_rel_node_ids) {
+                //     let rel_node = nodesById[rel_node_id]
+                //     rel_node.fx = nodeZoom.x + mar_x
+                //     rel_node.fy = y_min + k_rel * mar_y_rel
+                //     nodesUpdated.push(rel_node)
+                //     k_rel = k_rel + 1
 
-                const nodeIdsVisible = rel_node_ids.concat(rp_node_ids, rel_rp_node_ids)
+                //     for (let rel_rp_node_id of obj_rel_rp_node_ids[rel_node_id]) {
+                //         const rel_rp_node = nodesById[rel_rp_node_id]
+                //         rel_rp_node.fx = nodeZoom.x + mar_x * 2
+                //         rel_rp_node.fy = y_min + k_rel_rp * mar_y_rel_rp
+                //         nodesUpdated.push(rel_rp_node)
+                //         k_rel_rp = k_rel_rp + 1
+                //     }
+                //     // add extra space between rps of each rel
+                //     k_rel_rp = k_rel_rp + 1
+                // }
+
+                // for (let rp_node_id of set_rp_node_ids) {
+                //     const rp_node = nodesById[rp_node_id]
+                //     rp_node.fx = nodeZoom.x - mar_x
+                //     rp_node.fy = y_min + k_rp * mar_y_rp
+                //     nodesUpdated.push(rp_node)
+                //     k_rp = k_rp + 1
+                // }
+
+                // nodeZoom.fx = nodeZoom.x
+                // nodeZoom.fy = nodeZoom.y
+                // nodesUpdated.push(nodeZoom)
+                // /DELETE > 
+
                 nodeIdsVisible.push(props.nodeZoomId)
 
                 props.setProps({nodeIdsVisible:nodeIdsVisible})
-                props.setProps({linkIdsVisible:rel_link_ids.concat(rp_link_ids, rel_rp_link_ids)})
-                
-                // center camera
-                fgRef.current.centerAt(nodesById[props.nodeZoomId].x, nodesById[props.nodeZoomId].y, 250)
+                props.setProps({linkIdsVisible:linkIdsVisible})
+
+                // <DELETE
+                // const nodeFilterFn = n => {
+                //     return nodeIdsVisible.includes(n[props.nodeId])? true : false
+                // }
+                // fgRef.current.zoomToFit(250,10,nodeFilterFn)
+                // /DELETE>
+                fgRef.current.centerAt(nodeZoom.x, nodeZoom.y, 250)
                 fgRef.current.zoom(4,250)
 
             } else {
                 for (let node of props.graphData.nodes) {
-                    delete node.fx
-                    // node.fz =props.centreCoordinates+props.pixelUnitRatio*node.__coord_z
+                    if ("fx" in node) {
+                        delete node.fx
+                        delete node.fy
+                    }
                     nodesUpdated.push(node)
                 }
                 props.setProps({nodeIdsVisible:[]})
-                props.setProps({linkIdsVisible:[]}) 
+                props.setProps({linkIdsVisible:[]})
             }
-            props.setProps({graphData:{"nodes": nodesUpdated, "links":props.graphData.links}})
-        }        
+            // props.setProps({graphData:{"nodes": nodesUpdated, "links":props.graphData.links}})
+        }
     },[props.nodeZoomId])
 
     // useEffect(() => {
