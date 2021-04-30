@@ -621,9 +621,9 @@ function Graph2D(props) {
                 const height = Math.max(n_rel, n_rel_rp, n_rp) * mar_y_min
                 const y_min = nodeZoom.y - height/2
 
-                const mar_y_rel = n_rel > 0 ? height / n_rel : 0
-                const mar_y_rel_rp = n_rel_rp > 0 ? height / n_rel_rp : 0
-                const mar_y_rp = n_rel_rp > 0 ? height / n_rp : 0
+                const mar_y_rel = n_rel > 0 ? height / n_rel : mar_y_min
+                const mar_y_rel_rp = n_rel_rp > 0 ? height / n_rel_rp : mar_y_min
+                const mar_y_rp = n_rp > 0 ? height / n_rp : mar_y_min
 
                 let k_rel = 0.5
                 let k_rel_rp = 0.5
@@ -658,7 +658,6 @@ function Graph2D(props) {
 
                     nodesUpdated.push(node)
                 }
-                
                 // <DELETE
                 // for (let rel_node_id of set_rel_node_ids) {
                 //     let rel_node = nodesById[rel_node_id]
