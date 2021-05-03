@@ -26,6 +26,7 @@
   "dependencies": {
     "d3": "^6.5.0",
     "d3-force": "^2.1.1",
+    "lodash": "^4.17.21",
     "polished": "^4.1.0",
     "ramda": "^0.26.1",
     "react-dat-gui": "^4.1.1",

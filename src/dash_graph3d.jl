@@ -83,23 +83,19 @@ Bounding box is saved as the graphBbox prop
 - `nodeIcon_fontsheets` (Dict; optional): object with keys being fonts (string) and values being CSS sheets
 - `linkId` (String; optional): The link attribute containing the unique link id
 - `interactive` (Bool; optional): toggle enableZoomPanInteraction, enablePointerInteraction, enableNavigationControls with a single control
-- `updated` (Bool; optional): whether or not graphData has changed. Internally, sets interactive to False until (mainly used internally)
 - `nodeZoomId` (String; optional): id of node to zoom to
+- `sortRelsBy1` (String; optional): in zoom view, node attribute to sort relations by first
+- `sortRelsBy2` (String; optional): in zoom view, node attribute to sort relations by after first sort
+- `sortRoleplayersBy1` (String; optional): in zoom view, node attribute to sort role players by first
+- `sortRoleplayersBy2` (String; optional): in zoom view, node attribute to sort role players by after first sort
+- `sortRels1Descend` (Bool; optional): sort in descending order?
+- `sortRels2Descend` (Bool; optional): sort in descending order?
+- `sortRoleplayers1Descend` (Bool; optional): sort in descending order?
+- `sortRoleplayers2Descend` (Bool; optional): sort in descending order?
 - `nodesSelected` (Array of Dicts; optional): selected (clicked) nodes
-- `nodeIdsDrag` (Array of Strings; optional): ids of nodes highlighted due to being dragged
-- `nodeClicked` (Dict; optional): clicked node
-- `nodeClickedViewpointCoordinates` (Dict with Strings as keys and values of type Real; optional): screen coordinates of clicked node
-- `nodeRightClicked` (Dict; optional): right-clicked node
-- `nodeRightClickedViewpointCoordinates` (Dict with Strings as keys and values of type Real; optional): screen coordinates of right-clicked node
-- `nodeHovered` (Dict; optional): the currently hovered node
-- `nodeHoveredViewpointCoordinates` (Dict with Strings as keys and values of type Real; optional): screen coordinates of hovered node
-- `linkClicked` (Dict; optional): clicked link
-- `linkRightClicked` (Dict; optional): right-clicked link
-- `linkHovered` (Dict; optional): hovered link
-- `linksSelected` (Array of Dicts; optional): selected (clicked) links
-- `linkIdsNodesDrag` (Array of Strings; optional): ids of links highlighted due to being dragged
 - `nodeIdsHighlight` (Array of Strings; optional): ids of highlighted nodes (through searcha)
 - `nodeIdsVisible` (Array of Strings; optional): ids of visible nodes
+- `linkIdsHighlight` (Array of Strings; optional): ids of highlighted links (through search)
 - `linkIdsVisible` (Array of Strings; optional): ids of visible links
 - `externalobject_source` (String; optional): externalobject_source:
 - `externalobject_input` (Real | String | Bool | Array | Dict; optional): externalobject_source:
@@ -111,7 +107,7 @@ Bounding box is saved as the graphBbox prop
 - `maxDepth_neighbours_select` (Real; optional): max levels of neighbourhood selection around a node by repeat clicking
 """
 function dash_graph3d(; kwargs...)
-        available_props = Symbol[:id, :graphData, :nodeId, :linkSource, :linkTarget, :backgroundColor, :showNavInfo, :nodeRelSize, :nodeVal, :nodeLabel, :nodeDesc, :nodeColor, :nodeAutoColorBy, :nodeOpacity, :nodeResolution, :linkLabel, :linkDesc, :linkColor, :linkAutoColorBy, :linkOpacity, :linkLineDash, :linkWidth, :linkResolution, :linkCurvature, :linkCurveRotation, :linkDirectionalArrowLength, :linkDirectionalArrowColor, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticles, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :emitParticle, :rendererConfig, :pauseAnimation, :resumeAnimation, :centerAt, :zoom, :zoomToFit, :cameraPosition, :refresh, :numDimensions, :forceEngine, :dagMode, :dagModeOn, :dagLevelDistance, :dagNodeIds, :d3AlphaMin, :d3AlphaDecay, :d3VelocityDecay, :ngraphPhysics, :warmupTicks, :cooldownTicks, :cooldownTime, :d3ReheatSimulation, :linkHoverPrecision, :controlType, :enableNodeDrag, :getGraphBbox, :heightRatio, :size, :active, :nodeURL, :useNodeImg, :nodeImg, :useNodeIcon, :nodeIcon, :nodeIcon_fontsheets, :linkId, :interactive, :updated, :nodeZoomId, :nodesSelected, :nodeIdsDrag, :nodeClicked, :nodeClickedViewpointCoordinates, :nodeRightClicked, :nodeRightClickedViewpointCoordinates, :nodeHovered, :nodeHoveredViewpointCoordinates, :linkClicked, :linkRightClicked, :linkHovered, :linksSelected, :linkIdsNodesDrag, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsVisible, :externalobject_source, :externalobject_input, :centreCoordinates, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :maxDepth_neighbours_select]
+        available_props = Symbol[:id, :graphData, :nodeId, :linkSource, :linkTarget, :backgroundColor, :showNavInfo, :nodeRelSize, :nodeVal, :nodeLabel, :nodeDesc, :nodeColor, :nodeAutoColorBy, :nodeOpacity, :nodeResolution, :linkLabel, :linkDesc, :linkColor, :linkAutoColorBy, :linkOpacity, :linkLineDash, :linkWidth, :linkResolution, :linkCurvature, :linkCurveRotation, :linkDirectionalArrowLength, :linkDirectionalArrowColor, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticles, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :emitParticle, :rendererConfig, :pauseAnimation, :resumeAnimation, :centerAt, :zoom, :zoomToFit, :cameraPosition, :refresh, :numDimensions, :forceEngine, :dagMode, :dagModeOn, :dagLevelDistance, :dagNodeIds, :d3AlphaMin, :d3AlphaDecay, :d3VelocityDecay, :ngraphPhysics, :warmupTicks, :cooldownTicks, :cooldownTime, :d3ReheatSimulation, :linkHoverPrecision, :controlType, :enableNodeDrag, :getGraphBbox, :heightRatio, :size, :active, :nodeURL, :useNodeImg, :nodeImg, :useNodeIcon, :nodeIcon, :nodeIcon_fontsheets, :linkId, :interactive, :nodeZoomId, :sortRelsBy1, :sortRelsBy2, :sortRoleplayersBy1, :sortRoleplayersBy2, :sortRels1Descend, :sortRels2Descend, :sortRoleplayers1Descend, :sortRoleplayers2Descend, :nodesSelected, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsHighlight, :linkIdsVisible, :externalobject_source, :externalobject_input, :centreCoordinates, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :maxDepth_neighbours_select]
         wild_props = Symbol[]
         return Component("dash_graph3d", "Graph3D", "dash_react_force_graph", available_props, wild_props; kwargs...)
 end

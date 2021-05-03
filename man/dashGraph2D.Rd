@@ -40,17 +40,16 @@ enableNodeDrag=NULL, getGraphBbox=NULL, heightRatio=NULL,
 size=NULL, active=NULL, nodeURL=NULL, useNodeImg=NULL,
 nodeImg=NULL, useNodeIcon=NULL, nodeIcon=NULL,
 nodeIcon_fontsheets=NULL, linkId=NULL, interactive=NULL,
-updated=NULL, nodeZoomId=NULL, nodesSelected=NULL,
-nodeIdsDrag=NULL, nodeClicked=NULL,
-nodeClickedViewpointCoordinates=NULL, nodeRightClicked=NULL,
-nodeRightClickedViewpointCoordinates=NULL, nodeHovered=NULL,
-nodeHoveredViewpointCoordinates=NULL, linkClicked=NULL,
-linkRightClicked=NULL, linkHovered=NULL, linksSelected=NULL,
-linkIdsNodesDrag=NULL, nodeIdsHighlight=NULL,
-nodeIdsVisible=NULL, linkIdsVisible=NULL,
-externalobject_source=NULL, externalobject_input=NULL,
-centreCoordinates=NULL, useCoordinates=NULL,
-pixelUnitRatio=NULL, showCoordinates=NULL, gravity=NULL,
+nodeZoomId=NULL, sortRelsBy1=NULL, sortRelsBy2=NULL,
+sortRoleplayersBy1=NULL, sortRoleplayersBy2=NULL,
+sortRels1Descend=NULL, sortRels2Descend=NULL,
+sortRoleplayers1Descend=NULL, sortRoleplayers2Descend=NULL,
+nodesSelected=NULL, nodeIdsHighlight=NULL,
+nodeIdsVisible=NULL, linkIdsHighlight=NULL,
+linkIdsVisible=NULL, externalobject_source=NULL,
+externalobject_input=NULL, centreCoordinates=NULL,
+useCoordinates=NULL, pixelUnitRatio=NULL,
+showCoordinates=NULL, gravity=NULL,
 maxDepth_neighbours_select=NULL)
 }
 
@@ -202,39 +201,31 @@ Bounding box is saved as the graphBbox prop}
 
 \item{interactive}{Logical. toggle enableZoomPanInteraction, enablePointerInteraction, enableNavigationControls with a single control}
 
-\item{updated}{Logical. whether or not graphData has changed. Internally, sets interactive to False until (mainly used internally)}
-
 \item{nodeZoomId}{Character. id of node to zoom to}
+
+\item{sortRelsBy1}{Character. in zoom view, node attribute to sort relations by first}
+
+\item{sortRelsBy2}{Character. in zoom view, node attribute to sort relations by after first sort}
+
+\item{sortRoleplayersBy1}{Character. in zoom view, node attribute to sort role players by first}
+
+\item{sortRoleplayersBy2}{Character. in zoom view, node attribute to sort role players by after first sort}
+
+\item{sortRels1Descend}{Logical. sort in descending order?}
+
+\item{sortRels2Descend}{Logical. sort in descending order?}
+
+\item{sortRoleplayers1Descend}{Logical. sort in descending order?}
+
+\item{sortRoleplayers2Descend}{Logical. sort in descending order?}
 
 \item{nodesSelected}{List of named lists. selected (clicked) nodes}
 
-\item{nodeIdsDrag}{List of characters. ids of nodes highlighted due to being dragged}
-
-\item{nodeClicked}{Named list. clicked node}
-
-\item{nodeClickedViewpointCoordinates}{List with named elements and values of type numeric. screen coordinates of clicked node}
-
-\item{nodeRightClicked}{Named list. right-clicked node}
-
-\item{nodeRightClickedViewpointCoordinates}{List with named elements and values of type numeric. screen coordinates of right-clicked node}
-
-\item{nodeHovered}{Named list. the currently hovered node}
-
-\item{nodeHoveredViewpointCoordinates}{List with named elements and values of type numeric. screen coordinates of hovered node}
-
-\item{linkClicked}{Named list. clicked link}
-
-\item{linkRightClicked}{Named list. right-clicked link}
-
-\item{linkHovered}{Named list. hovered link}
-
-\item{linksSelected}{List of named lists. selected (clicked) links}
-
-\item{linkIdsNodesDrag}{List of characters. ids of links highlighted due to being dragged}
-
-\item{nodeIdsHighlight}{List of characters. ids of highlighted nodes (through searcha)}
+\item{nodeIdsHighlight}{List of characters. ids of highlighted nodes (through search)}
 
 \item{nodeIdsVisible}{List of characters. ids of visible nodes}
+
+\item{linkIdsHighlight}{List of characters. ids of highlighted links (through search)}
 
 \item{linkIdsVisible}{List of characters. ids of visible links}
 

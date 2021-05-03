@@ -48,7 +48,7 @@ function Graph3D(props) {
         fgRef.current.d3Force(
           'radial',forceRadial().radius(0).strength(0.00)) //Math.pow(Math.sqrt(node.x)+Math.sqrt(node.y),2)/2
         // add some negative charge (nodes repel each other) and lower the effective distance
-        fgRef.current.d3Force('charge').strength(-50).distanceMax(100)
+        fgRef.current.d3Force('charge').strength(0).distanceMax(100)
       }, []);
 
     // settings
@@ -58,7 +58,7 @@ function Graph3D(props) {
         "nodeRelSize":props.nodeRelSize,
         "nodeOpacity":props.nodeOpacity,
         "link":50,
-        "charge":-50,
+        "charge":0,
         "center":1,
         "radial":0.00,
         "useNodeImg":props.useNodeImg,
@@ -75,61 +75,59 @@ function Graph3D(props) {
         props.setProps({showNavInfo:guiSettings.showNavInfo})
         props.setProps({nodeRelSize:guiSettings.nodeRelSize})
         props.setProps({nodeOpacity:guiSettings.nodeOpacity})
-        fgRef.current
-            .d3Force('link')
-            .distance(link => guiSettings.link)
-        fgRef.current
-            .d3Force('charge')
-            .strength(() => guiSettings.charge)
-        fgRef.current
-            .d3Force('center')
-            .strength(() => guiSettings.center)
-        fgRef.current
-            .d3Force('radial')
-            .strength(() => guiSettings.radial)
-
+        if (props.forceEngine === "d3") {
+            fgRef.current
+                .d3Force('link')
+                .distance(link => guiSettings.link)
+            fgRef.current
+                .d3Force('charge')
+                .strength(() => guiSettings.charge)
+            fgRef.current
+                .d3Force('center')
+                .strength(() => guiSettings.center)
+            fgRef.current
+                .d3Force('radial')
+                .strength(() => guiSettings.radial)
+            props.setProps({dagMode:props.dagModeOn || guiSettings.dagModeOn? guiSettings.dagMode : null})
+            fgRef.current.d3ReheatSimulation()
+        }
         props.setProps({useNodeImg:guiSettings.useNodeImg})
         props.setProps({useNodeIcon:guiSettings.useNodeIcon})
-
-        props.setProps({dagMode:props.dagModeOn || guiSettings.dagModeOn? guiSettings.dagMode : null})
-
-        fgRef.current.d3ReheatSimulation()
-
     }, [guiSettings, props.dagModeOn])
 
     const [nodesById, setNodesById] = useState(null)
 
     // display standard browser warning before navigating away from page
     // https://stackoverflow.com/questions/1119289/how-to-show-the-are-you-sure-you-want-to-navigate-away-from-this-page-when-ch
-    useEffect( () => {
-        if (props.active && props.graphData.nodes.length>0) {
-            window.onbeforeunload = () => true
-        } else {
-            window.onbeforeunload = () => false
-        }
-      },[props.graphData, props.active])
+    // useEffect( () => {
+    //     if (props.active && props.graphData.nodes.length>0) {
+    //         window.onbeforeunload = () => true
+    //     } else {
+    //         window.onbeforeunload = () => false
+    //     }
+    //   },[props.graphData, props.active])
 
 
     // set node coordinates
     useEffect( () => {
-        const nodesUpdated = []
+        // const nodesUpdated = []
         const origin = [0,0,0]
         if (props.useCoordinates && props.pixelUnitRatio && props.graphData) {
            for (let node of props.graphData.nodes) {
                node.fx =origin+props.pixelUnitRatio*node.__coord_x
                node.fy =origin+props.pixelUnitRatio*node.__coord_y
                node.fz =origin+props.pixelUnitRatio*node.__coord_z
-               nodesUpdated.push(node)
+               // nodesUpdated.push(node)
            }
         }  else {
             for (let node of props.graphData.nodes) {
                 delete node.fx
                 delete node.fy
                 delete node.fz
-                nodesUpdated.push(node)
+                // nodesUpdated.push(node)
             }
         }
-        props.setProps({graphData:{"nodes": nodesUpdated, "links":props.graphData.links}})
+        // props.setProps({graphData:{"nodes": nodesUpdated, "links":props.graphData.links}})
    },[props.useCoordinates, props.pixelUnitRatio, props.graphData])
 
     // when loading new graphData and rendering engine is running, disable interactivity
@@ -224,9 +222,7 @@ function Graph3D(props) {
               }
           }
           props.setProps({graphData:{"nodes":nodes, "links":props.graphData.links}})
-        
-        setNodesById(Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node])))
-
+          setNodesById(Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node])))
         }
     },[props.graphData])
 
@@ -489,6 +485,9 @@ function Graph3D(props) {
         props.setProps({linkRightClicked:null});
         props.setProps({nodesSelected:[]});
         props.setProps({linksSelected:[]});
+        if (event.detail == 2) {
+          props.setProps({nodeZoomId:null})
+        }
     };
 
     const handleBackgroundRightClick = event => {
@@ -502,10 +501,10 @@ function Graph3D(props) {
         props.setProps({linksSelected:[]});
     };
 
-    useEffect(()=> {
-        props.setProps({updated:false})
-    }, [props.nodeIdsDrag, props.nodesSelected])
-
+    // useEffect(()=> {
+    //     props.setProps({updated:false})
+    // }, [props.nodeIdsDrag, props.nodesSelected])
+    //
 
     const handleLinkClick = (link,event) => {
 
@@ -541,20 +540,20 @@ function Graph3D(props) {
     useEffect(() => {
 
         if (props.graphData.nodes.length > 1) {
-            const nodesUpdated = []
+            // const nodesUpdated = []
 
             if (props.nodeZoomId) {
 
                 const nodeZoom = nodesById[props.nodeZoomId]
 
                 const rel_node_ids = []
-                const rel_link_ids = [] 
-                
+                const rel_link_ids = []
+
                 const rp_node_ids = []
-                const rp_link_ids = [] 
+                const rp_link_ids = []
 
                 const rel_rp_node_ids = []
-                const rel_rp_link_ids = [] 
+                const rel_rp_link_ids = []
 
                 // iterate over node relations
                 for (let [role, obj] of Object.entries(nodeZoom.__source)) {
@@ -582,16 +581,16 @@ function Graph3D(props) {
                             rel_rp_link_ids.push(key)
                             rel_rp_node_ids.push(value)
                         }
-                    }  
+                    }
                 }
-                
+
                 // place node relative to node zoom node
                 for (let node of props.graphData.nodes) {
-                    const delta_x = rel_node_ids.includes(node[props.nodeId])? 20 : rel_rp_node_ids.includes(node[props.nodeId])? 40 : rp_node_ids.includes(node[props.nodeId])? -20 : null 
+                    const delta_x = rel_node_ids.includes(node[props.nodeId])? 20 : rel_rp_node_ids.includes(node[props.nodeId])? 40 : rp_node_ids.includes(node[props.nodeId])? -20 : null
                     if (delta_x !== null) {
                         node.fx = nodeZoom.x + delta_x
                     }
-                    nodesUpdated.push(node)
+                    // nodesUpdated.push(node)
                 }
                 console.log("rel_node_ids")
                 console.log(rel_node_ids)
@@ -605,7 +604,7 @@ function Graph3D(props) {
 
                 props.setProps({nodeIdsVisible:nodeIdsVisible})
                 props.setProps({linkIdsVisible:rel_link_ids.concat(rp_link_ids, rel_rp_link_ids)})
-                
+
                 // center camera
                 const distance = 40;
                 const distRatio = 1 + distance/Math.hypot(nodesById[props.nodeZoomId].x, nodesById[props.nodeZoomId].y, nodesById[props.nodeZoomId].z);
@@ -619,13 +618,13 @@ function Graph3D(props) {
                 for (let node of props.graphData.nodes) {
                     delete node.fx
                     // node.fz =props.centreCoordinates+props.pixelUnitRatio*node.__coord_z
-                    nodesUpdated.push(node)
+                    // nodesUpdated.push(node)
                 }
                 props.setProps({nodeIdsVisible:[]})
-                props.setProps({linkIdsVisible:[]}) 
+                props.setProps({linkIdsVisible:[]})
             }
-            props.setProps({graphData:{"nodes": nodesUpdated, "links":props.graphData.links}})
-        }        
+            // props.setProps({graphData:{"nodes": nodesUpdated, "links":props.graphData.links}})
+        }
     },[props.nodeZoomId])
 
     // prepare icon_fontsheets
@@ -860,14 +859,21 @@ function Graph3D(props) {
         }
         let out = null
         if (spriteImg) {
-            let group = new THREE.Group();
-            const pos_adj1 = new THREE.Vector3( 0, -5, 0 );
-            const pos_adj2 = new THREE.Vector3( 0, 5, 0 );
-            spriteText.position.add(pos_adj1)
-            spriteImg.position.add(pos_adj2)
-            group.add( spriteText );
-            group.add( spriteImg );
-            out = group;
+            // https://github.com/vasturiano/react-force-graph/issues/240
+            out = new THREE.Mesh(
+              new THREE.SphereGeometry(10),
+              new THREE.MeshBasicMaterial({ depthWrite: false, transparent: true, opacity: 0 })
+            );
+            out.add(spriteText)
+            out.add(spriteImg)
+            // let group = new THREE.Group();
+            // const pos_adj1 = new THREE.Vector3( 0, -5, 0 );
+            // const pos_adj2 = new THREE.Vector3( 0, 5, 0 );
+            // spriteText.position.add(pos_adj1)
+            // spriteImg.position.add(pos_adj2)
+            // group.add( spriteText );
+            // group.add( spriteImg );
+            // out = group;
         } else {
             out = spriteText
         }
@@ -986,11 +992,17 @@ function Graph3D(props) {
         Object.assign(sprite.position, middlePos);
     }
 
-
     const onEngineStopFunction = () => {
         props.setProps({enableZoomPanInteraction: props.interactive? true : false})
         props.setProps({enablePointerInteraction: props.interactive? true : false})
         props.setProps({enableNavigationControls: props.interactive? true : false})
+        if (props.graphData.nodes.length) {
+            for (let node of props.graphData.nodes) {
+              node.fx = node.x
+              node.fy = node.y
+              node.fz = node.z
+            }
+        }
     }
 
     // three-geo: add terrain to scene
@@ -2118,13 +2130,53 @@ const graphSharedProptypes = {
     /**
     * whether or not graphData has changed. Internally, sets interactive to False until (mainly used internally)
     */
-    "updated": PropTypes.bool,
-
+    // "updated": PropTypes.bool,
+    //
     /**
     * id of node to zoom to
     */
     "nodeZoomId": PropTypes.string,
 
+    /**
+    * in zoom view, node attribute to sort relations by first
+    */
+    "sortRelsBy1":PropTypes.string,
+    
+     /**
+     * in zoom view, node attribute to sort relations by after first sort
+     */
+    "sortRelsBy2":PropTypes.string,
+     
+     /**
+     * in zoom view, node attribute to sort role players by first
+     */
+    "sortRoleplayersBy1":PropTypes.string,
+     
+     /**
+     * in zoom view, node attribute to sort role players by after first sort
+     */
+    "sortRoleplayersBy2":PropTypes.string,
+         
+     /**
+     * sort in descending order?
+     */
+    "sortRels1Descend":PropTypes.bool,
+ 
+     /**
+     * sort in descending order?
+     */
+    "sortRels2Descend":PropTypes.bool,
+ 
+     /**
+     * sort in descending order?
+     */
+    "sortRoleplayers1Descend":PropTypes.bool,
+ 
+     /**
+     * sort in descending order?
+     */
+    "sortRoleplayers2Descend":PropTypes.bool,
+     
     /**
     * selected (clicked) nodes
     */
@@ -2135,68 +2187,68 @@ const graphSharedProptypes = {
     /**
     * ids of nodes highlighted due to being dragged
     */
-    "nodeIdsDrag": PropTypes.arrayOf(
-        PropTypes.string
-    ),
+    // "nodeIdsDrag": PropTypes.arrayOf(
+    //     PropTypes.string
+    // ),
 
     /**
     * clicked node
     */
-    "nodeClicked": PropTypes.object,
+    // "nodeClicked": PropTypes.object,
 
     /**
     *  screen coordinates of clicked node
     */
-    "nodeClickedViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
+    // "nodeClickedViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
 
     /**
     * right-clicked node
     */
-    "nodeRightClicked": PropTypes.object,
+    // "nodeRightClicked": PropTypes.object,
 
     /**
     *  screen coordinates of right-clicked node
     */
-    "nodeRightClickedViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
+    // "nodeRightClickedViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
 
     /**
     * the currently hovered node
     */
-    "nodeHovered": PropTypes.object,
+    // "nodeHovered": PropTypes.object,
 
     /**
     *  screen coordinates of hovered node
     */
-    "nodeHoveredViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
+    // "nodeHoveredViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
 
     /**
     * clicked link
     */
-    "linkClicked": PropTypes.object,
+    // "linkClicked": PropTypes.object,
 
     /**
     * right-clicked link
     */
-    "linkRightClicked": PropTypes.object,
+    // "linkRightClicked": PropTypes.object,
 
     /**
     * hovered link
     */
-    "linkHovered": PropTypes.object,
+    // "linkHovered": PropTypes.object,
 
     /**
     *  selected (clicked) links
     */
-    "linksSelected": PropTypes.arrayOf(
-        PropTypes.object
-    ),
+    // "linksSelected": PropTypes.arrayOf(
+    //     PropTypes.object
+    // ),
 
     /**
     * ids of links highlighted due to being dragged
     */
-    "linkIdsNodesDrag": PropTypes.arrayOf(
-        PropTypes.string
-    ),
+    // "linkIdsNodesDrag": PropTypes.arrayOf(
+    //     PropTypes.string
+    // ),
 
 
     /**
@@ -2208,6 +2260,11 @@ const graphSharedProptypes = {
      * ids of visible nodes
      */
     "nodeIdsVisible": PropTypes.arrayOf(PropTypes.string),
+
+    /**
+    * ids of highlighted links (through search)
+    */
+    "linkIdsHighlight": PropTypes.arrayOf(PropTypes.string),
 
     /**
      * ids of visible links

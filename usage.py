@@ -12,7 +12,7 @@ app = dash.Dash(__name__,
 )
 
 
-def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=["x","y","z"]):
+def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=[]):
     '''
     @usage remove the data inserted into graphData by react-force-graph components.
     @param graphData: graphData used by react-force-graph
@@ -24,13 +24,13 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=["x","y","z"])
     links_key = "edges" if graph_lib == "cytoscape" else "links"
 
     # do not remove indexColor?
-    nodes_keys_rm = ["index", "vx","vy", "vz"]
-    if graph_lib == "2D":
+    nodes_keys_rm = ["index", "vx","vy"]
+    if graph_lib == "3D":
         nodes_keys_rm.append("vz")
 
     links_keys_rm = ["index","__controlPoints"]
 
-    if graph_lib == "2D":
+    if graph_lib == "3D":
         nodes_keys_rm.append("__threeObj")
         links_keys_rm += ["__arrowObj",   "__curve", "__lineObj"]
 
@@ -59,8 +59,6 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=["x","y","z"])
     return graphData
 
 
-
-
 graphData = {
     "nodes":[
         {"nodeId":"1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
@@ -78,7 +76,7 @@ graphData = {
         {"nodeId":"13",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
         {"nodeId":"14",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
         {"nodeId":"15",  "__nodeLabel":"Jenny Howard", "__nodeColor":"cornfloweblue", "__nodeIcon": {"FontAwesome":"\uF007"}}
-    
+
         ],
     "links":[
         {"id":"1", "label":"employee", "source":"1", "target":"10"},
@@ -104,21 +102,8 @@ app.layout = html.Div([
     html.Br(),
     html.Button("add random node", id="button-add"),
     html.Button("delete random node", id="button-delete"),
-    dcc.Dropdown(
-        id="dropdown",
-        options=[
-            {"label":"1","value":"1"},
-            {"label":"2","value":"2"},
-            {"label":"3","value":"3"},
-            {"label":"4","value":"4"},
-            {"label":"5","value":"5"},
-            {"label":"6","value":"6"},
-            {"label":"7","value":"7"},
-            {"label":"8","value":"8"},
-            {"label":"9","value":"9"},
-            {"label":"None","value":"None"},
-        ]),
 
+    
     dash_react_force_graph.Graph2D(
         id='graph2D',
         graphData=graphData,
@@ -133,6 +118,63 @@ app.layout = html.Div([
         dagMode=None,
         dagNodeIds=["3","4","6","8","9"]
     ),
+    html.Label("sortRelsBy1"),
+    dcc.Dropdown(
+        id="dropdown-sortRelsBy1",
+        options=[
+            {"label":"__nodeLabel", "value":"__nodeLabel"},
+            {"label":"nodeId", "value":"nodeId"},
+        ]),
+    html.Label("sortRelsBy2"),
+    dcc.Dropdown(
+        id="dropdown-sortRelsBy2",
+        options=[
+            {"label":"__nodeLabel", "value":"__nodeLabel"},
+            {"label":"nodeId", "value":"nodeId"},
+        ]),
+    html.Label("sortRoleplayersBy1"),
+    dcc.Dropdown(
+        id="dropdown-sortRoleplayersBy1",
+        options=[
+            {"label":"__nodeLabel", "value":"__nodeLabel"},
+            {"label":"nodeId", "value":"nodeId"},
+        ]),
+    html.Label("sortRoleplayersBy2"),
+    dcc.Dropdown(
+        id="dropdown-sortRoleplayersBy2",
+        options=[
+            {"label":"__nodeLabel", "value":"__nodeLabel"},
+            {"label":"nodeId", "value":"nodeId"},
+        ]),
+    html.Label("sortRels1Descend"),
+    dcc.Dropdown(
+        id="dropdown-sortRels1Descend",
+        options=[
+            {"label":"True", "value":"True"},
+            {"label":"False", "value":"False"},
+        ]),
+    html.Label("sortRels2Descend"),
+    dcc.Dropdown(
+        id="dropdown-sortRels2Descend",
+        options=[
+            {"label":"True", "value":"True"},
+            {"label":"False", "value":"False"},
+        ]),
+    html.Label("sortRoleplayers1Descend"),
+    dcc.Dropdown(
+        id="dropdown-sortRoleplayers1Descend",
+        options=[
+            {"label":"True", "value":"True"},
+            {"label":"False", "value":"False"},
+        ]),
+    html.Label("sortRoleplayers2Descend"),
+    dcc.Dropdown(
+        id="dropdown-sortRoleplayers2Descend",
+        options=[
+            {"label":"True", "value":"True"},
+            {"label":"False", "value":"False"},
+        ]),
+
     # dash_react_force_graph.Graph2D(
     #     id='graph2D',
     #     graphData=graphData,
@@ -145,12 +187,17 @@ app.layout = html.Div([
     #     nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     # ),
     # html.Div(id='output-nodeHovered-2D'),
+    html.Br(),
     html.Div(id='output-nodeClicked-2D'),
+    html.Br(),
+    html.Div(id='output-nodesSelected-2D'),
+    html.Br(),
     html.Div(id='output-nodeRightClicked-2D'),
+    # html.Div(id='output-graphData-2D'),
     # html.H2("Graph2D"),
     # html.Div(id='output-nodeClicked-2D'),
     # html.Div(id='output-nodeRightClicked-2D'),
-    html.Br(),
+    # html.Br(),
     # html.Br(),
     # dash_react_force_graph.Graph2D(
     #     id='graph2D',
@@ -163,46 +210,76 @@ app.layout = html.Div([
     # html.Div(id='output-nodeRightClicked-2D'),
 ])
 
+@app.callback(
+    Output("graph2D","sortRelsBy1"),
+    [Input("dropdown-sortRelsBy1","value")])
+def sort_rels_by_1(attr):
+    return attr
 
 @app.callback(
-    Output('dropdown',  'options'),
-[
-    Input('graph2D', 'graphData'),
-])
-def populate_node_dropdown(graphData):
-    return [{"label":node["nodeId"], "value":node["nodeId"]} for node in graphData["nodes"]]
+    Output("graph2D","sortRelsBy2"),
+    [Input("dropdown-sortRelsBy2","value")])
+def sort_rels_by_2(attr):
+    return attr
 
+@app.callback(
+    Output("graph2D","sortRels1Descend"),
+    [Input("dropdown-sortRels1Descend","value")])
+def sort_rels_1_desc(value):
+    return bool(value)
+    
+@app.callback(
+    Output("graph2D","sortRels2Descend"),
+    [Input("dropdown-sortRels2Descend","value")])
+def sort_rels_2_desc(value):
+    return bool(value)
 
-@app.callback(Output('graph2D',  'nodeZoomId'),
-[
-    Input('dropdown', 'value'),
-])
-def zoom_to_node(nodeZoomId):
-    ctx = dash.callback_context
+@app.callback(
+    Output("graph2D","sortRoleplayersBy1"),
+    [Input("dropdown-sortRoleplayersBy1","value")])
+def sort_rels_by_1(attr):
+    return attr
 
-    if not ctx.triggered:
-        raise PreventUpdate
+@app.callback(
+    Output("graph2D","sortRoleplayersBy2"),
+    [Input("dropdown-sortRoleplayersBy2","value")])
+def sort_rels_by_2(attr):
+    return attr
 
-    if nodeZoomId == "None":
-        nodeZoomId = None
-
-    return nodeZoomId
-
+@app.callback(
+    Output("graph2D","sortRoleplayers1Descend"),
+    [Input("dropdown-sortRoleplayers1Descend","value")])
+def sort_rels_1_desc(value):
+    return bool(value)
+    
+@app.callback(
+    Output("graph2D","sortRoleplayers2Descend"),
+    [Input("dropdown-sortRoleplayers2Descend","value")])
+def sort_rels_2_desc(value):
+    return bool(value)
 
 @app.callback(
 [
     # Output('output-nodeHovered-2D', 'children'),
     Output('output-nodeClicked-2D',  'children'),
+    Output('output-nodesSelected-2D',  'children'),
     Output('output-nodeRightClicked-2D',  'children'),
 ],
 [
     # Input('graph2D', 'nodeHovered'),
+    Input('graph2D', 'nodesSelected'),
     Input('graph2D', 'nodeClicked'),
     Input('graph2D', 'nodeRightClicked'),
 ])
-def display_selected_nodes_2D( nodeClicked, nodeRightClicked):
-    
-    return ["clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
+def display_clicked_selected_nodes_2D(
+nodesSelected,
+nodeClicked,
+nodeRightClicked):
+    return [
+        "clicked node: {}".format(nodeClicked),
+        "selected nodes: {}".format(nodesSelected),
+        "rightclicked node: {}".format(nodeRightClicked),
+        ]
 
 
 
@@ -221,6 +298,9 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
         raise PreventUpdate
     else:
         trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
+
+    print("")
+    print("received graphData: {} ".format(graphData))
 
     graphData = rm_graphData_render_data(graphData, graph_lib="2D", coordinates_rm=[])
 
@@ -245,6 +325,10 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
 
         if len(graphData["links"]):
             graphData["links"] = list(filter(lambda link: not nodeDel["nodeId"] in [link["source"], link["target"]], graphData["links"]))
+
+    print("")
+    print("returning graphData: {} ".format(graphData))
+
 
     return graphData
 
