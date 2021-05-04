@@ -536,13 +536,6 @@
         "required": false,
         "description": "How long (ms) to render for before stopping and freezing the layout engine."
       },
-      "d3ReheatSimulation": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine."
-      },
       "linkHoverPrecision": {
         "type": {
           "name": "number"

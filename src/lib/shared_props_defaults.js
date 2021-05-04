@@ -109,7 +109,7 @@ const objSharedProps = {
     // dagNodeFilter: // Implemented in Higher Order Component
     // onDagError: // implemented in Higher Order Component
     dagNodeIds: [],
-    d3AlphaMin: 0,
+    d3AlphaMin: 0.001,
     d3AlphaDecay: 0.0228,
     d3VelocityDecay: 0.4,
     ngraphPhysics: null,
@@ -122,7 +122,7 @@ const objSharedProps = {
     // d3Force_define: {"name":null, "force":null, "force_args":null},
     // d3Force_call: {"name":null, "method":null, "method_args":null},
 
-    d3ReheatSimulation: false,
+    // d3ReheatSimulation: false,
 
     /**
     * interaction

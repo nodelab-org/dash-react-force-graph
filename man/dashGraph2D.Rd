@@ -34,22 +34,21 @@ numDimensions=NULL, forceEngine=NULL, dagMode=NULL,
 dagModeOn=NULL, dagLevelDistance=NULL, dagNodeIds=NULL,
 d3AlphaMin=NULL, d3AlphaDecay=NULL, d3VelocityDecay=NULL,
 ngraphPhysics=NULL, warmupTicks=NULL, cooldownTicks=NULL,
-cooldownTime=NULL, d3ReheatSimulation=NULL,
-linkHoverPrecision=NULL, controlType=NULL,
-enableNodeDrag=NULL, getGraphBbox=NULL, heightRatio=NULL,
-size=NULL, active=NULL, nodeURL=NULL, useNodeImg=NULL,
-nodeImg=NULL, useNodeIcon=NULL, nodeIcon=NULL,
-nodeIcon_fontsheets=NULL, linkId=NULL, interactive=NULL,
-nodeZoomId=NULL, sortRelsBy1=NULL, sortRelsBy2=NULL,
-sortRoleplayersBy1=NULL, sortRoleplayersBy2=NULL,
-sortRels1Descend=NULL, sortRels2Descend=NULL,
-sortRoleplayers1Descend=NULL, sortRoleplayers2Descend=NULL,
-nodesSelected=NULL, nodeIdsHighlight=NULL,
-nodeIdsVisible=NULL, linkIdsHighlight=NULL,
-linkIdsVisible=NULL, externalobject_source=NULL,
-externalobject_input=NULL, centreCoordinates=NULL,
-useCoordinates=NULL, pixelUnitRatio=NULL,
-showCoordinates=NULL, gravity=NULL,
+cooldownTime=NULL, linkHoverPrecision=NULL,
+controlType=NULL, enableNodeDrag=NULL, getGraphBbox=NULL,
+heightRatio=NULL, size=NULL, active=NULL, nodeURL=NULL,
+useNodeImg=NULL, nodeImg=NULL, useNodeIcon=NULL,
+nodeIcon=NULL, nodeIcon_fontsheets=NULL, linkId=NULL,
+interactive=NULL, nodeZoomId=NULL, sortRelsBy1=NULL,
+sortRelsBy2=NULL, sortRoleplayersBy1=NULL,
+sortRoleplayersBy2=NULL, sortRels1Descend=NULL,
+sortRels2Descend=NULL, sortRoleplayers1Descend=NULL,
+sortRoleplayers2Descend=NULL, nodesSelected=NULL,
+nodeIdsHighlight=NULL, nodeIdsVisible=NULL,
+linkIdsHighlight=NULL, linkIdsVisible=NULL,
+externalobject_source=NULL, externalobject_input=NULL,
+centreCoordinates=NULL, useCoordinates=NULL,
+pixelUnitRatio=NULL, showCoordinates=NULL, gravity=NULL,
 maxDepth_neighbours_select=NULL)
 }
 
@@ -167,8 +166,6 @@ maxDepth_neighbours_select=NULL)
 \item{cooldownTicks}{Numeric. How many build-in frames to render before stopping and freezing the layout engine.}
 
 \item{cooldownTime}{Numeric. How long (ms) to render for before stopping and freezing the layout engine.}
-
-\item{d3ReheatSimulation}{Logical. Reheats the force simulation engine, by setting the alpha value to 1. Only applicable if using the d3 simulation engine.}
 
 \item{linkHoverPrecision}{Numeric. Whether to display the link label when gazing the link closely (low value) or from far away (high value).}
 
