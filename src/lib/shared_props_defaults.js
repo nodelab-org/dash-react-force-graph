@@ -28,7 +28,7 @@ const objSharedProps = {
     * node styling
     */
     // props
-    nodeRelSize: 4,
+    nodeRelSize: 5,
     nodeVal:"val",
     nodeLabel: "label",
     // nodeDesc: "desc" // VR only
@@ -109,9 +109,9 @@ const objSharedProps = {
     // dagNodeFilter: // Implemented in Higher Order Component
     // onDagError: // implemented in Higher Order Component
     dagNodeIds: [],
-    d3AlphaMin: 0.001,
-    d3AlphaDecay: 0.0228,
-    d3VelocityDecay: 0.4,
+    // d3AlphaMin: 0.001,
+    // d3AlphaDecay: 0.0228,
+    // d3VelocityDecay: 0.4,
     ngraphPhysics: null,
     warmupTicks: 0,
     cooldownTicks: Infinity,

@@ -32,7 +32,6 @@ resumeAnimation=NULL, centerAt=NULL, zoom=NULL,
 zoomToFit=NULL, cameraPosition=NULL, refresh=NULL,
 numDimensions=NULL, forceEngine=NULL, dagMode=NULL,
 dagModeOn=NULL, dagLevelDistance=NULL, dagNodeIds=NULL,
-d3AlphaMin=NULL, d3AlphaDecay=NULL, d3VelocityDecay=NULL,
 ngraphPhysics=NULL, warmupTicks=NULL, cooldownTicks=NULL,
 cooldownTime=NULL, linkHoverPrecision=NULL,
 controlType=NULL, enableNodeDrag=NULL, getGraphBbox=NULL,
@@ -152,12 +151,6 @@ maxDepth_neighbours_select=NULL)
 \item{dagLevelDistance}{Numeric. If dagMode is engaged, this specifies the distance between the different graph depths.}
 
 \item{dagNodeIds}{List of characters. array of string ids for nodes to include in DAG layout}
-
-\item{d3AlphaMin}{Numeric. Sets the simulation alpha min parameter. Only applicable if using the d3 simulation engine.}
-
-\item{d3AlphaDecay}{Numeric. Sets the simulation intensity decay parameter. Only applicable if using the d3 simulation engine.}
-
-\item{d3VelocityDecay}{Numeric. Nodes' velocity decay that simulates the medium resistance. Only applicable if using the d3 simulation engine.}
 
 \item{ngraphPhysics}{Named list. Specify custom physics configuration for ngraph, according to its configuration object syntax. Only applicable if using the ngraph simulation engine.}
 

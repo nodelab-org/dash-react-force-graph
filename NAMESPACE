@@ -1,6 +1,8 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
 export(dashGraph2D)
+export(dashGraph2D_tmp)
 export(dashGraph3D)
+export(dashGraph2DTmp)
 export(dashGraph2Dalt)
 export(dashDashReactForceGraph)

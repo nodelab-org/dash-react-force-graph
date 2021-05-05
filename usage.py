@@ -75,7 +75,7 @@ graphData = {
         {"nodeId":"12",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
         {"nodeId":"13",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
         {"nodeId":"14",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"15",  "__nodeLabel":"Jenny Howard", "__nodeColor":"cornfloweblue", "__nodeIcon": {"FontAwesome":"\uF007"}}
+        {"nodeId":"15",  "__nodeLabel":"Jenny Howard", "__nodeColor":"cornflowerblue", "__nodeIcon": {"FontAwesome":"\uF007"}}
 
         ],
     "links":[
@@ -237,25 +237,25 @@ def sort_rels_2_desc(value):
 @app.callback(
     Output("graph2D","sortRoleplayersBy1"),
     [Input("dropdown-sortRoleplayersBy1","value")])
-def sort_rels_by_1(attr):
+def sort_rps_by_1(attr):
     return attr
 
 @app.callback(
     Output("graph2D","sortRoleplayersBy2"),
     [Input("dropdown-sortRoleplayersBy2","value")])
-def sort_rels_by_2(attr):
+def sort_rps_by_2(attr):
     return attr
 
 @app.callback(
     Output("graph2D","sortRoleplayers1Descend"),
     [Input("dropdown-sortRoleplayers1Descend","value")])
-def sort_rels_1_desc(value):
+def sort_rps_1_desc(value):
     return bool(value)
     
 @app.callback(
     Output("graph2D","sortRoleplayers2Descend"),
     [Input("dropdown-sortRoleplayers2Descend","value")])
-def sort_rels_2_desc(value):
+def sort_rps_2_desc(value):
     return bool(value)
 
 @app.callback(
@@ -306,12 +306,12 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
 
     if trigger_id == "button-add":
         newNodeId = max([int(node["nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
-        newNode = {"nodeId":newNodeId, "__nodeLabel":"new_node_".format(newNodeId), "__nodeColor":"orange"}
+        newNode = {"nodeId":newNodeId, "__nodeLabel":"new_node_{}".format(newNodeId), "__nodeColor":"orange"}
 
         if len(graphData["nodes"]):
             ridx =  random.randrange(len(graphData["nodes"]))
             newLinkId = max([int(link["id"]) for link in graphData["links"]])+1 if len(graphData["links"]) else 1
-            newLink = {"id":newLinkId, "source":newNode["nodeId"], "target": graphData["nodes"][ridx]["nodeId"], "label":"new_link".format(newLinkId)}
+            newLink = {"id":newLinkId, "source":newNode["nodeId"], "target": graphData["nodes"][ridx]["nodeId"], "label":"new_link_{}".format(newLinkId)}
             graphData["links"].append(newLink)
 
         graphData["nodes"].append(newNode)
