@@ -16,18 +16,22 @@ Keyword arguments:
 - `backgroundColor` (String; optional): Getter/setter for the chart background color, default transparent
 - `showNavInfo` (Bool; optional): Whether to show the navigation controls footer info.
 - `nodeRelSize` (Real; optional): Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.
+- `nodeIconRelSize` (Real; optional): controls nodeIcon size
+- `nodeImgRelSize` (Real; optional): controls nodeImg size
 - `nodeVal` (Real | String; optional): Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.
 - `nodeLabel` (String; optional): Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
 2D, 3D and VR
 - `nodeDesc` (String; optional): For VR only. Node object accessor function or attribute for description (shown under label).
 - `nodeColor` (String; optional): The node attribute whose value should be used for coloring nodes
 - `nodeAutoColorBy` (String; optional): Node object accessor function or attribute to automatically group colors by. Only affects nodes without a color attribute.
+- `nodeTextAutoColor` (Bool; optional): Automatically color node text with inverse of backgroundColor
 - `nodeOpacity` (Real; optional): Nodes sphere opacity, between [0,1]. 3D, VR, AR
 - `nodeResolution` (Real; optional): Geometric resolution of each node's sphere, expressed in how many slice segments to divide the circumference. Higher values yield smoother spheres. Only applicable to 3D modes.
 3D, VR, AR
 - `linkLabel` (String; optional): Link object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
 - `linkDesc` (String; optional): For VR only. Link object accessor function or attribute for description (shown under label).
 - `linkColor` (String; optional): Link object accessor function or attribute for line color.
+- `linkAutoColor` (Bool; optional): Automatically color link with inverse of background color
 - `linkAutoColorBy` (String; optional): Link object accessor function or attribute to automatically group colors by. Only affects links without a color attribute.
 - `linkOpacity` (Real; optional): Line opacity of links, between [0,1]. 3D, VR, AR
 - `linkLineDash` (Real | String; optional): Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing.
@@ -63,8 +67,12 @@ Keyword arguments:
 - `warmupTicks` (Real; optional): Number of layout engine cycles to dry-run at ignition before starting to render.
 - `cooldownTicks` (Real; optional): How many build-in frames to render before stopping and freezing the layout engine.
 - `cooldownTime` (Real; optional): How long (ms) to render for before stopping and freezing the layout engine.
+- `fixNodes` (Bool; optional): Whether to fix node coordinates after simulation has cooled
 - `linkHoverPrecision` (Real; optional): Whether to display the link label when gazing the link closely (low value) or from far away (high value).
 - `controlType` (String; optional): Which type of control to use to control the camera on 3D mode. Choice between trackball, orbit or fly.
+- `enableZoomPanInteraction` (Bool; optional): Whether to enable zooming and panning user interactions on a 2D canvas.
+- `enableNavigationControls` (Bool; optional): Whether to enable the trackball navigation controls used to move the camera using mouse interactions (rotate/zoom/pan).
+- `enablePointerInteraction` (Bool; optional): Whether to enable the mouse tracking events. This activates an internal tracker of the canvas mouse position and enables the functionality of object hover/click and tooltip labels, at the cost of performance. If you're looking for maximum gain in your graph performance it's recommended to switch off this property.
 - `enableNodeDrag` (Bool; optional): Whether to enable the user interaction to drag nodes by click-dragging. If enabled, every time a node is dragged the simulation is re-heated so the other nodes react to the changes. Only applicable if enablePointerInteraction is true.
 - `getGraphBbox` (Bool; optional): Returns the current bounding box of the nodes in the graph, formatted as { x: [<num>, <num>], y: [<num>, <num>], z: [<num>, <num>] }. If no nodes are found, returns null. Accepts an optional argument to define a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful to calculate the bounding box of a portion of the graph.
 Bounding box is saved as the graphBbox prop
@@ -103,7 +111,7 @@ Bounding box is saved as the graphBbox prop
 - `maxDepth_neighbours_select` (Real; optional): max levels of neighbourhood selection around a node by repeat clicking
 """
 function dash_graph2d(; kwargs...)
-        available_props = Symbol[:id, :graphData, :nodeId, :linkSource, :linkTarget, :backgroundColor, :showNavInfo, :nodeRelSize, :nodeVal, :nodeLabel, :nodeDesc, :nodeColor, :nodeAutoColorBy, :nodeOpacity, :nodeResolution, :linkLabel, :linkDesc, :linkColor, :linkAutoColorBy, :linkOpacity, :linkLineDash, :linkWidth, :linkResolution, :linkCurvature, :linkCurveRotation, :linkDirectionalArrowLength, :linkDirectionalArrowColor, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticles, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :emitParticle, :rendererConfig, :pauseAnimation, :resumeAnimation, :centerAt, :zoom, :zoomToFit, :cameraPosition, :refresh, :numDimensions, :forceEngine, :dagMode, :dagModeOn, :dagLevelDistance, :dagNodeIds, :ngraphPhysics, :warmupTicks, :cooldownTicks, :cooldownTime, :linkHoverPrecision, :controlType, :enableNodeDrag, :getGraphBbox, :heightRatio, :size, :active, :nodeURL, :useNodeImg, :nodeImg, :useNodeIcon, :nodeIcon, :nodeIcon_fontsheets, :linkId, :interactive, :nodeZoomId, :sortRelsBy1, :sortRelsBy2, :sortRoleplayersBy1, :sortRoleplayersBy2, :sortRels1Descend, :sortRels2Descend, :sortRoleplayers1Descend, :sortRoleplayers2Descend, :nodesSelected, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsHighlight, :linkIdsVisible, :externalobject_source, :externalobject_input, :centreCoordinates, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :maxDepth_neighbours_select]
+        available_props = Symbol[:id, :graphData, :nodeId, :linkSource, :linkTarget, :backgroundColor, :showNavInfo, :nodeRelSize, :nodeIconRelSize, :nodeImgRelSize, :nodeVal, :nodeLabel, :nodeDesc, :nodeColor, :nodeAutoColorBy, :nodeTextAutoColor, :nodeOpacity, :nodeResolution, :linkLabel, :linkDesc, :linkColor, :linkAutoColor, :linkAutoColorBy, :linkOpacity, :linkLineDash, :linkWidth, :linkResolution, :linkCurvature, :linkCurveRotation, :linkDirectionalArrowLength, :linkDirectionalArrowColor, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticles, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :emitParticle, :rendererConfig, :pauseAnimation, :resumeAnimation, :centerAt, :zoom, :zoomToFit, :cameraPosition, :refresh, :numDimensions, :forceEngine, :dagMode, :dagModeOn, :dagLevelDistance, :dagNodeIds, :ngraphPhysics, :warmupTicks, :cooldownTicks, :cooldownTime, :fixNodes, :linkHoverPrecision, :controlType, :enableZoomPanInteraction, :enableNavigationControls, :enablePointerInteraction, :enableNodeDrag, :getGraphBbox, :heightRatio, :size, :active, :nodeURL, :useNodeImg, :nodeImg, :useNodeIcon, :nodeIcon, :nodeIcon_fontsheets, :linkId, :interactive, :nodeZoomId, :sortRelsBy1, :sortRelsBy2, :sortRoleplayersBy1, :sortRoleplayersBy2, :sortRels1Descend, :sortRels2Descend, :sortRoleplayers1Descend, :sortRoleplayers2Descend, :nodesSelected, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsHighlight, :linkIdsVisible, :externalobject_source, :externalobject_input, :centreCoordinates, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :maxDepth_neighbours_select]
         wild_props = Symbol[]
         return Component("dash_graph2d", "Graph2D", "dash_react_force_graph", available_props, wild_props; kwargs...)
 end

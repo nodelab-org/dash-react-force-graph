@@ -12,12 +12,13 @@
 \usage{
 dashGraph2D(id=NULL, graphData=NULL, nodeId=NULL, linkSource=NULL,
 linkTarget=NULL, backgroundColor=NULL, showNavInfo=NULL,
-nodeRelSize=NULL, nodeVal=NULL, nodeLabel=NULL,
-nodeDesc=NULL, nodeColor=NULL, nodeAutoColorBy=NULL,
+nodeRelSize=NULL, nodeIconRelSize=NULL, nodeImgRelSize=NULL,
+nodeVal=NULL, nodeLabel=NULL, nodeDesc=NULL, nodeColor=NULL,
+nodeAutoColorBy=NULL, nodeTextAutoColor=NULL,
 nodeOpacity=NULL, nodeResolution=NULL, linkLabel=NULL,
-linkDesc=NULL, linkColor=NULL, linkAutoColorBy=NULL,
-linkOpacity=NULL, linkLineDash=NULL, linkWidth=NULL,
-linkResolution=NULL, linkCurvature=NULL,
+linkDesc=NULL, linkColor=NULL, linkAutoColor=NULL,
+linkAutoColorBy=NULL, linkOpacity=NULL, linkLineDash=NULL,
+linkWidth=NULL, linkResolution=NULL, linkCurvature=NULL,
 linkCurveRotation=NULL, linkDirectionalArrowLength=NULL,
 linkDirectionalArrowColor=NULL,
 linkDirectionalArrowRelPos=NULL,
@@ -33,13 +34,15 @@ zoomToFit=NULL, cameraPosition=NULL, refresh=NULL,
 numDimensions=NULL, forceEngine=NULL, dagMode=NULL,
 dagModeOn=NULL, dagLevelDistance=NULL, dagNodeIds=NULL,
 ngraphPhysics=NULL, warmupTicks=NULL, cooldownTicks=NULL,
-cooldownTime=NULL, linkHoverPrecision=NULL,
-controlType=NULL, enableNodeDrag=NULL, getGraphBbox=NULL,
-heightRatio=NULL, size=NULL, active=NULL, nodeURL=NULL,
-useNodeImg=NULL, nodeImg=NULL, useNodeIcon=NULL,
-nodeIcon=NULL, nodeIcon_fontsheets=NULL, linkId=NULL,
-interactive=NULL, nodeZoomId=NULL, sortRelsBy1=NULL,
-sortRelsBy2=NULL, sortRoleplayersBy1=NULL,
+cooldownTime=NULL, fixNodes=NULL, linkHoverPrecision=NULL,
+controlType=NULL, enableZoomPanInteraction=NULL,
+enableNavigationControls=NULL,
+enablePointerInteraction=NULL, enableNodeDrag=NULL,
+getGraphBbox=NULL, heightRatio=NULL, size=NULL, active=NULL,
+nodeURL=NULL, useNodeImg=NULL, nodeImg=NULL,
+useNodeIcon=NULL, nodeIcon=NULL, nodeIcon_fontsheets=NULL,
+linkId=NULL, interactive=NULL, nodeZoomId=NULL,
+sortRelsBy1=NULL, sortRelsBy2=NULL, sortRoleplayersBy1=NULL,
 sortRoleplayersBy2=NULL, sortRels1Descend=NULL,
 sortRels2Descend=NULL, sortRoleplayers1Descend=NULL,
 sortRoleplayers2Descend=NULL, nodesSelected=NULL,
@@ -68,6 +71,10 @@ maxDepth_neighbours_select=NULL)
 
 \item{nodeRelSize}{Numeric. Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.}
 
+\item{nodeIconRelSize}{Numeric. controls nodeIcon size}
+
+\item{nodeImgRelSize}{Numeric. controls nodeImg size}
+
 \item{nodeVal}{Numeric | character. Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.}
 
 \item{nodeLabel}{Character. Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
@@ -79,6 +86,8 @@ maxDepth_neighbours_select=NULL)
 
 \item{nodeAutoColorBy}{Character. Node object accessor function or attribute to automatically group colors by. Only affects nodes without a color attribute.}
 
+\item{nodeTextAutoColor}{Logical. Automatically color node text with inverse of backgroundColor}
+
 \item{nodeOpacity}{Numeric. Nodes sphere opacity, between [0,1]. 3D, VR, AR}
 
 \item{nodeResolution}{Numeric. Geometric resolution of each node's sphere, expressed in how many slice segments to divide the circumference. Higher values yield smoother spheres. Only applicable to 3D modes.
@@ -89,6 +98,8 @@ maxDepth_neighbours_select=NULL)
 \item{linkDesc}{Character. For VR only. Link object accessor function or attribute for description (shown under label).}
 
 \item{linkColor}{Character. Link object accessor function or attribute for line color.}
+
+\item{linkAutoColor}{Logical. Automatically color link with inverse of background color}
 
 \item{linkAutoColorBy}{Character. Link object accessor function or attribute to automatically group colors by. Only affects links without a color attribute.}
 
@@ -160,9 +171,17 @@ maxDepth_neighbours_select=NULL)
 
 \item{cooldownTime}{Numeric. How long (ms) to render for before stopping and freezing the layout engine.}
 
+\item{fixNodes}{Logical. Whether to fix node coordinates after simulation has cooled}
+
 \item{linkHoverPrecision}{Numeric. Whether to display the link label when gazing the link closely (low value) or from far away (high value).}
 
 \item{controlType}{Character. Which type of control to use to control the camera on 3D mode. Choice between trackball, orbit or fly.}
+
+\item{enableZoomPanInteraction}{Logical. Whether to enable zooming and panning user interactions on a 2D canvas.}
+
+\item{enableNavigationControls}{Logical. Whether to enable the trackball navigation controls used to move the camera using mouse interactions (rotate/zoom/pan).}
+
+\item{enablePointerInteraction}{Logical. Whether to enable the mouse tracking events. This activates an internal tracker of the canvas mouse position and enables the functionality of object hover/click and tooltip labels, at the cost of performance. If you're looking for maximum gain in your graph performance it's recommended to switch off this property.}
 
 \item{enableNodeDrag}{Logical. Whether to enable the user interaction to drag nodes by click-dragging. If enabled, every time a node is dragged the simulation is re-heated so the other nodes react to the changes. Only applicable if enablePointerInteraction is true.}
 

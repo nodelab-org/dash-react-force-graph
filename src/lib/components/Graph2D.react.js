@@ -39,27 +39,24 @@ const withSizeHOC = withSize({
 function Graph2D(props) {
 
     // initialise props that can be changed from within component as state
-
-    // const [nodes,setNodes] = useState([{"nodeId":"node1"},{"nodeId":"node2"}])
-    // const [links,setLinks] = useState([{"id":"link1", "source":"node1", "target":"node2"}])
-    // const [graphData, setGraphData] = useState({"nodes":[{"nodeId":"node1"},{"nodeId":"node2"}], "links":[{"id":"link1", "source":"node1", "target":"node2"}]})
     const [backgroundColor,setBackgroundColor] = useState(props.backgroundColor)
     const [showNavInfo,setShowNavInfo] = useState(props.showNavInfo)
     const [nodeRelSize,setNodeRelSize] = useState(props.nodeRelSize)
+    const [nodeIconRelSize,setNodeIconRelSize] = useState(props.nodeIconRelSize)
+    const [nodeImgRelSize,setNodeImgRelSize] = useState(props.nodeImgRelSize)
     const [nodeOpacity,setNodeOpacity] = useState(props.nodeOpacity)
     const [useNodeImg,setUseNodeImg] = useState(props.useNodeImg)
     const [useNodeIcon,setUseNodeIcon] = useState(props.useNodeIcon)
     const [forceEngine,setForceEngine] = useState(props.forceEngine)
-    // const [d3AlphaMin, setD3AlphaMin] = useState(props.d3AlphaMin)
-    // const [d3AlphaDecay, setD3AlphaDecay] = useState(props.d3AlphaDecay)
-    // const [d3VelocityDecay, setD3VelocityDecay] = useState(props.d3VelocityDecay)
     const [cooldownTime, setCooldownTime] = useState(props.cooldownTime)
-    const [fixNodes,setFixNodes] = useState(true)
+    const [fixNodes,setFixNodes] = useState(props.fixNodes)
     const [dagModeOn,setDagModeOn] = useState(props.dagModeOn)
     const [dagMode,setDagMode] = useState(props.dagMode)
-    //   const [enableZoomPanInteraction,setEnableZoomPanInteraction] = useState(props.enableZoomPanInteraction)
-    //   const [enableNavigationControls,setEnableNavigationControls] = useState(props.enableNavigationControls)
-    //   const [enablePointerInteraction,setEnablePointerInteraction] = useState(props.enablePointerInteraction)
+    const [controlType,setControlType] = useState(props.controlType)
+    const [enableNodeDrag,setEnableNodeDrag] = useState(props.enableNodeDrag)
+    const [enableZoomPanInteraction,setEnableZoomPanInteraction] = useState(props.enableZoomPanInteraction)
+    const [enableNavigationControls,setEnableNavigationControls] = useState(props.enableNavigationControls)
+    const [enablePointerInteraction,setEnablePointerInteraction] = useState(props.enablePointerInteraction)
     const [nodeClicked,setNodeClicked] = useState(null)
     const [nodeClickedViewpointCoordinates,setNodeClickedViewpointCoordinates] = useState(null)
     //   const [nodeHovered,setNodeHovered] = useState(null)
@@ -85,7 +82,11 @@ function Graph2D(props) {
     const [nodeIdsAll, setNodeIdsAll] = useState(new Set())
     const [linkIdsAll, setLinkIdsAll] = useState(new Set())
     const [nodesById, setNodesById] = useState(null)
-
+    const [nodeTextAutoColor, setNodeTextAutoColor] = useState(false)
+    const [linkAutoColor, setLinkAutoColor] = useState(true)
+    const [linkWidth, setLinkWidth] = useState(props.linkWidth)
+    const [linkCurvature, setLinkCurvature] = useState(props.linkCurvature)
+    
     // import scripts
     // https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
     // importScript("https://kit.fontawesome.com/a6e0eeba63.js");
@@ -112,7 +113,13 @@ function Graph2D(props) {
         "backgroundColor":props.backgroundColor,
         "showNavInfo":props.showNavInfo,
         "nodeRelSize":props.nodeRelSize,
+        "nodeIconRelSize":props.nodeIconRelSize,
+        "nodeImgRelSize":props.nodeImgRelSize,
         "nodeOpacity":props.nodeOpacity,
+        "nodeTextAutoColor":props.nodeTextAutoColor,
+        "linkAutoColor":props.linkAutoColor,
+        "linkWidth":props.linkWidth,
+        "linkCurvature":props.linkCurvature,
         "link":50,
         "charge":-50,
         "center":1,
@@ -122,11 +129,13 @@ function Graph2D(props) {
         "dagModeOn":props.dagModeOn,
         "dagMode":props.dagMode,
         "forceEngine":props.forceEngine,
-        // // // "d3AlphaMin":props.d3AlphaMin,
-        // // "d3AlphaDecay":props.d3AlphaDecay,
-        // "d3VelocityDecay":props.d3VelocityDecay,
         "cooldownTime":props.cooldownTime,
-        "fixNodes":true,
+        "fixNodes":props.fixNodes,
+        "controlType":props.controlType,
+        "enableNodeDrag":props.enableNodeDrag,
+        "enableZoomPanInteraction":props.enableZoomPanInteraction,
+        "enableNavigationControls":props.enableNavigationControls,
+        "enablePointerInteraction":props.enablePointerInteraction,
     })
 
       // Update current state with changes from controls
@@ -136,7 +145,17 @@ function Graph2D(props) {
         setBackgroundColor(guiSettings.backgroundColor)
         setShowNavInfo(guiSettings.showNavInfo)
         setNodeRelSize(guiSettings.nodeRelSize)
+        setNodeIconRelSize(guiSettings.nodeIconRelSize)
+        setNodeImgRelSize(guiSettings.nodeImgRelSize)
         setNodeOpacity(guiSettings.nodeOpacity)
+        setUseNodeImg(guiSettings.useNodeImg)
+        setUseNodeIcon(guiSettings.useNodeIcon)
+        setNodeTextAutoColor(guiSettings.nodeTextAutoColor)
+
+        setLinkAutoColor(guiSettings.linkAutoColor)
+        setLinkWidth(guiSettings.linkWidth)
+        setLinkCurvature(guiSettings.linkCurvature)
+
         setForceEngine(guiSettings.forceEngine)
 
         if (forceEngine === "d3") {
@@ -161,9 +180,13 @@ function Graph2D(props) {
         setDagModeOn(guiSettings.dagModeOn)
         setDagMode(dagModeOn || guiSettings.dagModeOn? guiSettings.dagMode : null)
         setFixNodes(guiSettings.fixNodes)
-        setUseNodeImg(guiSettings.useNodeImg)
-        setUseNodeIcon(guiSettings.useNodeIcon)
         setCooldownTime(guiSettings.cooldownTime)
+
+        setControlType(guiSettings.controlType)
+        setEnableNodeDrag(guiSettings.enableNodeDrag)
+        setEnableZoomPanInteraction(guiSettings.enableZoomPanInteraction)
+        setEnableNavigationControls(guiSettings.enableNavigationControls)
+        setEnablePointerInteraction(guiSettings.enablePointerInteraction)
     }, [guiSettings])
 
     //let nodesById = Object.fromEntries(props.graphData.nodes.map(node => [node[props.nodeId], node]));
@@ -318,6 +341,7 @@ function Graph2D(props) {
 
     const nodeColorFunction = (node => {
         let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "cornflowerblue" : "cornflowerblue"
+
         if (nodesSelected.length) {
           color = darken(0.3, color)
           if (nodesSelected.map(nodeSel => nodeSel[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
@@ -947,7 +971,9 @@ function Graph2D(props) {
         // provide a sensible default
         let color = props.nodeColor in node? validateColor(node[props.nodeColor])? node[props.nodeColor] : "#0000ff" : "#0000ff"
         const label = props.nodeLabel in node? node[props.nodeLabel]? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId]
-        const size = 12;
+        const iconSize = nodeIconRelSize? nodeIconRelSize : 12; // sensible default
+        const imgSize = nodeImgRelSize? nodeImgRelSize : 12; // sensible default
+
         // ctx.globalAlpha = 0.9;
         ctx.fontWeight = "normal";
         let fontSize = Math.max(11/globalScale,5)
@@ -989,7 +1015,7 @@ function Graph2D(props) {
         // paint node text background rectangle
         // is this necessary??
         // ctx.fillStyle = color
-        let backgroundColor_tmp = backgroundColor? validateColor(backgroundColor)? backgroundColor : "#000000" : "#000000"
+        // let backgroundColor_tmp = backgroundColor? validateColor(backgroundColor)? backgroundColor : "#000000" : "#000000"
         // ctx.fillStyle = backgroundColor_tmp;
         // add padding
         // const rectsize = size*0.2
@@ -1004,7 +1030,7 @@ function Graph2D(props) {
                     const img = new Image();
                     img.src = img_src
                     //ctx.fillStyle = color;
-                    ctx.drawImage(img, node.x - size / 2, node.y-size, size, size);
+                    ctx.drawImage(img, node.x - imgSize / 2, node.y-imgSize, imgSize, imgSize);
                 }
             }
         }
@@ -1016,14 +1042,14 @@ function Graph2D(props) {
             // icon
             if (node[props.nodeIcon]) {
                 const nodeIcon_obj = node[props.nodeIcon]
-                ctx.font = `${size}px ${Object.keys(nodeIcon_obj)[0]}`
+                ctx.font = `${iconSize}px ${Object.keys(nodeIcon_obj)[0]}`
                 ctx.fillStyle = color;
-                ctx.fillText(`${Object.values(nodeIcon_obj)[0]}`, node.x, node.y-size/1.7, size);
+                ctx.fillText(`${Object.values(nodeIcon_obj)[0]}`, node.x, node.y-iconSize/1.7, iconSize);
             }
         }
 
         // draw text background rectangle
-        // let backgroundColor_tmp = backgroundColor? validateColor(backgroundColor)? backgroundColor : "#000000" : "#000000"
+        let backgroundColor_tmp = backgroundColor? validateColor(backgroundColor)? backgroundColor : "#000000" : "#000000"
         ctx.font = `${fontSize}px Sans-Serif`;
         const textWidth = ctx.measureText(label).width;
         // add padding
@@ -1036,7 +1062,7 @@ function Graph2D(props) {
             ctx.font = `${fontSize}px Sans-Serif bold`;
         }
         // ctx.fillStyle = color;
-        ctx.fillStyle = invert(backgroundColor_tmp)
+        ctx.fillStyle = nodeTextAutoColor? invert(backgroundColor_tmp) : color
         ctx.fillText(label, node.x, node.y);
     }
 
@@ -1055,7 +1081,7 @@ function Graph2D(props) {
     }
 
     const linkColorFunction = link => {
-        let color = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(backgroundColor) : invert(backgroundColor)
+        let color = linkAutoColor? invert(backgroundColor) : props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(backgroundColor) : invert(backgroundColor)
         // is link selected?
         if (linksSelected.length) {
             color = darken(0.2, color)
@@ -1084,7 +1110,7 @@ function Graph2D(props) {
     }
 
     const linkWidthFunction = link => {
-        let width = props.linkWidth
+        let width = linkWidth
         // is link selected?
         if (linksSelected.length) {
             width = width*0.9
@@ -1153,7 +1179,8 @@ function Graph2D(props) {
 
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(backgroundColor) : invert(backgroundColor)
+        ctx.fillStyle = invert(backgroundColor)
+        // ctx.fillStyle = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(backgroundColor) : invert(backgroundColor)
         ctx.fillText(label, 0, 0);
         ctx.restore();
     }
@@ -1378,7 +1405,7 @@ function Graph2D(props) {
                     linkLineDash={props.linkLineDash}
                     linkWidth={linkWidthFunction}
                     linkResolution={props.linkResolution}
-                    linkCurvature={props.linkCurvature}
+                    linkCurvature={linkCurvature}
                     // linkCurveRotation={props.linkCurveRotation} // 3D, VR, AR,
                     // linkMaterial: null, // 3D, VR, AR, not exposed
                     linkCanvasObject={linkCanvasObjectFunction}
@@ -1453,11 +1480,11 @@ function Graph2D(props) {
                     linkHoverPrecision={props.linkHoverPrecision}
                     // onZoom // TODO: function
                     // onZoomEnd // TODO: function
-                    controlType={props.controlType}
-                    enableNodeDrag={props.enableNodeDrag}
-                    // enableZoomPanInteraction={enableZoomPanInteraction} // overridden by 'interactive' parameter
-                    // enableNavigationControls={enableNavigationControls} // overridden by 'interactive' parameter
-                    // enablePointerInteraction={enablePointerInteraction} // overridden by 'interactive' parameter
+                    controlType={controlType}
+                    enableNodeDrag={enableNodeDrag}
+                    enableZoomPanInteraction={enableZoomPanInteraction} // overridden by 'interactive' parameter
+                    enableNavigationControls={enableNavigationControls} // overridden by 'interactive' parameter
+                    enablePointerInteraction={enablePointerInteraction} // overridden by 'interactive' parameter
                     onChange={e => {props.setProps({graphData:e.target.graphData})}}
             />
             <div id = "dat-gui-div">
@@ -1476,17 +1503,32 @@ function Graph2D(props) {
                             <DatNumber path='radial' label='radial' min={0} max={1} step={0.01} />
                             </DatFolder>
                         <DatFolder title='Node styling' closed={true}>
-                            <DatNumber path='nodeRelSize' label='nodeRelSize' min={1} max={25} step={1}/>
+                            <DatNumber path='nodeRelSize' label='nodeRelSize' min={1} max={50} step={1}/>
+                            <DatNumber path='nodeIconRelSize' label='nodeIconRelSize' min={1} max={50} step={1}/>
+                            <DatNumber path='nodeImgRelSize' label='nodeImgRelSize' min={1} max={50} step={1}/>
                             <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/>
-                            <DatBoolean path='useNodeImg' label='useNodeImg'/>
                             <DatBoolean path='useNodeIcon' label='useNodeIcon'/>
+                            <DatBoolean path='useNodeImg' label='useNodeImg'/>
+                            <DatBoolean path='nodeTextAutoColor' label='nodeTextAutoColor'/>
+                            </DatFolder>
+                        <DatFolder title='Link styling' closed={true}>
+                            <DatBoolean path='linkAutoColor' label='linkAutoColor'/>
+                            <DatNumber path='linkWidth' label='linkWidth' min={0.1} max={5} step={0.1}/>
+                            <DatNumber path='linkCurvature' label='linkCurvature' min={0} max={1} step={0.1}/>
                             </DatFolder>
                         <DatFolder title='Force engine configuration' closed = {true}>
                             <DatSelect path='forceEngine' label='forceEngine' options={['d3', 'ngraph']}/>
                             <DatBoolean path='datModeOn' label='datModeOn'/>
                             <DatSelect path='dagMode' label='dagMode' options={['td', 'bu', 'lr', 'rl', 'radialout', 'radialin']}/>
                             <DatNumber path='cooldownTime' label='cooldownTime' min={1000} max={30000} step={1000}/>
-                            <DatSelect path='fixNodes' label='fixNodes' options={['true', 'false']}/>
+                            <DatBoolean path='fixNodes' label='fixNodes'/>
+                            </DatFolder>
+                        <DatFolder title='Interaction' closed = {true}>
+                            <DatSelect title='controlType' label='controlType' options={['trackball', 'orbit', 'fly']}/>
+                            <DatBoolean path='enableNodeDrag' label='enableNodeDrag'/>
+                            <DatBoolean path='enableZoomPanInteraction' label='enableZoomPanInteraction'/>
+                            <DatBoolean path='enableNavigationControls' label='enableNavigationControls'/>
+                            <DatBoolean path='enablePointerInteraction' label='enablePointerInteraction'/>
                             </DatFolder>
                         </DatFolder>
                 </DatGui>
@@ -1581,6 +1623,16 @@ const graphSharedProptypes = {
     "nodeRelSize": PropTypes.number,
 
     /**
+     *  controls nodeIcon size
+     */
+     "nodeIconRelSize": PropTypes.number,
+
+    /**
+     *  controls nodeImg size
+     */
+    "nodeImgRelSize": PropTypes.number,
+
+    /**
      *  Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.
      */
     "nodeVal": PropTypes.oneOfType([
@@ -1632,7 +1684,11 @@ const graphSharedProptypes = {
     //    PropTypes.func
     ]),
 
-
+    /**
+     * Automatically color node text with inverse of backgroundColor
+     */
+    "nodeTextAutoColor": PropTypes.bool,
+    
     /**
      * Nodes sphere opacity, between [0,1]. 3D, VR, AR
      */
@@ -1716,6 +1772,12 @@ const graphSharedProptypes = {
         PropTypes.string,
     //    PropTypes.func
     ]),
+
+
+    /**
+    * Automatically color link with inverse of background color
+    */
+    "linkAutoColor": PropTypes.bool,
 
     /**
      * Link object accessor function or attribute to automatically group colors by. Only affects links without a color attribute.
@@ -2060,6 +2122,11 @@ const graphSharedProptypes = {
     "cooldownTime": PropTypes.number,
 
     /**
+     * Whether to fix node coordinates after simulation has cooled
+     */
+    "fixNodes": PropTypes.bool,
+
+    /**
      * Callback function invoked at every tick of the simulation engine.
      */
     // onEngineTick: PropTypes.func, // not exposed
@@ -2194,17 +2261,17 @@ const graphSharedProptypes = {
     /**
     * Whether to enable zooming and panning user interactions on a 2D canvas.
     */
-    // enableZoomPanInteraction: PropTypes.bool, overridden by 'interactive' parameter
+    "enableZoomPanInteraction": PropTypes.bool, 
 
     /**
      * Whether to enable the trackball navigation controls used to move the camera using mouse interactions (rotate/zoom/pan).
      */
-    // enableNavigationControls:PropTypes.bool, overridden by 'interactive' parameter
+    "enableNavigationControls":PropTypes.bool, 
 
     /**
      * Whether to enable the mouse tracking events. This activates an internal tracker of the canvas mouse position and enables the functionality of object hover/click and tooltip labels, at the cost of performance. If you're looking for maximum gain in your graph performance it's recommended to switch off this property.
      */
-    // enablePointerInteraction:PropTypes.bool, overridden by 'interactive' parameter
+    "enablePointerInteraction":PropTypes.bool, 
 
     /**
     * Whether to enable the user interaction to drag nodes by click-dragging. If enabled, every time a node is dragged the simulation is re-heated so the other nodes react to the changes. Only applicable if enablePointerInteraction is true.

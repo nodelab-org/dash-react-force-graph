@@ -1,3 +1,5 @@
+import { treemapSquarify } from "d3-hierarchy";
+
 const objSharedProps = {
     // props include most react-force-graph props (unless handled with internal logic in higher-level component)
     // https://github.com/vasturiano/react-force-graph
@@ -29,11 +31,14 @@ const objSharedProps = {
     */
     // props
     nodeRelSize: 5,
+    nodeIconRelSize: 12,
+    nodeImgRelSize: 12,
     nodeVal:"val",
     nodeLabel: "label",
     // nodeDesc: "desc" // VR only
     // nodeVisibility: True // not exposed, use nodeIdsVisible prop instead
     nodeColor: "color",
+    nodeTextAutoColor: true,
     nodeAutoColorBy: "label",
     nodeOpacity:0.75, // 3D, VR, AR only
     nodeResolution: 8, // 3D, VR, AR only
@@ -49,6 +54,7 @@ const objSharedProps = {
     linkLabel: "label",
     // linkDesc: "desc", // VR only,
     // linkVisibility: true, // not exposed, use nodeIdsVisible instead
+    linkAutoColor: true,
     linkColor: "color",
     linkAutoColorBy:"label",
     linkOpacity:0.2,
@@ -102,9 +108,9 @@ const objSharedProps = {
     // props
 
     numDimensions: 3, // 3D, VR, AR
-    forceEngine: "d3",
-    dagMode: null,
-    dagModeOn: false,
+    // forceEngine: "d3",
+    // dagMode: null,
+    // dagModeOn: false,
     dagLevelDistance: null,
     // dagNodeFilter: // Implemented in Higher Order Component
     // onDagError: // implemented in Higher Order Component
@@ -116,6 +122,7 @@ const objSharedProps = {
     warmupTicks: 0,
     cooldownTicks: Infinity,
     cooldownTime: 15000,
+    fixNodes: true,
     // onEngineTick: // TODO: function
     // onEngineStop: // TODO: function
     // methods
@@ -143,10 +150,10 @@ const objSharedProps = {
     // onZoom // TODO: function
     // onZoomEnd // TODO: function
     controlType: "trackball",
-    // enableZoomPanInteraction: true, // overridden by 'interactive' parameter
-    // enableNavigationControls: true, // overridden by 'interactive' parameter
-    // enablePointerInteraction: true, // overridden by 'interactive' parameter
-    enableNodeDrag: true, // overridden by 'interactive' parameter
+    enableZoomPanInteraction: true,
+    enableNavigationControls: true,
+    enablePointerInteraction: true,
+    enableNodeDrag: true, 
 
     /**
     * utility
