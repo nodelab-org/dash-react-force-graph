@@ -292,7 +292,7 @@ function Graph3D(props) {
          props.setProps({nodeRightClickedViewpointCoordinates:null})
          // set props
          props.setProps({nodeClicked:node});
-         props.setProps({nodeClickedViewpointCoordinates:fgRef.current.graph2ScreenCoords(node.x,node.y)})
+         props.setProps({nodeClickedViewpointCoordinates:fgRef.current.graph2ScreenCoords(node.x,node.y, node.z)})
 
          /**
           * node selection
@@ -333,7 +333,7 @@ function Graph3D(props) {
 
      const handleNodeRightClick = node=> {
          props.setProps({nodeRightClicked:node});
-         props.setProps({nodeRightClickedViewpointCoordinates:fgRef.current.graph2ScreenCoords(node.x,node.y)})
+         props.setProps({nodeRightClickedViewpointCoordinates:fgRef.current.graph2ScreenCoords(node.x,node.y,node.z)})
          // reset node clicked
          props.setProps({nodeClicked:null});
          props.setProps({nodeClickedViewpointCoordinates:null});

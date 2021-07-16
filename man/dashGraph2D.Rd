@@ -48,7 +48,7 @@ sortRels2Descend=NULL, sortRoleplayers1Descend=NULL,
 sortRoleplayers2Descend=NULL, nodesSelected=NULL,
 nodeIdsHighlight=NULL, nodeIdsVisible=NULL,
 linkIdsHighlight=NULL, linkIdsVisible=NULL,
-externalobject_source=NULL, externalobject_input=NULL,
+externalobject_source=NULL, externalobjectInput=NULL,
 centreCoordinates=NULL, useCoordinates=NULL,
 pixelUnitRatio=NULL, showCoordinates=NULL, gravity=NULL,
 maxDepth_neighbours_select=NULL)
@@ -57,7 +57,8 @@ maxDepth_neighbours_select=NULL)
 \arguments{
 \item{id}{Character. The ID used to identify this component in Dash callbacks.}
 
-\item{graphData}{Named list. Graph data structure. Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
+\item{graphData}{Named list. Graph data structure. Prop which is provided by user.
+Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{nodeId}{Character. Node object accessor attribute for unique node id (used in link objects source/target).}
 
@@ -240,7 +241,7 @@ Bounding box is saved as the graphBbox prop}
 
 \item{externalobject_source}{Character. externalobject_source:}
 
-\item{externalobject_input}{Numeric | character | logical | unnamed list | named list. externalobject_source:}
+\item{externalobjectInput}{Numeric | character | logical | unnamed list | named list. externalobject_source:}
 
 \item{centreCoordinates}{List with named elements and values of type numeric. origin coordinates}
 

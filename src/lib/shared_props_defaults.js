@@ -10,6 +10,8 @@ const objSharedProps = {
     */
     // props
     graphData: {"nodes":[], "links":[]},
+    //graphDataProcessed: {"nodes":[], "links":[]},// {"nodes":[], "links":[]},
+    // graphDataRendered: {"nodes":[], "links":[]},
     nodeId: "id",
     linkSource : "source",
     linkTarget: "target",
@@ -208,7 +210,7 @@ const objSharedProps = {
     linkIdsVisible: [],
     externalobject_source: null,
     externalobject_input: null,
-    centreCoordinates: {x:300, y:300, z:300}, // just initial values
+    // centreCoordinates: {x:300, y:300, z:300}, // just initial values
     useCoordinates: false,
     pixelUnitRatio: null,
     showCoordinates: null,

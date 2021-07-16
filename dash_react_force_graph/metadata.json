@@ -23,7 +23,7 @@
           "name": "object"
         },
         "required": true,
-        "description": "Graph data structure. Can also be used to apply incremental updates. Format {nodes:{}, links:{}}"
+        "description": "Graph data structure. Prop which is provided by user.\nCan also be used to apply incremental updates. Format {nodes:{}, links:{}}"
       },
       "nodeId": {
         "type": {
@@ -804,7 +804,7 @@
         "required": false,
         "description": "externalobject_source:"
       },
-      "externalobject_input": {
+      "externalobjectInput": {
         "type": {
           "name": "union",
           "value": [

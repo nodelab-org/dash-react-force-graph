@@ -9,7 +9,8 @@ A Graph2D component.
 
 Keyword arguments:
 - `id` (String; required): The ID used to identify this component in Dash callbacks.
-- `graphData` (Dict; required): Graph data structure. Can also be used to apply incremental updates. Format {nodes:{}, links:{}}
+- `graphData` (Dict; required): Graph data structure. Prop which is provided by user.
+Can also be used to apply incremental updates. Format {nodes:{}, links:{}}
 - `nodeId` (String; optional): Node object accessor attribute for unique node id (used in link objects source/target).
 - `linkSource` (String; optional): Link object accessor attribute referring to id of source node.
 - `linkTarget` (String; optional): Link object accessor attribute referring to id of target node.
@@ -102,7 +103,7 @@ Bounding box is saved as the graphBbox prop
 - `linkIdsHighlight` (Array of Strings; optional): ids of highlighted links (through search)
 - `linkIdsVisible` (Array of Strings; optional): ids of visible links
 - `externalobject_source` (String; optional): externalobject_source:
-- `externalobject_input` (Real | String | Bool | Array | Dict; optional): externalobject_source:
+- `externalobjectInput` (Real | String | Bool | Array | Dict; optional): externalobject_source:
 - `centreCoordinates` (Dict with Strings as keys and values of type Real; optional): origin coordinates
 - `useCoordinates` (Bool; optional): useCoordinates: whether to use node attribute to set node coordinates
 - `pixelUnitRatio` (Real; optional): pixelUnitRatio: if node attribute (in some unit of measurement) is used as coordinates, pixel:unit scale
@@ -111,7 +112,7 @@ Bounding box is saved as the graphBbox prop
 - `maxDepth_neighbours_select` (Real; optional): max levels of neighbourhood selection around a node by repeat clicking
 """
 function dash_graph2d(; kwargs...)
-        available_props = Symbol[:id, :graphData, :nodeId, :linkSource, :linkTarget, :backgroundColor, :showNavInfo, :nodeRelSize, :nodeIconRelSize, :nodeImgRelSize, :nodeVal, :nodeLabel, :nodeDesc, :nodeColor, :nodeAutoColorBy, :nodeTextAutoColor, :nodeOpacity, :nodeResolution, :linkLabel, :linkDesc, :linkColor, :linkAutoColor, :linkAutoColorBy, :linkOpacity, :linkLineDash, :linkWidth, :linkResolution, :linkCurvature, :linkCurveRotation, :linkDirectionalArrowLength, :linkDirectionalArrowColor, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticles, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :emitParticle, :rendererConfig, :pauseAnimation, :resumeAnimation, :centerAt, :zoom, :zoomToFit, :cameraPosition, :refresh, :numDimensions, :forceEngine, :dagMode, :dagModeOn, :dagLevelDistance, :dagNodeIds, :ngraphPhysics, :warmupTicks, :cooldownTicks, :cooldownTime, :fixNodes, :linkHoverPrecision, :controlType, :enableZoomPanInteraction, :enableNavigationControls, :enablePointerInteraction, :enableNodeDrag, :getGraphBbox, :heightRatio, :size, :active, :nodeURL, :useNodeImg, :nodeImg, :useNodeIcon, :nodeIcon, :nodeIcon_fontsheets, :linkId, :interactive, :nodeZoomId, :sortRelsBy1, :sortRelsBy2, :sortRoleplayersBy1, :sortRoleplayersBy2, :sortRels1Descend, :sortRels2Descend, :sortRoleplayers1Descend, :sortRoleplayers2Descend, :nodesSelected, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsHighlight, :linkIdsVisible, :externalobject_source, :externalobject_input, :centreCoordinates, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :maxDepth_neighbours_select]
+        available_props = Symbol[:id, :graphData, :nodeId, :linkSource, :linkTarget, :backgroundColor, :showNavInfo, :nodeRelSize, :nodeIconRelSize, :nodeImgRelSize, :nodeVal, :nodeLabel, :nodeDesc, :nodeColor, :nodeAutoColorBy, :nodeTextAutoColor, :nodeOpacity, :nodeResolution, :linkLabel, :linkDesc, :linkColor, :linkAutoColor, :linkAutoColorBy, :linkOpacity, :linkLineDash, :linkWidth, :linkResolution, :linkCurvature, :linkCurveRotation, :linkDirectionalArrowLength, :linkDirectionalArrowColor, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticles, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :emitParticle, :rendererConfig, :pauseAnimation, :resumeAnimation, :centerAt, :zoom, :zoomToFit, :cameraPosition, :refresh, :numDimensions, :forceEngine, :dagMode, :dagModeOn, :dagLevelDistance, :dagNodeIds, :ngraphPhysics, :warmupTicks, :cooldownTicks, :cooldownTime, :fixNodes, :linkHoverPrecision, :controlType, :enableZoomPanInteraction, :enableNavigationControls, :enablePointerInteraction, :enableNodeDrag, :getGraphBbox, :heightRatio, :size, :active, :nodeURL, :useNodeImg, :nodeImg, :useNodeIcon, :nodeIcon, :nodeIcon_fontsheets, :linkId, :interactive, :nodeZoomId, :sortRelsBy1, :sortRelsBy2, :sortRoleplayersBy1, :sortRoleplayersBy2, :sortRels1Descend, :sortRels2Descend, :sortRoleplayers1Descend, :sortRoleplayers2Descend, :nodesSelected, :nodeIdsHighlight, :nodeIdsVisible, :linkIdsHighlight, :linkIdsVisible, :externalobject_source, :externalobjectInput, :centreCoordinates, :useCoordinates, :pixelUnitRatio, :showCoordinates, :gravity, :maxDepth_neighbours_select]
         wild_props = Symbol[]
         return Component("dash_graph2d", "Graph2D", "dash_react_force_graph", available_props, wild_props; kwargs...)
 end

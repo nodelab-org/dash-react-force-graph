@@ -2,6 +2,4 @@
 
 export(dashGraph2D)
 export(dashGraph3D)
-export(dashGraph2DTmp)
-export(dashGraph2Dalt)
 export(dashDashReactForceGraph)

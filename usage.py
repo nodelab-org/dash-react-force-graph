@@ -47,35 +47,39 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=[]):
             for each_key in links_keys_rm:
                 if each_key in graphData[links_key][i].keys():
                     graphData[links_key][i].pop(each_key)
-
+    
     # reactforcegraph substitutes the whole node object for the id upon render; reverse this for consistency
     if len(graphData[links_key])>0:
         for i in range(len(graphData[links_key])):
-            if not (type(graphData[links_key][i]["source"])) is str:
+            print("")
+            print('graphData[links_key][i]')
+            print(graphData[links_key][i])
+            # print(graphData[links_key][i]["source"])
+            if type(graphData[links_key][i]["source"]) == dict:
                 graphData[links_key][i]["source"] = graphData[links_key][i]["source"]["nodeId"]
-            if not (type(graphData[links_key][i]["target"])) is str:
+            if type(graphData[links_key][i]["target"]) == dict:
                 graphData[links_key][i]["target"] = graphData[links_key][i]["target"]["nodeId"]
-
+    
     return graphData
 
 
 graphData = {
     "nodes":[
-        {"nodeId":"1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"2", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"3",  "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"4",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}},
-        {"nodeId":"5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200"},
-        {"nodeId":"6",  "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300"},
-        {"nodeId":"7",  "__nodeLabel":"Strawberry Fields Ltd", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/11/200/300"},
-        {"nodeId":"8",  "__nodeLabel":"The Fundamentally Supine Authority", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/16/200/300"},
-        {"nodeId":"9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
-        {"nodeId":"10",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"11",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"12",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"13",  "__nodeLabel":"neighbours", "__nodeColor":"tomato"},
-        {"nodeId":"14",  "__nodeLabel":"employment", "__nodeColor":"tomato"},
-        {"nodeId":"15",  "__nodeLabel":"Jenny Howard", "__nodeColor":"cornflowerblue", "__nodeIcon": {"FontAwesome":"\uF007"}}
+        {"nodeId":"1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}, "rootType":"entity"},
+        {"nodeId":"2", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}, "rootType":"entity"},
+        {"nodeId":"3",  "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}, "rootType":"entity"},
+        {"nodeId":"4",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}, "rootType":"entity"},
+        {"nodeId":"5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200", "rootType":"entity"},
+        {"nodeId":"6",  "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300", "rootType":"entity"},
+        {"nodeId":"7",  "__nodeLabel":"Strawberry Fields Ltd", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/11/200/300", "rootType":"entity"},
+        {"nodeId":"8",  "__nodeLabel":"The Fundamentally Supine Authority", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/16/200/300", "rootType":"entity"},
+        {"nodeId":"9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato", "rootType":"relation"},
+        {"nodeId":"10",  "__nodeLabel":"employment", "__nodeColor":"tomato", "rootType":"relation"},
+        {"nodeId":"11",  "__nodeLabel":"employment", "__nodeColor":"tomato", "rootType":"relation"},
+        {"nodeId":"12",  "__nodeLabel":"employment", "__nodeColor":"tomato", "rootType":"relation"},
+        {"nodeId":"13",  "__nodeLabel":"neighbours", "__nodeColor":"tomato", "rootType":"relation"},
+        {"nodeId":"14",  "__nodeLabel":"employment", "__nodeColor":"tomato", "rootType":"relation"},
+        {"nodeId":"15",  "__nodeLabel":"Jenny Howard", "__nodeColor":"cornflowerblue", "__nodeIcon": {"FontAwesome":"\uF007"}, "rootType":"entity"}
 
         ],
     "links":[
@@ -85,16 +89,16 @@ graphData = {
         {"id":"4", "label":"employee", "source":"3", "target":"11"},
         {"id":"5", "label":"neighbour", "source":"4", "target":"13"},
         {"id":"6", "label":"employer", "source":"6", "target":"11"},
-        # {"id":"7", "label":"employer", "source":"7", "target":"10"},
-        {"id":"8", "label":"employer", "source":"8", "target":"12"},
-        {"id":"10", "label":"neighbour", "source":"2", "target":"9"},
-        {"id":"11", "label":"neighbour", "source":"4", "target":"9"},
-        {"id":"12", "label":"neighbour", "source":"1", "target":"13"},
-        {"id":"13", "label":"neighbour", "source":"3", "target":"13"},
-        {"id":"14", "label":"employee", "source":"4", "target":"12"},
-        {"id":"15", "label":"employer", "source":"7", "target":"14"},
-        {"id":"16", "label":"employee", "source":"15", "target":"14"},
-        {"id":"17", "label":"neighbour", "source":"15", "target":"9"},
+        {"id":"7", "label":"employer", "source":"8", "target":"12"},
+        {"id":"8", "label":"neighbour", "source":"2", "target":"9"},
+        {"id":"9", "label":"neighbour", "source":"4", "target":"9"},
+        {"id":"10", "label":"neighbour", "source":"1", "target":"13"},
+        {"id":"11", "label":"neighbour", "source":"3", "target":"13"},
+        {"id":"12", "label":"employee", "source":"4", "target":"12"},
+        {"id":"13", "label":"employer", "source":"7", "target":"14"},
+        {"id":"14", "label":"employee", "source":"15", "target":"14"},
+        {"id":"15", "label":"neighbour", "source":"15", "target":"9"},
+        {"id":"16", "label":"neighbour", "source":"15", "target":"15"},
         ]#
     }
 
@@ -192,6 +196,8 @@ app.layout = html.Div([
     html.Br(),
     html.Div(id='output-nodesSelected-2D'),
     html.Br(),
+    html.Div(id='output-linksSelected-2D'),
+    html.Br(),
     html.Div(id='output-nodeRightClicked-2D'),
     # html.Div(id='output-graphData-2D'),
     # html.H2("Graph2D"),
@@ -263,21 +269,25 @@ def sort_rps_2_desc(value):
     # Output('output-nodeHovered-2D', 'children'),
     Output('output-nodeClicked-2D',  'children'),
     Output('output-nodesSelected-2D',  'children'),
+    Output('output-linksSelected-2D',  'children'),
     Output('output-nodeRightClicked-2D',  'children'),
 ],
 [
     # Input('graph2D', 'nodeHovered'),
-    Input('graph2D', 'nodesSelected'),
     Input('graph2D', 'nodeClicked'),
+    Input('graph2D', 'nodesSelected'),
+    Input('graph2D', 'linksSelected'),
     Input('graph2D', 'nodeRightClicked'),
 ])
 def display_clicked_selected_nodes_2D(
-nodesSelected,
 nodeClicked,
+nodesSelected,
+linksSelected,
 nodeRightClicked):
     return [
         "clicked node: {}".format(nodeClicked),
         "selected nodes: {}".format(nodesSelected),
+        "selected links: {}".format(linksSelected),
         "rightclicked node: {}".format(nodeRightClicked),
         ]
 
@@ -289,7 +299,7 @@ nodeRightClicked):
         Input('button-delete', 'n_clicks')
     ],
     [
-        State("graph2D","graphData")
+        State("graph2D","graphDataProcessed")
     ])
 def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
     ctx = dash.callback_context
