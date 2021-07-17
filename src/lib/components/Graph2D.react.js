@@ -8,6 +8,7 @@ import {cloneDeep} from "lodash";
 import {forceRadial} from "d3-force";
 import DatGui, {
     DatBoolean,
+    DatButton,
     DatColor,
     DatFolder,
     DatNumber,
@@ -90,14 +91,14 @@ function Graph2D (props) {
             fixNodes,
             setFixNodes
         ],
-        [
-            dagModeOn,
-            setDagModeOn
-        ],
-        [
-            dagMode,
-            setDagMode
-        ],
+        // [
+        //     dagModeOn,
+        //     setDagModeOn
+        // ],
+        // [
+        //     dagMode,
+        //     setDagMode
+        // ],
         [
             controlType,
             setControlType
@@ -207,13 +208,17 @@ function Graph2D (props) {
             setLinkAutoColor
         ],
         [
+            linkColor,
+            setLinkColor
+        ],
+        [
             linkWidth,
             setLinkWidth
         ],
-        [
-            linkCurvature,
-            setLinkCurvature
-        ],
+        // [
+        //     linkCurvature,
+        //     setLinkCurvature
+        // ],
         [
             guiSettings,
             setGuiSettings
@@ -231,8 +236,8 @@ function Graph2D (props) {
         useState(props.forceEngine),
         useState(props.cooldownTime),
         useState(props.fixNodes),
-        useState(props.dagModeOn),
-        useState(props.dagMode),
+        // useState(props.dagModeOn),
+        // useState(props.dagMode),
         useState(props.controlType),
         useState(props.enableNodeDrag),
         useState(props.enableZoomPanInteraction),
@@ -266,16 +271,17 @@ function Graph2D (props) {
         }),
         useState(false),
         useState(true),
+        useState(props.linkColor),
         useState(props.linkWidth),
-        useState(props.linkCurvature),
+        // useState(props.linkCurvature),
         useState({
             "backgroundColor": props.backgroundColor,
-            "center": 1,
-            "charge": -50,
+            "center": 0.52,
+            "charge": -10,
             "controlType": props.controlType,
             "cooldownTime": props.cooldownTime,
-            "dagMode": props.dagMode,
-            "dagModeOn": props.dagModeOn,
+            // "dagMode": props.dagMode,
+            // "dagModeOn": props.dagModeOn,
             "enableNavigationControls": props.enableNavigationControls,
             "enableNodeDrag": props.enableNodeDrag,
             "enablePointerInteraction": props.enablePointerInteraction,
@@ -284,7 +290,8 @@ function Graph2D (props) {
             "forceEngine": props.forceEngine,
             "link": 50,
             "linkAutoColor": props.linkAutoColor,
-            "linkCurvature": props.linkCurvature,
+            "linkColor": props.linkColor,
+            // "linkCurvature": props.linkCurvature,
             "linkWidth": props.linkWidth,
             "nodeIconRelSize": props.nodeIconRelSize,
             "nodeImgRelSize": props.nodeImgRelSize,
@@ -363,8 +370,9 @@ function Graph2D (props) {
             setUseNodeIcon(guiSettings.useNodeIcon);
             setNodeTextAutoColor(guiSettings.nodeTextAutoColor);
             setLinkAutoColor(guiSettings.linkAutoColor);
+            setLinkColor(guiSettings.linkColor);
             setLinkWidth(guiSettings.linkWidth);
-            setLinkCurvature(guiSettings.linkCurvature);
+            // setLinkCurvature(guiSettings.linkCurvature);
             setForceEngine(guiSettings.forceEngine);
             if (forceEngine === "d3") {
 
@@ -396,10 +404,10 @@ function Graph2D (props) {
              * but hooks cannot be inside a conditional block
              */
 
-            setDagModeOn(guiSettings.dagModeOn);
-            setDagMode(dagModeOn || guiSettings.dagModeOn
-                ? guiSettings.dagMode
-                : null);
+            // setDagModeOn(guiSettings.dagModeOn);
+            // setDagMode(dagModeOn || guiSettings.dagModeOn
+            //     ? guiSettings.dagMode
+            //     : null);
             setFixNodes(guiSettings.fixNodes);
             setCooldownTime(guiSettings.cooldownTime);
             setControlType(guiSettings.controlType);
@@ -485,16 +493,18 @@ function Graph2D (props) {
          * since we only need it on the next render
          */
 
+        setNodeZoomId(null);
+
         setGraphDataIdsAll({
             "links": linkIdsAllNew,
             "nodes": nodeIdsAllNew
         });
 
-        console.log("detected new props.graphData, update neighbours");
-        console.log("graphDataIdsAll");
-        console.log(graphDataIdsAll);
-        console.log("props.graphData");
-        console.log(props.graphData);
+        // console.log("detected new props.graphData, update neighbours");
+        // console.log("graphDataIdsAll");
+        // console.log(graphDataIdsAll);
+        // console.log("props.graphData");
+        // console.log(props.graphData);
 
         /**
          * Initialise __source and __target
@@ -583,8 +593,8 @@ function Graph2D (props) {
 
         }
 
-        console.log("props.graphData after adding neighbours and coordinates:");
-        console.log(props.graphData);
+        // console.log("props.graphData after adding neighbours and coordinates:");
+        // console.log(props.graphData);
 
     } 
 
@@ -613,9 +623,9 @@ function Graph2D (props) {
                 []
             ];
 
-            console.log("UseEffect: nodeZoom");
+            // console.log("UseEffect: nodeZoom");
 
-            if (nodeZoomId !== null) {
+            if (nodeZoomId) {
 
                 nodeIdsVisibleNew.push(nodeZoomId);
 
@@ -713,12 +723,12 @@ function Graph2D (props) {
                 /**
                  * sort nodes
                  */
-                if (false) {
+                if (true) {
                     // relations
 
                     // first rel sort
 
-                    if (props.sortRelsBy1 !== null) {
+                    if (props.sortRelsBy1) {
 
                         // find out the attribute type
 
@@ -772,7 +782,7 @@ function Graph2D (props) {
 
                     }
                     // second rel sort
-                    if (props.sortRelsBy2 !== null) {
+                    if (props.sortRelsBy2) {
 
                         // find out the attribute type
                         const relObjRelHasAttr = relations.find((relObj) => props.sortRelsBy2 in relObj.relation);
@@ -831,7 +841,7 @@ function Graph2D (props) {
 
                     // First role player sort
 
-                    if (props.sortRoleplayersBy1 !== null) {
+                    if (props.sortRoleplayersBy1) {
 
                         // Relation role players
 
@@ -958,7 +968,7 @@ function Graph2D (props) {
 
                     // Second role player sort
 
-                    if (props.sortRoleplayersBy2 !== null) {
+                    if (props.sortRoleplayersBy2) {
 
                         // relation role players
                         // find out the attribute type
@@ -1161,7 +1171,7 @@ function Graph2D (props) {
                         roleplayer.fx = nodeZoom.x + marX * 2 / 3;
                         roleplayer.fy = yMin + kRelRp * marYRelRp;
                         // if too close to nodeZoom and relation is below nodeZoom in height, shift rp down another notch
-                        if (roleplayer.fy - nodeZoom.y < marYMin && yMin + kRel * marYRel > nodeZoom.y) {
+                        if (roleplayer.fy - nodeZoom.y < marYMin && (yMin + kRel * marYRel > nodeZoom.y)) {
 
                             roleplayer.fy += marYRelRp;
                             kRelRp += 1;
@@ -1237,13 +1247,14 @@ function Graph2D (props) {
                     }
 
                 });
+                fgRef.current.d3ReheatSimulation();
 
             }
 
             setNodeIdsVisible(nodeIdsVisibleNew);
             setLinkIdsVisible(linkIdsVisibleNew);
 
-            console.log("useEffect on nodeZoomId ran");
+            // console.log("useEffect on nodeZoomId ran");
 
         }
 
@@ -1669,13 +1680,13 @@ function Graph2D (props) {
         setLinkIdsNodesDrag([]);
 
         // Highlight dragged node and immediate neighbours
-        if (node !== null) {
+        if (node) {
 
             const neighbourNodeIds = [];
             const linkIds = [];
             if ("__source" in node) {
 
-                if (Object.keys(node.__source).length > 0) {
+                if (Object.keys(node.__source).length) {
                     
                     Object.keys(node.__source).forEach((key) => {
 
@@ -1692,7 +1703,7 @@ function Graph2D (props) {
             }
             if ("__target" in node) {
 
-                if (Object.keys(node.__target).length > 0) {
+                if (Object.keys(node.__target).length) {
 
                     Object.keys(node.__target).forEach((key) => {
 
@@ -1724,7 +1735,7 @@ function Graph2D (props) {
                     /* eslint-disable max-depth */
                     if ("__source" in neighbourNode) {
 
-                        if (Object.keys(neighbourNode.__source).length > 0) {
+                        if (Object.keys(neighbourNode.__source).length) {
                             
                             Object.keys(neighbourNode.__source).forEach((key) => {
 
@@ -1742,7 +1753,7 @@ function Graph2D (props) {
 
                     if ("__target" in neighbourNode) {
 
-                        if (Object.keys(neighbourNode.__target).length > 0) {
+                        if (Object.keys(neighbourNode.__target).length) {
                             
                             Object.keys(neighbourNode.__target).forEach((key) => {
 
@@ -1773,7 +1784,7 @@ function Graph2D (props) {
              */
             // from https://github.com/vasturiano/force-graph/blob/master/example/multi-selection/index.html
             if (nodesSelected.length) {
-                
+
                 const nodesSelectedNew = cloneDeep(nodesSelected);
                 const nodesSelectedIds = nodesSelectedNew.map((nodeSel) => nodeSel[props.nodeId]);
                 // Moving a selected node?
@@ -1810,8 +1821,8 @@ function Graph2D (props) {
         //             .forEach(node => ['x', 'y'].forEach(coord => node[`f${coord}`] = undefined)); // unfix controlled nodes
         //     }
         // }
-        node.fx = node.x;
-        node.fy = node.y;
+        // node.fx = node.x;
+        // node.fy = node.y;
         // node.fz = node.z;
     };
 
@@ -1832,7 +1843,7 @@ function Graph2D (props) {
     // set centreCoordinates
     useEffect( () => {
 
-        if (fgRef.current.getGraphBbox() !== null && props.centreCoordinates) {
+        if (fgRef.current.getGraphBbox() && props.centreCoordinates) {
 
             setCentreCoordinates(props.graphData.nodes.length
                 ? {
@@ -1858,9 +1869,7 @@ function Graph2D (props) {
         setLinkRightClicked(null);
         setNodesSelected([]);
         setLinksSelected([]);
-        //if (event.detail === 2) {
         setNodeZoomId(null);
-        //}
 
     };
 
@@ -1911,306 +1920,9 @@ function Graph2D (props) {
         }
 
     },
-    [props.nodeZoomId]);
+    [props.nodeZoomId]
+    );
 
-    // zoom to node
-    // useEffect(() => {
-    //     if (props.graphData.nodes.length > 1) {
-
-    //         const nodesClone = cloneDeep(props.graphData.nodes)
-
-    //         if (nodeZoomId && nodesById) {
-    //             const nodeIdsVisibleNew = []
-    //             const linkIdsVisibleNew = []
-    //             nodeIdsVisibleNew.push(nodeZoomId)
-
-    //             // spacing between nodes
-    //             const marX = 60
-    //             const marYMin = 20
-
-    //             const nodesById = cloneDeep(nodesById)
-    //             const nodeZoom = nodesById[nodeZoomId]
-
-    //             nodeZoom.fx = nodeZoom.x
-    //             nodeZoom.fy = nodeZoom.y + marYMin/2 // shift a bit to avoid overlap
-
-    //             const relations = []
-    //             const related = []
-
-    //             if (Object.values(nodeZoom.__source).length) {
-    //                 for (const [role, obj] of Object.entries(nodeZoom.__source)) {
-    //                     for (const [linkId, relId] of Object.entries(obj)) {
-    //                         // set_relNode_ids.add(relId)
-    //                         const relNode = nodesById[relId]
-    //                         relations.push({"relation":relNode, "roleplayers":[]})
-    //                         linkIdsVisibleNew.push(linkId)
-    //                         nodeIdsVisibleNew.push(relId)
-    //                         // obj_rel_rp_node_ids[relId] = new Set(null)
-    //                         if (Object.values(relNode.__target).length) {
-    //                             for (const [role1,obj1] of Object.entries(relNode.__target)) {
-    //                                 for (const [linkId1, rpId] of Object.entries(obj1)) {
-    //                                     if (!nodeIdsVisibleNew.includes(rpId)) {
-    //                                         // only allow role players to be placed once
-    //                                         relations[relations.length-1].roleplayers.push(nodesById[rpId])
-    //                                         nodeIdsVisibleNew.push(rpId)
-    //                                     }
-    //                                     // .. but always make the link visible
-    //                                     linkIdsVisibleNew.push(linkId1)
-    //                                 }
-    //                             }
-    //                         }
-    //                     }
-    //                 }
-    //             }
-
-    //             if (Object.values(nodeZoom.__target).length) {
-    //                 for (const [role, obj] of Object.entries(nodeZoom.__target)) {
-    //                     for (const [linkId, rpId] of Object.entries(obj)) {
-    //                         linkIdsVisibleNew.push(linkId)
-    //                         if (!nodeIdsVisibleNew.includes(rpId)) {
-    //                             related.push(nodesById[rpId])
-    //                             nodeIdsVisibleNew.push(rpId)
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //             /**
-    //              * sort nodes
-    //              */
-    //             // relations
-    //             // first rel sort
-    //             if (props.sortRelsBy1 !== null) {
-    //                 // find out the attribute type
-    //                 const relObjRelHasAttr = relations.find((relObj) => props.sortRelsBy1 in relObj.relation);
-    //                 if (typeof(relObjRelHasAttr) !== "undefined") {
-    //                     if (typeof(relObjRelHasAttr.relation[props.sortRelsBy1]) === "string") {
-    //                         relations.sort((a,b)=> {
-    //                             return (props.sortRelsBy1 in a.relation && props.sortRelsBy1 in b.relation) ? a.relation[props.sortRelsBy1].localeCompare(b.relation[props.sortRelsBy1]) > 0 ? props.sortRels1Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     } else if (typeof(relObjRelHasAttr.relation[props.sortRelsBy1]) === "number") {
-    //                         relations.sort((a, b) => {
-    //                             return (props.sortRelsBy1 in a.relation && props.sortRelsBy1 in b.relation) ? a.relation[props.sortRelsBy1] - b.relation[props.sortRelsBy1] > 0 ? props.sortRels1Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     } else if (typeof(relObjRelHasAttr.relation[props.sortRelsBy1]) === "boolean") {
-    //                         relations.sort((a, b) => {
-    //                             return (props.sortRelsBy1 in a.relation && props.sortRelsBy1 in b.relation) ? a.relation[props.sortRelsBy1] > b.relation[props.sortRelsBy1] ? props.sortRels1Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     }
-    //                 }
-    //             }
-    //             // second rel sort
-    //             if (props.sortRelsBy2 !== null) {
-    //                 // find out the attribute type
-    //                 let relObjRelHasAttr = relations.find((relObj) => props.sortRelsBy2 in relObj.relation);
-    //                 if (typeof(relObjRelHasAttr) !== "undefined") {
-    //                     if (typeof(relObjRelHasAttr.relation[props.sortRelsBy2]) === "string") {
-    //                         relations.sort((a,b)=> {
-    //                             return (props.sortRelsBy2 in a.relation && props.sortRelsBy2 in b.relation) ? a.relation[props.sortRelsBy2].localeCompare(b.relation[props.sortRelsBy2]) > 0 ? props.sortRels2Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     } else if (typeof(relObjRelHasAttr.relation[props.sortRelsBy2]) === "number") {
-    //                         relations.sort((a, b) => {
-    //                             return (props.sortRelsBy2 in a.relation && props.sortRelsBy2 in b.relation) ? a.relation[props.sortRelsBy2] - b.relation[props.sortRelsBy2] > 0 ? props.sortRels2Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     } else if (typeof(relObjRelHasAttr.relation[props.sortRelsBy2]) === "boolean") {
-    //                         relations.sort((a, b) => {
-    //                             return (props.sortRelsBy2 in a.relation && props.sortRelsBy2 in b.relation) ? a.relation[props.sortRelsBy2] > b.relation[props.sortRelsBy2] ? props.sortRels2Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     }
-    //                 }
-    //             }
-    //             // role players
-    //             // first role player sort
-    //             if (props.sortRoleplayersBy1 !== null) {
-    //                 // relation role players
-    //                 // find out the attribute type
-    //                 for (const relObj of relations) {
-    //                     let nodeRelRpHasAttr = relObj.roleplayers.find((rp) => props.sortRoleplayersBy1 in rp)
-    //                     if (typeof(nodeRelRpHasAttr) !== "undefined") {
-    //                         break
-    //                     }
-    //                 }
-    //                 if (typeof(nodeRelRpHasAttr) !== "undefined") {
-    //                     for (const relObj of relations) {
-    //                         if (typeof(nodeRelRpHasAttr[props.sortRoleplayersBy1]) === "string") {
-    //                             relObj.roleplayers.sort((a,b)=> {
-    //                                 return (props.sortRoleplayersBy1 in a && props.sortRoleplayersBy1 in b) ? a[props.sortRoleplayersBy1].localeCompare(b[props.sortRoleplayersBy1]) > 0 ? props.sortRoleplayers1Descend ? -1 : 1 : -1 : 0
-    //                             })
-    //                         } else if (typeof(nodeRelRpHasAttr[props.sortRoleplayersBy1]) === "number") {
-    //                             relObj.roleplayers.sort((a, b) => {
-    //                                 return (props.sortRoleplayersBy1 in a && props.sortRoleplayersBy1 in b) ? a[props.sortRoleplayersBy1] - b[props.sortRoleplayersBy1] > 0 ? props.sortRoleplayers1Descend ? -1 : 1 : -1 : 0
-    //                             })
-    //                         } else if (typeof(nodeRelRpHasAttr[props.sortRoleplayersBy1]) === "boolean") {
-    //                             relObj.roleplayers.sort((a, b) => {
-    //                                 return (props.sortRoleplayersBy1 in a && props.sortRoleplayersBy1 in b) ? a[props.sortRoleplayersBy1] > b[props.sortRoleplayersBy1] ? props.sortRoleplayers1Descend ? -1 : 1 : -1 : 0
-    //                             })
-    //                         }
-    //                     }
-    //                 }
-
-    //                 // related role players
-    //                 // find out the attribute type
-    //                 let nodeRpHasAttr = related.find((rp) => props.sortRoleplayersBy1 in rp)
-    //                 if (typeof(nodeRpHasAttr) !== "undefined") {
-    //                     if (typeof(nodeRpHasAttr[props.sortRoleplayersBy1]) === "string") {
-    //                         related.sort((a,b)=> {
-    //                             return (props.sortRoleplayersBy1 in a && props.sortRoleplayersBy1 in b) ? a[props.sortRoleplayersBy1].localeCompare(b[props.sortRoleplayersBy1]) > 0 ? props.sortRoleplayers1Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     } else if (typeof(nodeRpHasAttr[props.sortRoleplayersBy1]) === "number") {
-    //                         related.sort((a, b) => {
-    //                             return (props.sortRoleplayersBy1 in a && props.sortRoleplayersBy1 in b) ? a[props.sortRoleplayersBy1] - b[props.sortRoleplayersBy1] > 0 ? props.sortRoleplayers1Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     } else if (typeof(nodeRpHasAttr[props.sortRoleplayersBy1]) === "boolean") {
-    //                         related.sort((a, b) => {
-    //                             return (props.sortRoleplayersBy1 in a && props.sortRoleplayersBy1 in b) ? a[props.sortRoleplayersBy1] > b[props.sortRoleplayersBy1] ? props.sortRoleplayers1Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     }
-    //                 }
-    //             }
-    //             // second role player sort
-    //             if (props.sortRoleplayersBy2 !== null) {
-    //                 // relation role players
-    //                 // find out the attribute type
-    //                 for (const relObj of relations) {
-    //                     let nodeRelRpHasAttr = relObj.roleplayers.find((rp) => props.sortRoleplayersBy2 in rp)
-    //                     if (typeof(nodeRelRpHasAttr) !== "undefined") {
-    //                         break
-    //                     }
-    //                 }
-    //                 if (typeof(nodeRelRpHasAttr) !== "undefined") {
-    //                     for (const relObj of relations) {
-    //                         if (typeof(nodeRelRpHasAttr[props.sortRoleplayersBy2]) === "string") {
-    //                             relObj.roleplayers.sort((a,b)=> {
-    //                                 return (props.sortRoleplayersBy2 in a && props.sortRoleplayersBy2 in b) ? a[props.sortRoleplayersBy2].localeCompare(b[props.sortRoleplayersBy2]) > 0 ? props.sortRoleplayers2Descend ? -1 : 1 : -1 : 0
-    //                             })
-    //                         } else if (typeof(nodeRelRpHasAttr[props.sortRoleplayersBy2]) === "number") {
-    //                             relObj.roleplayers.sort((a, b) => {
-    //                                 return (props.sortRoleplayersBy2 in a && props.sortRoleplayersBy2 in b) ? a[props.sortRoleplayersBy2] - b[props.sortRoleplayersBy2] > 0 ? props.sortRoleplayers2Descend ? -1 : 1 : -1 : 0
-    //                             })
-    //                         } else if (typeof(nodeRelRpHasAttr[props.sortRoleplayersBy2]) === "boolean") {
-    //                             relObj.roleplayers.sort((a, b) => {
-    //                                 return (props.sortRoleplayersBy2 in a && props.sortRoleplayersBy2 in b) ? a[props.sortRoleplayersBy2] > b[props.sortRoleplayersBy2] ? props.sortRoleplayers2Descend ? -1 : 1 : -1 : 0
-    //                             })
-    //                         }
-    //                     }
-    //                 }
-
-    //                 // related role players
-    //                 // find out the attribute type
-    //                 let nodeRpHasAttr = related.find((rp) => props.sortRoleplayersBy2 in rp)
-    //                 if (typeof(nodeRpHasAttr) !== "undefined") {
-    //                     if (typeof(nodeRpHasAttr[props.sortRoleplayersBy2]) === "string") {
-    //                         related.sort((a,b)=> {
-    //                             return (props.sortRoleplayersBy2 in a && props.sortRoleplayersBy2 in b) ? a[props.sortRoleplayersBy2].localeCompare(b[props.sortRoleplayersBy2]) > 0 ? props.sortRoleplayers2Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     } else if (typeof(nodeRpHasAttr[props.sortRoleplayersBy2]) === "number") {
-    //                         related.sort((a, b) => {
-    //                             return (props.sortRoleplayersBy2 in a && props.sortRoleplayersBy2 in b) ? a[props.sortRoleplayersBy2] - b[props.sortRoleplayersBy2] > 0 ? props.sortRoleplayers2Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     } else if (typeof(nodeRpHasAttr[props.sortRoleplayersBy2]) === "boolean") {
-    //                         related.sort((a, b) => {
-    //                             return (props.sortRoleplayersBy2 in a && props.sortRoleplayersBy2 in b) ? a[props.sortRoleplayersBy2] > b[props.sortRoleplayersBy2] ? props.sortRoleplayers2Descend ? -1 : 1 : -1 : 0
-    //                         })
-    //                     }
-    //                 }
-    //             }
-
-    //             // place node relative to node zoom node
-    //             const nRel = relations.length
-    //             // add half a space also for extra spaces between relations, to group their roleplayers
-    //             // we need nRels/2 - 0.5 extra spaces
-    //             const sum = (array) => array.reduce(function(a, b) {return a + b}, 0);
-    //             const nRelRp = relations.length? sum(relations.map((rel) => rel.roleplayers.length)) + relations.length/2 - 0.5 : 0
-    //             const nRp = related.length
-
-    //             // compute min y value (top)
-    //             const height = Math.max(nRel, nRelRp, nRp) * marYMin
-    //             const yMin = nodeZoom.y - height/2
-
-    //             // compute y margins (spacing) for each column of nodes
-    //             const marYRel = nRel > 0 ? height / nRel : marYMin
-    //             const marYRelRp = nRelRp > 0 ? height / nRelRp : marYMin
-    //             const marYRp = nRp > 0 ? height / nRp : marYMin
-
-    //             // initialise the position multiplier at 0.5 to get center vertical alignment
-    //             let kRel = 0.5
-    //             let kRelRp = -0.5 // move role players up a bit
-    //             let kRp = 0.5
-
-    //             relations.forEach((relationObj) => {
-    //                 const relNode = relationObj.relation
-    //                 const roleplayers = relationObj.roleplayers
-    //                 relNode.fx = nodeZoom.x + marX * 2
-    //                 relNode.fy = yMin + kRel * marYRel
-    //                 for (const roleplayer of roleplayers) {
-    //                     roleplayer.fx = nodeZoom.x + marX*2/3
-    //                     roleplayer.fy = yMin + kRelRp * marYRelRp
-    //                     // if too close to nodeZoom and relation is below nodeZoom in height, shift rp down another notch
-    //                     if ((roleplayer.fy - nodeZoom.y < marYMin) && (yMin + kRel * marYRel > nodeZoom.y)) {
-    //                         roleplayer.fy = roleplayer.fy + marYRelRp
-    //                         kRelRp = kRelRp + 1
-    //                     }
-    //                     kRelRp = kRelRp + 1
-    //                 }
-    //                 // add extra half space between rps of each rel
-    //                 kRel = kRel + 1
-    //                 kRelRp = kRelRp + 0.5
-    //             })
-
-    //             related.forEach((roleplayer) => {
-    //                 roleplayer.fx = nodeZoom.x - marX
-    //                 roleplayer.fy = yMin + kRp * marYRp
-    //                 kRp = kRp + 1
-    //             })
-
-    //             nodesClone.forEach((node) => {
-    //                 if (nodeIdsVisibleNew.includes(node[props.nodeId])) {
-    //                     node.fx = nodesById[node[props.nodeId]].fx
-    //                     node.fy = nodesById[node[props.nodeId]].fy
-    //                 }
-    //             })
-    //             // pan and zoom
-    //             const nodeFilterFn = (n) => {
-    //                 return nodeIdsVisibleNew.includes(n[props.nodeId])? true : false
-    //             }
-    //             fgRef.current.zoomToFit(250,40,nodeFilterFn)
-
-    //             // <DELETE ?
-    //             fgRef.current.centerAt(nodeZoom.fx+marX/2, nodeZoom.fy, 250)
-    //             // fgRef.current.zoom(4,250)
-    //             // /DELETE>
-
-    //         } else {
-    //             nodesClone.forEach((node)=>{
-    //                 if ("fx" in node) {
-    //                     delete node.fx
-    //                     delete node.fy
-    //                 }
-    //             })
-    //             const nodeIdsVisibleNew = []
-    //             const linkIdsVisibleNew = []
-    //         }
-    //         const links_clone = cloneDeep(props.graphData.links)
-    //         links_clone.forEach((link) => {
-    //             link.id = link.id[props.nodeId]
-    //         })
-
-    //         // props.setProps({graphData:{"nodes":nodesClone, "links":links_clone}})
-    //         setGraphDataProcessed({"nodes":nodesClone, "links":links_clone});
-    //         setnodesById(Object.fromEntries(nodesClone.map((node) => [node[props.nodeId], node])))
-    //         setNodeIdsVisible(nodeIdsVisibleNew)
-    //         setLinkIdsVisible(linkIdsVisibleNew)
-    //     }
-    // },[
-    //     nodeZoomId,
-    //     props.sortRelsBy1,
-    //     props.sortRelsBy2,
-    //     props.sortRoleplayersBy1,
-    //     props.sortRoleplayersBy2,
-    //     props.sortRels1Descend,
-    //     props.sortRels2Descend,
-    //     props.sortRoleplayers1Descend,
-    //     props.sortRoleplayers2Descend
-    // ])
 
     // useEffect(() => {
     //     if (props.forceEngine === "d3") {
@@ -2363,7 +2075,11 @@ function Graph2D (props) {
     };
 
     const linkColorFunction = (link) => {
-        let color = linkAutoColor ? invert(backgroundColor) : props.linkColor in link ? validateColor(link[props.linkColor]) ? link[props.linkColor] :  invert(backgroundColor) : invert(backgroundColor);
+        let color = linkAutoColor
+            ? invert(backgroundColor)
+            : validateColor(linkColor)
+                ? linkColor
+                :  invert(backgroundColor)
         // is link selected?
         if (linksSelected.length) {
             color = darken(0.2, color);
@@ -2418,6 +2134,36 @@ function Graph2D (props) {
     };
 
     const linkCanvasObjectFunction = (link, ctx) => {
+        let color = linkAutoColor
+            ? invert(backgroundColor)
+            : validateColor(linkColor)
+                ? linkColor
+                :  invert(backgroundColor)
+        // is link selected?
+        if (linksSelected.length) {
+            color = darken(0.2, color);
+            if (linksSelected.map((linkSel)=>linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+                color = saturate(0.2,color);
+                color = lighten(0.2,color);
+            }
+        }
+        // is link connected to node being dragged?
+        if (linkIdsNodesDrag.length) {
+            color = darken(0.2, color);
+            if (linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
+                color = saturate(0.2,color);
+                color = lighten(0.2, color);
+            }
+        }
+        // are link source and target selected?
+        if (nodesSelected.length) {
+            color = darken(0.3, color);
+            if (nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkSource]) && nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkTarget])) {
+                color = saturate(0.2,color);
+                color = lighten(0.3, color);
+            }
+        }
+        
         const MAX_FONT_SIZE = 4;
         const LABEL_NODE_MARGIN = nodeRelSize * 1.5;
 
@@ -2461,8 +2207,7 @@ function Graph2D (props) {
 
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillStyle = invert(backgroundColor);
-        // ctx.fillStyle = props.linkColor in link? validateColor(link[props.linkColor])? link[props.linkColor] :  invert(backgroundColor) : invert(backgroundColor)
+        ctx.fillStyle = color;// invert(backgroundColor);
         ctx.fillText(label, 0, 0);
         ctx.restore();
     };
@@ -2509,18 +2254,18 @@ function Graph2D (props) {
         }
     };
 
-    const dagNodeFilter = (node) => {
-        return props.dagNodeIds.includes(node[props.nodeId]) ? true : false;
-    };
+    // const dagNodeFilter = (node) => {
+    //     return props.dagNodeIds.includes(node[props.nodeId]) ? true : false;
+    // };
 
     // https://github.com/vasturiano/react-force-graph/issues/199
-    const onDagError = (loopNodeIds) => {};
+    // const onDagError = (loopNodeIds) => {};
     /**
      * call methods via higher order component props
      */
 
     useEffect( () => {
-        if (props.emitParticle !== null){
+        if (props.emitParticle) {
             fgRef.current.emitParticle(props.emitParticle);
         }
     },[props.emitParticle]);
@@ -2686,7 +2431,7 @@ function Graph2D (props) {
                     linkLineDash={props.linkLineDash}
                     linkWidth={linkWidthFunction}
                     linkResolution={props.linkResolution}
-                    linkCurvature={linkCurvature}
+                    // linkCurvature={linkCurvature}
                     // linkCurveRotation={props.linkCurveRotation} // 3D, VR, AR,
                     // linkMaterial: null, // 3D, VR, AR, not exposed
                     linkCanvasObject={linkCanvasObjectFunction}
@@ -2730,10 +2475,10 @@ function Graph2D (props) {
                     */
                     // numDimensions={props.numDimensions}
                     forceEngine={forceEngine}
-                    dagMode={dagMode}
-                    dagLevelDistance={props.dagLevelDistance}
-                    dagNodeFilter={dagNodeFilter} // TODO: function
-                    onDagError={onDagError}
+                    // dagMode={dagMode}
+                    // dagLevelDistance={props.dagLevelDistance}
+                    // dagNodeFilter={dagNodeFilter} // TODO: function
+                    // onDagError={onDagError}
                     // // // d3AlphaMin={d3AlphaMin}
                     // // d3AlphaDecay={d3AlphaDecay}
                     // d3VelocityDecay={d3VelocityDecay}
@@ -2797,15 +2542,24 @@ function Graph2D (props) {
                             </DatFolder>
                         <DatFolder title='Link styling' closed={true}>
                             <DatBoolean path='linkAutoColor' label='linkAutoColor'/>
+                            <DatColor path='linkColor' label='linkColor'/>
                             <DatNumber path='linkWidth' label='linkWidth' min={0.1} max={5} step={0.1}/>
-                            <DatNumber path='linkCurvature' label='linkCurvature' min={0} max={1} step={0.1}/>
+                            {/* <DatNumber path='linkCurvature' label='linkCurvature' min={0} max={1} step={0.1}/> */}
                             </DatFolder>
                         <DatFolder title='Force engine configuration' closed = {true}>
                             <DatSelect path='forceEngine' label='forceEngine' options={["d3", "ngraph"]}/>
-                            <DatBoolean path='datModeOn' label='datModeOn'/>
-                            <DatSelect path='dagMode' label='dagMode' options={["td", "bu", "lr", "rl", "radialout", "radialin"]}/>
+                            {/* <DatBoolean path='dagModeOn' label='dagModeOn'/> */}
+                            {/* <DatSelect path='dagMode' label='dagMode' options={["td", "bu", "lr", "rl", "radialout", "radialin"]}/> */}
                             <DatNumber path='cooldownTime' label='cooldownTime' min={1000} max={30000} step={1000}/>
                             <DatBoolean path='fixNodes' label='fixNodes'/>
+                            <DatButton label='reheat simulation' onClick={() => {
+                                if (nodeZoomId) {
+                                    setNodeZoomId(null)    
+                                } else {
+                                    fgRef.current.d3ReheatSimulation()
+                                }
+                            }
+                            }/>
                             </DatFolder>
                         <DatFolder title='Interaction' closed = {true}>
                             <DatSelect title='controlType' label='controlType' options={["trackball", "orbit", "fly"]}/>
@@ -3054,13 +2808,9 @@ const graphSharedProptypes = {
     // ]), // not exposed
 
     /**
-     * Link object accessor function or attribute for line color.
+     * String giving link color
      */
-    "linkColor": PropTypes.oneOfType([
-        PropTypes.string,
-    //    PropTypes.func
-    ]),
-
+    "linkColor": PropTypes.string,
 
     /**
     * Automatically color link with inverse of background color
@@ -3106,20 +2856,20 @@ const graphSharedProptypes = {
         /**
      * Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.
      */
-    "linkCurvature": PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string,
-    //    PropTypes.func
-    ]),
+    // "linkCurvature": PropTypes.oneOfType([
+    //     PropTypes.number,
+    //     PropTypes.string,
+    // //    PropTypes.func
+    // ]),
 
     /**
      * Link object accessor function, attribute or a numeric constant for the rotation along the line axis to apply to the curve. Has no effect on straight lines. At 0 rotation, the curve is oriented in the direction of the intersection with the XY plane. The rotation angle (in radians) will rotate the curved line clockwise around the "start-to-end" axis from this reference orientation.
      */
-    "linkCurveRotation": PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string,
-    //    PropTypes.func
-    ]),
+    // "linkCurveRotation": PropTypes.oneOfType([
+    //     PropTypes.number,
+    //     PropTypes.string,
+    // //    PropTypes.func
+    // ]),
 
 
     /**
@@ -3346,17 +3096,17 @@ const graphSharedProptypes = {
     /**
     * Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).
     */
-    "dagMode": PropTypes.string,
+    // "dagMode": PropTypes.string,
 
     /**
     * Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).
     */
-    "dagModeOn": PropTypes.bool,
+    // "dagModeOn": PropTypes.bool,
 
     /**
     * If dagMode is engaged, this specifies the distance between the different graph depths.
     */
-    "dagLevelDistance": PropTypes.number,
+    // "dagLevelDistance": PropTypes.number,
 
     /**
     * Node accessor function to specify nodes to ignore during the DAG layout processing. This accessor method receives a node object and should return a boolean value indicating whether the node is to be included. Excluded nodes will be left unconstrained and free to move in any direction.
@@ -3372,7 +3122,7 @@ const graphSharedProptypes = {
     * array of string ids for nodes to include in DAG layout
     */
 
-    "dagNodeIds": PropTypes.arrayOf(PropTypes.string),
+    // "dagNodeIds": PropTypes.arrayOf(PropTypes.string),
 
     /**
     * Sets the simulation alpha min parameter. Only applicable if using the d3 simulation engine.

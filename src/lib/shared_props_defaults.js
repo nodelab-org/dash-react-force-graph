@@ -63,8 +63,8 @@ const objSharedProps = {
     linkLineDash: null, // falsy value disables dashing
     linkWidth:1,
     linkResolution: 6,
-    linkCurvature: 0,
-    linkCurveRotation: 0, // 3D, VR, AR,
+    // linkCurvature: 0,
+    // linkCurveRotation: 0, // 3D, VR, AR,
     // linkMaterial: null, // 3D, VR, AR, not exposed
     // linkCanvasObject: null // 2D, not exposed
     // linkCanvasObjectMode: "replace", // 2D, not exposed
@@ -113,18 +113,18 @@ const objSharedProps = {
     // forceEngine: "d3",
     // dagMode: null,
     // dagModeOn: false,
-    dagLevelDistance: null,
+    // dagLevelDistance: null,
     // dagNodeFilter: // Implemented in Higher Order Component
     // onDagError: // implemented in Higher Order Component
-    dagNodeIds: [],
+    // dagNodeIds: [],
     // d3AlphaMin: 0.001,
     // d3AlphaDecay: 0.0228,
     // d3VelocityDecay: 0.4,
     ngraphPhysics: null,
     warmupTicks: 0,
     cooldownTicks: Infinity,
-    cooldownTime: 15000,
-    fixNodes: true,
+    cooldownTime: 2500,
+    fixNodes: false,
     // onEngineTick: // TODO: function
     // onEngineStop: // TODO: function
     // methods

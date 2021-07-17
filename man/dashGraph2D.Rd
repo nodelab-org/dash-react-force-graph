@@ -18,8 +18,8 @@ nodeAutoColorBy=NULL, nodeTextAutoColor=NULL,
 nodeOpacity=NULL, nodeResolution=NULL, linkLabel=NULL,
 linkDesc=NULL, linkColor=NULL, linkAutoColor=NULL,
 linkAutoColorBy=NULL, linkOpacity=NULL, linkLineDash=NULL,
-linkWidth=NULL, linkResolution=NULL, linkCurvature=NULL,
-linkCurveRotation=NULL, linkDirectionalArrowLength=NULL,
+linkWidth=NULL, linkResolution=NULL,
+linkDirectionalArrowLength=NULL,
 linkDirectionalArrowColor=NULL,
 linkDirectionalArrowRelPos=NULL,
 linkDirectionalArrowResolution=NULL,
@@ -31,11 +31,10 @@ linkDirectionalParticleResolution=NULL, emitParticle=NULL,
 rendererConfig=NULL, pauseAnimation=NULL,
 resumeAnimation=NULL, centerAt=NULL, zoom=NULL,
 zoomToFit=NULL, cameraPosition=NULL, refresh=NULL,
-numDimensions=NULL, forceEngine=NULL, dagMode=NULL,
-dagModeOn=NULL, dagLevelDistance=NULL, dagNodeIds=NULL,
-ngraphPhysics=NULL, warmupTicks=NULL, cooldownTicks=NULL,
-cooldownTime=NULL, fixNodes=NULL, linkHoverPrecision=NULL,
-controlType=NULL, enableZoomPanInteraction=NULL,
+numDimensions=NULL, forceEngine=NULL, ngraphPhysics=NULL,
+warmupTicks=NULL, cooldownTicks=NULL, cooldownTime=NULL,
+fixNodes=NULL, linkHoverPrecision=NULL, controlType=NULL,
+enableZoomPanInteraction=NULL,
 enableNavigationControls=NULL,
 enablePointerInteraction=NULL, enableNodeDrag=NULL,
 getGraphBbox=NULL, heightRatio=NULL, size=NULL, active=NULL,
@@ -98,7 +97,7 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{linkDesc}{Character. For VR only. Link object accessor function or attribute for description (shown under label).}
 
-\item{linkColor}{Character. Link object accessor function or attribute for line color.}
+\item{linkColor}{Character. String giving link color}
 
 \item{linkAutoColor}{Logical. Automatically color link with inverse of background color}
 
@@ -111,10 +110,6 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 \item{linkWidth}{Numeric | character. Link object accessor function, attribute or a numeric constant for the link line width.}
 
 \item{linkResolution}{Numeric. Geometric resolution of each link 3D line, expressed in how many radial segments to divide the cylinder. Higher values yield smoother cylinders. Applicable only to links with positive width. 3D, VR, AR}
-
-\item{linkCurvature}{Numeric | character. Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.}
-
-\item{linkCurveRotation}{Numeric | character. Link object accessor function, attribute or a numeric constant for the rotation along the line axis to apply to the curve. Has no effect on straight lines. At 0 rotation, the curve is oriented in the direction of the intersection with the XY plane. The rotation angle (in radians) will rotate the curved line clockwise around the "start-to-end" axis from this reference orientation.}
 
 \item{linkDirectionalArrowLength}{Numeric | character. Link object accessor function, attribute or a numeric constant for the length of the arrow head indicating the link directionality. The arrow is displayed directly over the link line, and points in the direction of source > target. A value of 0 hides the arrow.}
 
@@ -155,14 +150,6 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 \item{numDimensions}{Numeric. Not applicable to 2D mode. Number of dimensions to run the force simulation on. 3D, VR, AR}
 
 \item{forceEngine}{Character. Which force-simulation engine to use (d3 or ngraph).}
-
-\item{dagMode}{Character. Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).}
-
-\item{dagModeOn}{Logical. Apply layout constraints based on the graph directionality. Only works correctly for DAG graph structures (without cycles). Choice between td (top-down), bu (bottom-up), lr (left-to-right), rl (right-to-left), zout (near-to-far), zin (far-to-near), radialout (outwards-radially) or radialin (inwards-radially).}
-
-\item{dagLevelDistance}{Numeric. If dagMode is engaged, this specifies the distance between the different graph depths.}
-
-\item{dagNodeIds}{List of characters. array of string ids for nodes to include in DAG layout}
 
 \item{ngraphPhysics}{Named list. Specify custom physics configuration for ngraph, according to its configuration object syntax. Only applicable if using the ngraph simulation engine.}
 

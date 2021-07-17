@@ -117,10 +117,7 @@ app.layout = html.Div([
         nodeColor="__nodeColor",
         nodeIcon="__nodeIcon",
         nodeImg="__nodeImg",
-        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
-        dagModeOn=False,
-        dagMode=None,
-        dagNodeIds=["3","4","6","8","9"]
+        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"}
     ),
     html.Label("sortRelsBy1"),
     dcc.Dropdown(
@@ -299,7 +296,7 @@ nodeRightClicked):
         Input('button-delete', 'n_clicks')
     ],
     [
-        State("graph2D","graphDataProcessed")
+        State("graph2D","graphData")
     ])
 def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
     ctx = dash.callback_context
