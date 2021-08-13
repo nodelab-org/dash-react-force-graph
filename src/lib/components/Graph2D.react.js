@@ -52,10 +52,6 @@ function Graph2D (props) {
             setBackgroundColor
         ],
         [
-            showNavInfo,
-            setShowNavInfo
-        ],
-        [
             nodeRelSize,
             setNodeRelSize
         ],
@@ -66,10 +62,6 @@ function Graph2D (props) {
         [
             nodeImgRelSize,
             setNodeImgRelSize
-        ],
-        [
-            nodeOpacity,
-            setNodeOpacity
         ],
         [
             useNodeImg,
@@ -91,18 +83,6 @@ function Graph2D (props) {
             fixNodes,
             setFixNodes
         ],
-        // [
-        //     dagModeOn,
-        //     setDagModeOn
-        // ],
-        // [
-        //     dagMode,
-        //     setDagMode
-        // ],
-        [
-            controlType,
-            setControlType
-        ],
         [
             enableNodeDrag,
             setEnableNodeDrag
@@ -110,10 +90,6 @@ function Graph2D (props) {
         [
             enableZoomPanInteraction,
             setEnableZoomPanInteraction
-        ],
-        [
-            enableNavigationControls,
-            setEnableNavigationControls
         ],
         [
             enablePointerInteraction,
@@ -154,6 +130,10 @@ function Graph2D (props) {
         [
             nodeZoomId,
             setNodeZoomId
+        ],
+        [
+            nodePreviousFCoordinatesById,
+            setNodePreviousFCoordinatesById
         ],
         [
             nodeIdsVisible,
@@ -226,22 +206,16 @@ function Graph2D (props) {
         fgRef
     ] = [
         useState(props.backgroundColor),
-        useState(props.showNavInfo),
         useState(props.nodeRelSize),
         useState(props.nodeIconRelSize),
         useState(props.nodeImgRelSize),
-        useState(props.nodeOpacity),
         useState(props.useNodeImg),
         useState(props.useNodeIcon),
         useState(props.forceEngine),
         useState(props.cooldownTime),
         useState(props.fixNodes),
-        // useState(props.dagModeOn),
-        // useState(props.dagMode),
-        useState(props.controlType),
         useState(props.enableNodeDrag),
         useState(props.enableZoomPanInteraction),
-        useState(props.enableNavigationControls),
         useState(props.enablePointerInteraction),
         useState(null),
         useState(null),
@@ -251,6 +225,7 @@ function Graph2D (props) {
         useState(null),
         useState([]),
         useState([]),
+        useState(null),
         useState(null),
         useState(props.nodeIdsVisible),
         useState(props.linkIdsVisible),
@@ -277,29 +252,29 @@ function Graph2D (props) {
         useState({
             "backgroundColor": props.backgroundColor,
             "center": 0.52,
-            "charge": -10,
-            "controlType": props.controlType,
+            "charge": -50,
+            // "controlType": props.controlType,
             "cooldownTime": props.cooldownTime,
             // "dagMode": props.dagMode,
             // "dagModeOn": props.dagModeOn,
-            "enableNavigationControls": props.enableNavigationControls,
+            // "enableNavigationControls": props.enableNavigationControls,
             "enableNodeDrag": props.enableNodeDrag,
             "enablePointerInteraction": props.enablePointerInteraction,
             "enableZoomPanInteraction": props.enableZoomPanInteraction,
             "fixNodes": props.fixNodes,
             "forceEngine": props.forceEngine,
-            "link": 50,
+            "link": 60,
             "linkAutoColor": props.linkAutoColor,
             "linkColor": props.linkColor,
             // "linkCurvature": props.linkCurvature,
             "linkWidth": props.linkWidth,
             "nodeIconRelSize": props.nodeIconRelSize,
             "nodeImgRelSize": props.nodeImgRelSize,
-            "nodeOpacity": props.nodeOpacity,
+            // "nodeOpacity": props.nodeOpacity,
             "nodeRelSize": props.nodeRelSize,
             "nodeTextAutoColor": props.nodeTextAutoColor,
             "radial": 0.0,
-            "showNavInfo": props.showNavInfo,
+            // "showNavInfo": props.showNavInfo,
             "useNodeIcon": props.useNodeIcon,
             "useNodeImg": props.useNodeImg
         }),
@@ -336,6 +311,8 @@ function Graph2D (props) {
                     .strength(0.00)
             );
             // Math.pow(Math.sqrt(node.x)+Math.sqrt(node.y),2)/2
+            
+            // Add negative charge and lower effective distance
             const [
                 newStrength,
                 newDistMax
@@ -343,7 +320,7 @@ function Graph2D (props) {
                 -50,
                 100
             ];
-            // Add negative charge and lower effective distance
+            
             fgRef.current.d3Force("charge")
                 .strength(newStrength)
                 .distanceMax(newDistMax);
@@ -361,11 +338,11 @@ function Graph2D (props) {
     useEffect(
         () => {
             setBackgroundColor(guiSettings.backgroundColor);
-            setShowNavInfo(guiSettings.showNavInfo);
+            // setShowNavInfo(guiSettings.showNavInfo);
             setNodeRelSize(guiSettings.nodeRelSize);
             setNodeIconRelSize(guiSettings.nodeIconRelSize);
             setNodeImgRelSize(guiSettings.nodeImgRelSize);
-            setNodeOpacity(guiSettings.nodeOpacity);
+            // setNodeOpacity(guiSettings.nodeOpacity);
             setUseNodeImg(guiSettings.useNodeImg);
             setUseNodeIcon(guiSettings.useNodeIcon);
             setNodeTextAutoColor(guiSettings.nodeTextAutoColor);
@@ -410,10 +387,10 @@ function Graph2D (props) {
             //     : null);
             setFixNodes(guiSettings.fixNodes);
             setCooldownTime(guiSettings.cooldownTime);
-            setControlType(guiSettings.controlType);
+            // setControlType(guiSettings.controlType);
             setEnableNodeDrag(guiSettings.enableNodeDrag);
             setEnableZoomPanInteraction(guiSettings.enableZoomPanInteraction);
-            setEnableNavigationControls(guiSettings.enableNavigationControls);
+            // setEnableNavigationControls(guiSettings.enableNavigationControls);
             setEnablePointerInteraction(guiSettings.enablePointerInteraction);
 
         },
@@ -591,6 +568,22 @@ function Graph2D (props) {
 
             });
 
+        }
+
+        if (props.graphData.nodes.every((node) => "fx" in node && "fy" in node)) {
+            // iff ALL nodes previously had fx and fy coordinate attributes, save them to recover after
+            setNodePreviousFCoordinatesById(Object.fromEntries(props.graphData.nodes
+                .map((node) => [
+
+                    node[props.nodeId],
+                    [
+                        node.fx,
+                        node.fy
+                    ]
+                ])));
+
+        } else {
+            setNodePreviousFCoordinatesById(null);
         }
 
         // console.log("props.graphData after adding neighbours and coordinates:");
@@ -1205,38 +1198,34 @@ function Graph2D (props) {
                     }
 
                 });
-
-                // pan and zoom
-                const nodeFilterFn = (nodeTmp) => {
-
-                    return nodeIdsVisibleNew.includes(nodeTmp[props.nodeId]) 
-                        ? true 
-                        : false;
-
-                };
-                
-                fgRef.current.zoomToFit(
-                    250,
-                    40,
-                    nodeFilterFn
-                );
                 
                 // <DELETE ?
 
-                fgRef.current.centerAt(
-                    nodeZoom.fx + marX / 2,
-                    nodeZoom.fy,
-                    250
-                );
+                // fgRef.current.centerAt(
+                //     nodeZoom.fx + marX / 2,
+                //     nodeZoom.fy,
+                //     250
+                // );
 
                 // fgRef.current.zoom(4,250)
 
                 // /DELETE>
 
+            } else if (nodePreviousFCoordinatesById) {
+
+                // recover previous f coordinates
+                props.graphData.nodes.forEach((node) => {
+
+                    [
+                        node.fx,
+                        node.fy
+                    ] = nodePreviousFCoordinatesById[node.nodeId];
+
+                });
+
             } else {
 
-                // If nodeZoomId is null
-
+                // remove f coordinates
                 props.graphData.nodes.forEach((node) => {
 
                     if ("fx" in node) {
@@ -1250,6 +1239,21 @@ function Graph2D (props) {
                 fgRef.current.d3ReheatSimulation();
 
             }
+
+            // pan and zoom
+            const nodeFilterFn = (nodeTmp) => {
+
+                return nodeIdsVisibleNew.includes(nodeTmp[props.nodeId]) 
+                    ? true 
+                    : false;
+
+            };
+
+            fgRef.current.zoomToFit(
+                250,
+                40,
+                nodeFilterFn
+            );
 
             setNodeIdsVisible(nodeIdsVisibleNew);
             setLinkIdsVisible(linkIdsVisibleNew);
@@ -1719,8 +1723,9 @@ function Graph2D (props) {
 
             }
 
-            // Two-step highlighting if rootType is entity
-            if (node.rootType === "entity") {
+            // Two-step highlighting if rootType is entity and not a schema node
+            // this is hard-coded for typedb-vis-utils
+            if (node.rootType === "entity" && node.thingType !== node.nodeId) {
 
                 // We cannot simply iterate over neighbourNodeIds nor its length adding
                 // since we are adding to it
@@ -1874,6 +1879,7 @@ function Graph2D (props) {
     };
 
     const handleBackgroundRightClick = (event) => {
+
         setNodeClicked(null);
         setNodeClickedViewpointCoordinates(null);
         setNodeRightClicked(null);
@@ -1883,6 +1889,7 @@ function Graph2D (props) {
         setNodesSelected([]);
         setLinksSelected([]);
         setNodeZoomId(null);
+        
     };
 
     const handleLinkClick = (link,event) => {
@@ -1905,12 +1912,18 @@ function Graph2D (props) {
             linksSelected_new.push(link);
         }
         setLinksSelected(linksSelected_new);
+
     };
 
     useEffect(() => setNodeIdsVisible(props.nodeIdsVisible),[props.nodeIdsVisible]);
+
     useEffect(() => setLinkIdsVisible(props.linkIdsVisible),[props.linkIdsVisible]);
+
     useEffect(() => setNodeIdsHighlight(props.nodeIdsHighlight),[props.nodeIdsHighlight]);
+
     useEffect(() => setLinkIdsHighlight(props.linkIdsHighlight),[props.linkIdsHighlight]);
+
+
     useEffect(() => {
 
         if (props.nodeZoomId) {
@@ -2213,9 +2226,6 @@ function Graph2D (props) {
     };
 
     const onEngineStopFunction = () => {
-        // setEnableZoomPanInteraction(props.interactive? true : false)
-        // setEnablePointerInteraction(props.interactive? true : false)
-        // setEnableNavigationControls(props.interactive? true : false)
         if (props.graphData.nodes.length && fixNodes) {
             
             props.graphData.nodes.forEach((node)=> {
@@ -2254,6 +2264,30 @@ function Graph2D (props) {
         }
     };
 
+    const restoreDefaultForcesFunction = () => {
+        setGuiSettings( (guiSettings) => ({...guiSettings, 
+                    "charge": -50,
+                    "center": 0.52,
+                    "link": 60,
+                    "radial": 0.0
+                }
+        ))
+    }
+
+    const reheatFunction = () => {
+        if (nodeZoomId) {
+            setNodeZoomId(null)    
+        } else {
+            props.graphData.nodes.forEach((node) => {
+            if ("fx" in node) {
+                delete node.fx;
+                delete node.fy;
+            }
+            });
+            fgRef.current.d3ReheatSimulation()
+        }
+    }
+    
     // const dagNodeFilter = (node) => {
     //     return props.dagNodeIds.includes(node[props.nodeId]) ? true : false;
     // };
@@ -2401,7 +2435,7 @@ function Graph2D (props) {
                     width={props.size.width}
                     height={window.innerHeight * props.heightRatio}
                     backgroundColor={backgroundColor}
-                    showNavInfo={showNavInfo}
+                    // showNavInfo={showNavInfo}
                     // yOffset: 1.5, // AR
                     // glScale: 200 // AR
                     // markerAttrs: { preset: 'hiro' } // AR
@@ -2415,7 +2449,7 @@ function Graph2D (props) {
                     nodeVisibility={nodeVisibilityFunction}
                     nodeColor={nodeColorFunction}
                     nodeAutoColorBy={props.nodeAutoColorBy}
-                    nodeOpacity={nodeOpacity}
+                    // nodeOpacity={nodeOpacity}
                     //nodeResolution={props.nodeResolution}
                     nodeCanvasObject={nodeCanvasObjectFunction}
                     nodeCanvasObjectMode={nodeCanvasObjectModeFunction}
@@ -2506,11 +2540,11 @@ function Graph2D (props) {
                     linkHoverPrecision={props.linkHoverPrecision}
                     // onZoom // TODO: function
                     // onZoomEnd // TODO: function
-                    controlType={controlType}
+                    // controlType={controlType}
                     enableNodeDrag={enableNodeDrag}
-                    enableZoomPanInteraction={enableZoomPanInteraction} // overridden by 'interactive' parameter
-                    enableNavigationControls={enableNavigationControls} // overridden by 'interactive' parameter
-                    enablePointerInteraction={enablePointerInteraction} // overridden by 'interactive' parameter
+                    enableZoomPanInteraction={enableZoomPanInteraction} 
+                    // enableNavigationControls={enableNavigationControls} 
+                    enablePointerInteraction={enablePointerInteraction} 
                     onChange={(e) => {
                         props.setProps({
                             "graphData":e.target.graphData
@@ -2523,19 +2557,20 @@ function Graph2D (props) {
                     <DatFolder title='graph settings' closed={true}>
                         <DatFolder title='Container layout' closed={true}>
                             <DatColor path='backgroundColor' label='backgroundColor'/>
-                            <DatBoolean path='showNavInfo' label='showNavInfo'/>
+                            {/* <DatBoolean path='showNavInfo' label='showNavInfo'/> */}
                             </DatFolder>
                         <DatFolder title='d3Force' closed={true}>
                             <DatNumber path='link' label='link' min={0} max={100} step={1} />
                             <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
                             <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
                             <DatNumber path='radial' label='radial' min={0} max={1} step={0.01} />
+                            <DatButton label='restore defaults' onClick={restoreDefaultForcesFunction}/>
                             </DatFolder>
                         <DatFolder title='Node styling' closed={true}>
                             <DatNumber path='nodeRelSize' label='nodeRelSize' min={1} max={50} step={1}/>
                             <DatNumber path='nodeIconRelSize' label='nodeIconRelSize' min={1} max={50} step={1}/>
                             <DatNumber path='nodeImgRelSize' label='nodeImgRelSize' min={1} max={50} step={1}/>
-                            <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/>
+                            {/* <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/> */}
                             <DatBoolean path='useNodeIcon' label='useNodeIcon'/>
                             <DatBoolean path='useNodeImg' label='useNodeImg'/>
                             <DatBoolean path='nodeTextAutoColor' label='nodeTextAutoColor'/>
@@ -2550,22 +2585,15 @@ function Graph2D (props) {
                             <DatSelect path='forceEngine' label='forceEngine' options={["d3", "ngraph"]}/>
                             {/* <DatBoolean path='dagModeOn' label='dagModeOn'/> */}
                             {/* <DatSelect path='dagMode' label='dagMode' options={["td", "bu", "lr", "rl", "radialout", "radialin"]}/> */}
-                            <DatNumber path='cooldownTime' label='cooldownTime' min={1000} max={30000} step={1000}/>
-                            <DatBoolean path='fixNodes' label='fixNodes'/>
-                            <DatButton label='reheat simulation' onClick={() => {
-                                if (nodeZoomId) {
-                                    setNodeZoomId(null)    
-                                } else {
-                                    fgRef.current.d3ReheatSimulation()
-                                }
-                            }
-                            }/>
+                            <DatNumber path='cooldownTime' label='cooldownTime' min={1000} max={15000} step={1000}/>
+                            <DatBoolean path='fixNodes' label='fix nodes'/>
+                            <DatButton label='reheat simulation' onClick={reheatFunction}/>
                             </DatFolder>
                         <DatFolder title='Interaction' closed = {true}>
-                            <DatSelect title='controlType' label='controlType' options={["trackball", "orbit", "fly"]}/>
+                            {/* <DatSelect title='controlType' label='controlType' options={["trackball", "orbit", "fly"]}/> */}
                             <DatBoolean path='enableNodeDrag' label='enableNodeDrag'/>
                             <DatBoolean path='enableZoomPanInteraction' label='enableZoomPanInteraction'/>
-                            <DatBoolean path='enableNavigationControls' label='enableNavigationControls'/>
+                            {/* <DatBoolean path='enableNavigationControls' label='enableNavigationControls'/> */}
                             <DatBoolean path='enablePointerInteraction' label='enablePointerInteraction'/>
                             </DatFolder>
                         </DatFolder>
@@ -2638,7 +2666,7 @@ const graphSharedProptypes = {
     /**
      * Whether to show the navigation controls footer info.
      */
-    "showNavInfo": PropTypes.bool,
+    // "showNavInfo": PropTypes.bool,
 
     /**
      * In AR mode, defines the offset distance above the marker where to place the center coordinates <0,0,0> of the force directed graph. Measured in terms of marker width units.
@@ -3402,11 +3430,6 @@ const graphSharedProptypes = {
     * The link attribute containing the unique link id
     */
     "linkId": PropTypes.string,
-
-    /**
-    * toggle enableZoomPanInteraction, enablePointerInteraction, enableNavigationControls with a single control
-    */
-    "interactive": PropTypes.bool,
 
     /**
     * whether or not graphData has changed. Internally, sets interactive to False until (mainly used internally)
