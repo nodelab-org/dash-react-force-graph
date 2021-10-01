@@ -389,7 +389,7 @@ function Graph2D (props) {
                 "links": linkIdsAllNew,
                 "nodes": nodeIdsAllNew
             });
-            
+
             /**
              * Initialise __source and __target
              */
@@ -551,6 +551,7 @@ function Graph2D (props) {
         /**
          * an effect that runs when nodeZoomId changes
          * using useEffect allows for entering but also resetting nodeZoom view
+         * UPDATE: resetting on background click etc now happens directly in event handlers 
          */
 
         if (props.graphData.nodes.length > 1) {
@@ -562,8 +563,6 @@ function Graph2D (props) {
                 [],
                 []
             ];
-
-            // console.log("UseEffect: nodeZoom");
 
             if (nodeZoomId) {
 
@@ -795,21 +794,6 @@ function Graph2D (props) {
                     ] = nodePreviousFCoordinatesById[node[props.nodeId]];
 
                 });
-
-            } else {
-
-                // remove f coordinates
-                props.graphData.nodes.forEach((node) => {
-
-                    if ("fx" in node) {
-
-                        delete node.fx;
-                        delete node.fy;
-
-                    }
-
-                });
-                fgRef.current.d3ReheatSimulation();
 
             }
 
@@ -1522,7 +1506,25 @@ function Graph2D (props) {
         setLinkRightClicked(null);
         setNodesSelected([]);
         setLinksSelected([]);
-        setNodeZoomId(null);
+
+        if (nodeZoomId) {
+
+            setNodeZoomId(null);
+
+            // remove f coordinates
+            props.graphData.nodes.forEach((node) => {
+
+                if ("fx" in node) {
+
+                    delete node.fx;
+                    delete node.fy;
+
+                }
+
+            });
+            fgRef.current.d3ReheatSimulation();
+
+        }
 
     };
 
@@ -1536,8 +1538,26 @@ function Graph2D (props) {
         setLinkRightClicked(null);
         setNodesSelected([]);
         setLinksSelected([]);
-        setNodeZoomId(null);
-        
+
+        if (nodeZoomId) {
+
+            setNodeZoomId(null);
+
+            // remove f coordinates
+            props.graphData.nodes.forEach((node) => {
+
+                if ("fx" in node) {
+
+                    delete node.fx;
+                    delete node.fy;
+
+                }
+
+            });
+            fgRef.current.d3ReheatSimulation();
+
+        }
+
     };
 
     const handleLinkClick = (link,event) => {
@@ -1585,10 +1605,27 @@ function Graph2D (props) {
 
                 setNodeZoomId(props.nodeZoomId);
 
+            } else if (nodeZoomId) {
+
+                setNodeZoomId(null);
+
+                // remove f coordinates
+                props.graphData.nodes.forEach((node) => {
+
+                    if ("fx" in node) {
+
+                        delete node.fx;
+                        delete node.fy;
+
+                    }
+
+                });
+                fgRef.current.d3ReheatSimulation();
+
             }
 
         },
-    [props.nodeZoomId]
+        [props.nodeZoomId]
     );
 
 
@@ -1964,17 +2001,22 @@ function Graph2D (props) {
     }
 
     const reheatFunction = () => {
+
         if (nodeZoomId) {
+
             setNodeZoomId(null)    
-        } else {
-            props.graphData.nodes.forEach((node) => {
-            if ("fx" in node) {
-                delete node.fx;
-                delete node.fy;
-            }
-            });
-            fgRef.current.d3ReheatSimulation()
+
         }
+        props.graphData.nodes.forEach((node) => {
+        if ("fx" in node) {
+
+            delete node.fx;
+            delete node.fy;
+
+        }
+        });
+        fgRef.current.d3ReheatSimulation()
+        
     }
     
     // const dagNodeFilter = (node) => {
