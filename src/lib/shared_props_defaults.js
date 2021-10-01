@@ -1,4 +1,4 @@
-import { treemapSquarify } from "d3-hierarchy";
+// import { treemapSquarify } from "d3-hierarchy";
 
 const objSharedProps = {
     // props include most react-force-graph props (unless handled with internal logic in higher-level component)
@@ -9,21 +9,21 @@ const objSharedProps = {
     * data input
     */
     // props
-    graphData: {"nodes":[], "links":[]},
+    "graphData": {"nodes":[], "links":[]},
     //graphDataProcessed: {"nodes":[], "links":[]},// {"nodes":[], "links":[]},
     // graphDataRendered: {"nodes":[], "links":[]},
-    nodeId: "id",
-    linkSource : "source",
-    linkTarget: "target",
+    "nodeId": "__nodeId",
+    "linkSource" : "source",
+    "linkTarget": "target",
 
     /**
     * container layout
     */
     // props
     // width: null, // not exposed, responsive to container width
-    // height: null, // not exposed, uses heightRatio prop instead
+    // height: null, // not exposed, uses heightRation prop instead
     backgroundColor: "black",
-    showNavInfo: true, // 3D and VR
+    // showNavInfo: true, // 3D and VR
     // yOffset: 1.5, // AR
     // glScale: 200 // AR
     // markerAttrs: { preset: 'hiro' } // AR
@@ -35,13 +35,13 @@ const objSharedProps = {
     nodeRelSize: 5,
     nodeIconRelSize: 12,
     nodeImgRelSize: 12,
-    nodeVal:"val",
-    nodeLabel: "label",
+    nodeVal:"__nodeVal",
+    nodeLabel: "__nodeLabel",
     // nodeDesc: "desc" // VR only
     // nodeVisibility: True // not exposed, use nodeIdsVisible prop instead
-    nodeColor: "color",
+    nodeColor: "__nodeColor",
     nodeTextAutoColor: true,
-    nodeAutoColorBy: "label",
+    nodeAutoColorBy: null,
     nodeOpacity:0.75, // 3D, VR, AR only
     nodeResolution: 8, // 3D, VR, AR only
     // nodeCanvasObject: none // 2D, not exposed
@@ -123,8 +123,8 @@ const objSharedProps = {
     ngraphPhysics: null,
     warmupTicks: 0,
     cooldownTicks: Infinity,
-    cooldownTime: 2500,
-    fixNodes: false,
+    cooldownTime: 3000,
+    fixNodes: true,
     // onEngineTick: // TODO: function
     // onEngineStop: // TODO: function
     // methods
@@ -174,11 +174,10 @@ const objSharedProps = {
     // zoomOut: false,
     // center: false,
     graphBbox: null,
-    nodeURL: "link",
     useNodeImg: true,
-    nodeImg: "img",
+    nodeImg: "__nodeImg",
     useNodeIcon: true,
-    nodeIcon: "icon",
+    nodeIcon: "__nodeIcon",
     nodeIcon_fontsheets: {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     linkId: "id",
     interactive: true,
@@ -204,18 +203,65 @@ const objSharedProps = {
     // linkRightClicked:null,
     // linksSelected: [],
     // linkIdsNodesDrag: [],
-    nodeIdsHighlight: [],
-    nodeIdsVisible: [],
-    linkIdsHighlight: [],
-    linkIdsVisible: [],
+    nodeIdsHighlightUser: [],
+    // nodeIdsVisible: [],
+    nodeIdsInvisibleUser: [],
+    linkIdsHighlightUser: [],
+    // linkIdsVisible: [],
+    linkIdsInvisibleUser: [],
     externalobject_source: null,
     externalobject_input: null,
     // centreCoordinates: {x:300, y:300, z:300}, // just initial values
     useCoordinates: false,
-    pixelUnitRatio: null,
-    showCoordinates: null,
-    gravity: null,
-    maxDepth_neighbours_select: 4,
-}
+    "pixelUnitRatio": null,
+    "showCoordinates": null,
+    "gravity": null,
+    "invisibleProps": [
+        "__rootType",
+        "__thingType",
+        "__nodeId",
+        "__abstract",
+        "__is_inferred",
+        "__value",
+        "__nodeLabel",
+        "__nodeColor",
+        "__nodeAutoColorBy",
+        "__nodeVal",
+        "__nodeIcon",
+        "__nodeImg",
+        "__nodeURL",
+        "__nodeAttachment",
+        "__nodeBody",
+        "__nodeLabelAttribute",
+        "__nodeColorAttribute",
+        "__nodeIconAttribute",
+        "__nodeImgAttribute",
+        "__nodeValAttribute",
+        "__nodeURLAttribute",
+        "__nodeAttachmentAttribute",
+        "__nodeBodyAttribute",
+        "__source",
+        "__target",
+        "__sub",
+        "__plays",
+        "__relates",
+        "__owns",
+        "__played_by",
+        "__related_by",
+        "__scope",
+        "__owns@key",
+        "__indexColor",
+        "index",
+        "x",
+        "y",
+        "fx",
+        "fy",
+        "vx",
+        "vy",
+        "__depth",
+        "__lateral_rank"
+    ],
+    "maxDepth_neighbours_select": 4
+};
 
 export default objSharedProps;
