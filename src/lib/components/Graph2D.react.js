@@ -9,10 +9,10 @@ import {forceRadial} from "d3-force";
 import DatGui, {
     DatBoolean,
     DatButton,
-    DatColor,
+    // DatColor,
     DatFolder,
     DatNumber,
-    DatSelect
+    // DatSelect
 } from "react-dat-gui";
 import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
@@ -43,14 +43,32 @@ const withSizeHOC = withSize({
 /* eslint-disable max-statements */
 /* eslint-disable func-style */
 
+Object.filter = function( obj, keyPredicate ) {
+
+    let result = {}, key;
+
+    for (key in obj) {
+
+        if (obj.hasOwnProperty(key) && keyPredicate(key)) {
+
+            result[key] = obj[key];
+
+        }
+
+    }
+
+    return result;
+
+};
+
 function Graph2D (props) {
 
     // Initialise props that can be changed from within component as state
     const [
-        [
-            backgroundColor,
-            setBackgroundColor
-        ],
+        // [
+        //     backgroundColor,
+        //     setBackgroundColor
+        // ],
         [
             nodeRelSize,
             setNodeRelSize
@@ -72,28 +90,8 @@ function Graph2D (props) {
             setUseNodeIcon
         ],
         [
-            forceEngine,
-            setForceEngine
-        ],
-        [
-            cooldownTime,
-            setCooldownTime
-        ],
-        [
             fixNodes,
             setFixNodes
-        ],
-        [
-            enableNodeDrag,
-            setEnableNodeDrag
-        ],
-        [
-            enableZoomPanInteraction,
-            setEnableZoomPanInteraction
-        ],
-        [
-            enablePointerInteraction,
-            setEnablePointerInteraction
         ],
         [
             nodeClicked,
@@ -136,12 +134,12 @@ function Graph2D (props) {
             setNodePreviousFCoordinatesById
         ],
         [
-            nodeIdsVisible,
-            setNodeIdsVisible
+            nodeIdsInvisibleAuto,
+            setNodeIdsInvisibleAuto
         ],
         [
-            linkIdsVisible,
-            setLinkIdsVisible
+            linkIdsInvisibleAuto,
+            setLinkIdsInvisibleAuto
         ],
         [
             nodeIdsHighlight,
@@ -160,10 +158,6 @@ function Graph2D (props) {
             setResumeAnimation
         ],
         [
-            graphBbox,
-            setGraphBbox
-        ],
-        [
             nodesSelected,
             setNodesSelected
         ],
@@ -172,51 +166,24 @@ function Graph2D (props) {
             setLinksSelected
         ],
         [
-            centreCoordinates,
-            setCentreCoordinates
-        ],
-        [
             graphDataIdsAll,
             setGraphDataIdsAll
         ],
-        [
-            nodeTextAutoColor,
-            setNodeTextAutoColor
-        ],
-        [
-            linkAutoColor,
-            setLinkAutoColor
-        ],
-        [
-            linkColor,
-            setLinkColor
-        ],
-        [
-            linkWidth,
-            setLinkWidth
-        ],
-        // [
-        //     linkCurvature,
-        //     setLinkCurvature
-        // ],
         [
             guiSettings,
             setGuiSettings
         ],
         fgRef
     ] = [
-        useState(props.backgroundColor),
+        // useState(props.backgroundColor),
         useState(props.nodeRelSize),
         useState(props.nodeIconRelSize),
         useState(props.nodeImgRelSize),
         useState(props.useNodeImg),
         useState(props.useNodeIcon),
-        useState(props.forceEngine),
-        useState(props.cooldownTime),
+        // useState(props.forceEngine),
+        // useState(props.cooldownTime),
         useState(props.fixNodes),
-        useState(props.enableNodeDrag),
-        useState(props.enableZoomPanInteraction),
-        useState(props.enablePointerInteraction),
         useState(null),
         useState(null),
         useState(null),
@@ -227,73 +194,40 @@ function Graph2D (props) {
         useState([]),
         useState(null),
         useState(null),
-        useState(props.nodeIdsVisible),
-        useState(props.linkIdsVisible),
-        useState(props.nodeIdsHighlight),
-        useState(props.linkIdsHighlight),
+        useState([]),
+        useState([]),
+        useState([]),
+        useState([]),
         useState(false),
         useState(true),
-        useState(null),
+        // useState(null),
         useState([]),
         useState([]),
-        useState({
-            "x": 1000,
-            "y": 1000
-        }),
         useState({
             "links": new Set(),
             "nodes": new Set()
         }),
-        useState(false),
-        useState(true),
-        useState(props.linkColor),
-        useState(props.linkWidth),
-        // useState(props.linkCurvature),
         useState({
-            "backgroundColor": props.backgroundColor,
             "center": 0.52,
             "charge": -50,
-            // "controlType": props.controlType,
-            "cooldownTime": props.cooldownTime,
-            // "dagMode": props.dagMode,
-            // "dagModeOn": props.dagModeOn,
-            // "enableNavigationControls": props.enableNavigationControls,
-            "enableNodeDrag": props.enableNodeDrag,
-            "enablePointerInteraction": props.enablePointerInteraction,
-            "enableZoomPanInteraction": props.enableZoomPanInteraction,
             "fixNodes": props.fixNodes,
-            "forceEngine": props.forceEngine,
             "link": 60,
-            "linkAutoColor": props.linkAutoColor,
-            "linkColor": props.linkColor,
-            // "linkCurvature": props.linkCurvature,
-            "linkWidth": props.linkWidth,
             "nodeIconRelSize": props.nodeIconRelSize,
             "nodeImgRelSize": props.nodeImgRelSize,
-            // "nodeOpacity": props.nodeOpacity,
             "nodeRelSize": props.nodeRelSize,
-            "nodeTextAutoColor": props.nodeTextAutoColor,
             "radial": 0.0,
-            // "showNavInfo": props.showNavInfo,
             "useNodeIcon": props.useNodeIcon,
             "useNodeImg": props.useNodeImg
         }),
         useRef(null)
     ];
 
-    //const [nodeHovered,setNodeHovered] = useState(null)
-
-    //const [linkHovered,setLinkHovered = useState(null)
-
-    // const [
-        // nodeHoveredViewpointCoordinates,
-        // setNodeHoveredViewpointCoordinates] = useState(null)
-
     // Import scripts https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
     Object.keys(props.nodeIcon_fontsheets).map((key) => {
 
         importScript(props.nodeIcon_fontsheets[key]);
         // useFontFace(key, props.nodeIcon_fontsheets[key])
+
     });
 
     useEffect(
@@ -311,7 +245,7 @@ function Graph2D (props) {
                     .strength(0.00)
             );
             // Math.pow(Math.sqrt(node.x)+Math.sqrt(node.y),2)/2
-            
+
             // Add negative charge and lower effective distance
             const [
                 newStrength,
@@ -320,7 +254,7 @@ function Graph2D (props) {
                 -50,
                 100
             ];
-            
+
             fgRef.current.d3Force("charge")
                 .strength(newStrength)
                 .distanceMax(newDistMax);
@@ -337,21 +271,14 @@ function Graph2D (props) {
 
     useEffect(
         () => {
-            setBackgroundColor(guiSettings.backgroundColor);
-            // setShowNavInfo(guiSettings.showNavInfo);
+
             setNodeRelSize(guiSettings.nodeRelSize);
             setNodeIconRelSize(guiSettings.nodeIconRelSize);
             setNodeImgRelSize(guiSettings.nodeImgRelSize);
             // setNodeOpacity(guiSettings.nodeOpacity);
             setUseNodeImg(guiSettings.useNodeImg);
             setUseNodeIcon(guiSettings.useNodeIcon);
-            setNodeTextAutoColor(guiSettings.nodeTextAutoColor);
-            setLinkAutoColor(guiSettings.linkAutoColor);
-            setLinkColor(guiSettings.linkColor);
-            setLinkWidth(guiSettings.linkWidth);
-            // setLinkCurvature(guiSettings.linkCurvature);
-            setForceEngine(guiSettings.forceEngine);
-            if (forceEngine === "d3") {
+            if (props.forceEngine === "d3") {
 
                 fgRef.current
                     .d3Force("link")
@@ -366,32 +293,15 @@ function Graph2D (props) {
                     .d3Force("radial")
                     .strength(() => guiSettings.radial);
 
-                // setD3AlphaMin(guiSettings.d3AlphaMin)
-
-                // setD3AlphaDecay(guiSettings.d3AlphaDecay)
-
-                // setD3VelocityDecay(guiSettings.d3VelocityDecay)
-
                 fgRef.current.d3ReheatSimulation();
 
             }
 
-            /**
-             * dagMode only works with d3 forceengine,
-             * but hooks cannot be inside a conditional block
-             */
 
-            // setDagModeOn(guiSettings.dagModeOn);
-            // setDagMode(dagModeOn || guiSettings.dagModeOn
-            //     ? guiSettings.dagMode
-            //     : null);
             setFixNodes(guiSettings.fixNodes);
-            setCooldownTime(guiSettings.cooldownTime);
-            // setControlType(guiSettings.controlType);
-            setEnableNodeDrag(guiSettings.enableNodeDrag);
-            setEnableZoomPanInteraction(guiSettings.enableZoomPanInteraction);
-            // setEnableNavigationControls(guiSettings.enableNavigationControls);
-            setEnablePointerInteraction(guiSettings.enablePointerInteraction);
+            // setEnableNodeDrag(guiSettings.enableNodeDrag);
+            // setEnableZoomPanInteraction(guiSettings.enableZoomPanInteraction);
+            // setEnablePointerInteraction(guiSettings.enablePointerInteraction);
 
         },
         [guiSettings]
@@ -429,168 +339,204 @@ function Graph2D (props) {
      * containing a dict, with linkLabels as keys,
      * and dicts of {linkid1:nodeid1, linkid2:nodeid2..} as values.
      * Then add coordinates if fixed coordinate attributes are used.
-     * Finally, update nodesById 
+     * Finally, update nodesById
      */
 
-    /* eslint-disable one-var */
-    const [
-        nodeIdsAllNew,
-        linkIdsAllNew
-    ] = [
-        new Set(props
-            .graphData
-            .nodes
-            .map((node) => node[props.nodeId])),
-        new Set(props
-            .graphData
-            .links
-            .map((link) => link[props.linkId]))
-    ];
-
-    const [
-        nodeIdsAddedNew,
-        nodeIdsRemovedNew,
-        linkIdsAddedNew,
-        linkIdsRemovedNew
-    ] = [
-        new Set([...nodeIdsAllNew].filter((el) => !graphDataIdsAll.nodes.has(el))),
-        new Set([...graphDataIdsAll.nodes].filter((el) => !nodeIdsAllNew.has(el))),
-        new Set([...linkIdsAllNew].filter((el) => !graphDataIdsAll.links.has(el))),
-        new Set([...graphDataIdsAll.links].filter((el) => !linkIdsAllNew.has(el)))
-    ];
-    /* eslint-enable one-var */
-
-    if (nodeIdsAddedNew.size ||
-        nodeIdsRemovedNew.size ||
-        linkIdsAddedNew.size ||
-        linkIdsRemovedNew.size) {
-
-        /**
-         * Fine for setGraphDataIdsAll to update asynchronously
-         * since we only need it on the next render
-         */
-
-        setNodeZoomId(null);
-
-        setGraphDataIdsAll({
-            "links": linkIdsAllNew,
-            "nodes": nodeIdsAllNew
-        });
-
-        // console.log("detected new props.graphData, update neighbours");
-        // console.log("graphDataIdsAll");
-        // console.log(graphDataIdsAll);
-        // console.log("props.graphData");
-        // console.log(props.graphData);
-
-        /**
-         * Initialise __source and __target
-         */
-
-        props.graphData.nodes.forEach((node) => {
-
-            node.__source = {};
-            node.__target = {};
-
-        });
-
-        if (props.graphData.links.length) {
-
-            const nodeIds = props.graphData.nodes.map((node) => node[props.nodeId]);
-            props.graphData.links.forEach((link) => {
-
-                const [
-                    idxSourceNode,
-                    idxTargetNode
-                ] = [
-                    nodeIds.indexOf(link[props.linkSource]),
-                    nodeIds.indexOf(link[props.linkTarget])
-                ];
-                // If not props.linkLabel in link, set to link id
-                if (!(props.linkLabel in link)) {
-
-                    link[props.linkLabel] = link[props.linkId];
-
-                }
-
-                // If link label type not in node.__source, add key
-                if (!(link[props.linkLabel] in props.graphData.nodes[idxSourceNode].__source)) {
-
-                    props.graphData.nodes[idxSourceNode]
-                        .__source[link[props.linkLabel]] = {};
-
-                }
-
-                props.graphData.nodes[idxSourceNode]
-                    .__source[link[props.linkLabel]][link[props.linkId]] = link[props.linkTarget];
-
-                // If link label type not in node.__target, add key
-                if (!(link[props.linkLabel] in props.graphData.nodes[idxTargetNode].__target)) {
-
-                    props.graphData.nodes[idxTargetNode].__target[link[props.linkLabel]] = {};
-
-                }
-
-                props.graphData.nodes[idxTargetNode]
-                    .__target[link[props.linkLabel]][link[props.linkId]] =
-                        link[props.linkSource];
-
-            })
-
-        }
-
-        if (props.useCoordinates && props.pixelUnitRatio) {
-
-            // Fix node coordinates to attribute values
-
-            /* eslint-disable one-var */
-            const origin = centreCoordinates
-                ? centreCoordinates
-                : {
-                /* eslint-disable no-magic-numbers */
-                    "x": 1000,
-                    "y": 1000
-                    /* eslint-enable no-magic-numbers */
-                };
-            /* eslint-enable one-var */
+    if (props.graphData && "nodes" in props.graphData && "links" in props.graphData) { 
     
+        /* eslint-disable one-var */
+        const [
+            nodeIdsAllNew,
+            linkIdsAllNew
+        ] = [
+            new Set(props
+                .graphData
+                .nodes
+                .map((node) => node[props.nodeId])),
+            new Set(props
+                .graphData
+                .links
+                .map((link) => link[props.linkId]))
+        ];
+
+        const [
+            nodeIdsAddedNew,
+            nodeIdsRemovedNew,
+            linkIdsAddedNew,
+            linkIdsRemovedNew
+        ] = [
+            new Set([...nodeIdsAllNew].filter((el) => !graphDataIdsAll.nodes.has(el))),
+            new Set([...graphDataIdsAll.nodes].filter((el) => !nodeIdsAllNew.has(el))),
+            new Set([...linkIdsAllNew].filter((el) => !graphDataIdsAll.links.has(el))),
+            new Set([...graphDataIdsAll.links].filter((el) => !linkIdsAllNew.has(el)))
+        ];
+        /* eslint-enable one-var */
+
+        if (nodeIdsAddedNew.size ||
+            nodeIdsRemovedNew.size ||
+            linkIdsAddedNew.size ||
+            linkIdsRemovedNew.size) {
+
+            /**
+             * Fine for setGraphDataIdsAll to update asynchronously
+             * since we only need it on the next render
+             */
+
+            setNodeZoomId(null);
+            setNodeClicked(null);
+            setNodeRightClicked(null);
+            setGraphDataIdsAll({
+                "links": linkIdsAllNew,
+                "nodes": nodeIdsAllNew
+            });
+            
+            /**
+             * Initialise __source and __target
+             */
+
             props.graphData.nodes.forEach((node) => {
-    
-                const [
-                    newX,
-                    newY
-                ] = [
-                    props.pixelUnitRatio * node.__coord_x,
-                    props.pixelUnitRatio * node.__coord_y
-                ];
-                node.fx = origin + newX;
-                node.fy = origin + newY;
+
+                node.__source = {};
+                node.__target = {};
 
             });
 
+            if (props.graphData.links.length) {
+
+                const nodeIds = props.graphData.nodes.map((node) => node[props.nodeId]);
+                props.graphData.links.forEach((link) => {
+
+                    const [
+                        idxSourceNode,
+                        idxTargetNode
+                    ] = [
+                        nodeIds.indexOf(link[props.linkSource]),
+                        nodeIds.indexOf(link[props.linkTarget])
+                    ];
+                    // If not props.linkLabel in link, set to link id
+                    if (!(props.linkLabel in link)) {
+
+                        link[props.linkLabel] = link[props.linkId];
+
+                    }
+
+                    // If link label type not in node.__source, add key
+                    if (!(link[props.linkLabel] in props.graphData.nodes[idxSourceNode].__source)) {
+
+                        props.graphData.nodes[idxSourceNode]
+                            .__source[link[props.linkLabel]] = {};
+
+                    }
+
+                    props.graphData.nodes[idxSourceNode]
+                        .__source[link[props.linkLabel]][link[props.linkId]] = link[props.linkTarget];
+
+                    // If link label type not in node.__target, add key
+                    if (!(link[props.linkLabel] in props.graphData.nodes[idxTargetNode].__target)) {
+
+                        props.graphData.nodes[idxTargetNode].__target[link[props.linkLabel]] = {};
+
+                    }
+
+                    props.graphData.nodes[idxTargetNode]
+                        .__target[link[props.linkLabel]][link[props.linkId]] =
+                            link[props.linkSource];
+
+                });
+
+            }
+
+            if (props.useCoordinates && props.pixelUnitRatio) {
+
+                // Fix node coordinates to attribute values
+
+                /* eslint-disable one-var */
+                // const origin = centreCoordinates
+                //     ? centreCoordinates
+                //     : {
+                //     /* eslint-disable no-magic-numbers */
+                //         "x": 1000,
+                //         "y": 1000
+                //         /* eslint-enable no-magic-numbers */
+                //     };
+                /* eslint-enable one-var */
+        
+                props.graphData.nodes.forEach((node) => {
+        
+                    const [
+                        newX,
+                        newY
+                    ] = [
+                        props.pixelUnitRatio * node.__coord_x,
+                        props.pixelUnitRatio * node.__coord_y
+                    ];
+                    node.fx = props.centreCoordinates.x + newX;
+                    node.fy = props.centreCoordinates.y + newY;
+
+                });
+
+            }
+
+            if (props.graphData.nodes.every((node) => "fx" in node && "fy" in node)) {
+                // iff ALL nodes previously had fx and fy coordinate attributes, save them to recover after
+                setNodePreviousFCoordinatesById(Object.fromEntries(props.graphData.nodes
+                    .map((node) => [
+
+                        node[props.nodeId],
+                        [
+                            node.fx,
+                            node.fy
+                        ]
+                    ])));
+
+                // pan
+                const avg = (myArray) => myArray.reduce((x,y) => x + y, 0) / myArray.length;
+
+                const [
+                    coordinate_x_mean,
+                    coordinate_y_mean
+                ] = [
+                    avg(props.graphData.nodes.map((node) => node.fx)),
+                    avg(props.graphData.nodes.map((node) => node.fy))
+                ]
+
+                fgRef.current.centerAt(coordinate_x_mean, coordinate_y_mean, 250);
+
+            } else {
+
+                setNodePreviousFCoordinatesById(null);
+
+            }
+
+            // pan and zoom
+            // const nodeFilterFn = (nodeTmp) => {
+
+            //     return nodeIdsVisible.length > 0 && nodeIdsVisible.includes(nodeTmp[props.nodeId]);
+
+            // };
+
+            // const coordinates_x = props.graphData.nodes.map((node) => node.fx);
+            // const coordinates_x = props.graphData.nodes.map((node) => node.fx);
+
+            // if (fgRef) {
+
+            //     fgRef.current.centerAt
+            
+            
+            //         250);
+
+            // }
+            
+            // fgRef.current.zoomToFit(
+            //     250,
+            //     40,
+            //     nodeFilterFn
+            // );
+
         }
 
-        if (props.graphData.nodes.every((node) => "fx" in node && "fy" in node)) {
-            // iff ALL nodes previously had fx and fy coordinate attributes, save them to recover after
-            setNodePreviousFCoordinatesById(Object.fromEntries(props.graphData.nodes
-                .map((node) => [
-
-                    node[props.nodeId],
-                    [
-                        node.fx,
-                        node.fy
-                    ]
-                ])));
-
-        } else {
-            setNodePreviousFCoordinatesById(null);
-        }
-
-        // console.log("props.graphData after adding neighbours and coordinates:");
-        // console.log(props.graphData);
-
-    } 
-
+    }
+    
     const nodesById = Object.fromEntries(
         props.graphData.nodes.map((node) => [
             node[props.nodeId],
@@ -599,7 +545,8 @@ function Graph2D (props) {
 
     /* eslint-disable complexity */
     /* eslint-disable max-depth */
-    useEffect(() => {
+    useEffect(
+        () => {
 
         /**
          * an effect that runs when nodeZoomId changes
@@ -716,381 +663,15 @@ function Graph2D (props) {
                 /**
                  * sort nodes
                  */
-                if (true) {
-                    // relations
 
-                    // first rel sort
-
-                    if (props.sortRelsBy1) {
-
-                        // find out the attribute type
-
-                        const relObjRelHasAttr = relations
-                            .find((relObj) => props.sortRelsBy1 in relObj.relation);
-                        if (typeof relObjRelHasAttr !== "undefined") {
-
-                            if (typeof relObjRelHasAttr.relation[props.sortRelsBy1] === "string") {
-
-                                relations.sort((objA, objB) => {
-
-                                    return props.sortRelsBy1 in objA.relation && props.sortRelsBy1 in objB.relation
-                                        ? objA.relation[props.sortRelsBy1].localeCompare(objB.relation[props.sortRelsBy1]) > 0
-                                            ? props.sortRels1Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            } else if (typeof relObjRelHasAttr.relation[props.sortRelsBy1] === "number") {
-
-                                relations.sort((objA, objB) => {
-                                    return props.sortRelsBy1 in objA.relation && props.sortRelsBy1 in objB.relation
-                                        ? objB.relation[props.sortRelsBy1] - objB.relation[props.sortRelsBy1] > 0
-                                            ? props.sortRels1Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-                                });
-
-                            } else if (typeof relObjRelHasAttr.relation[props.sortRelsBy1] === "boolean") {
-
-                                relations.sort((objA, objB) => {
-
-                                    return props.sortRelsBy1 in objA.relation && props.sortRelsBy1 in objB.relation
-                                        ? objA.relation[props.sortRelsBy1] > objB.relation[props.sortRelsBy1]
-                                            ? props.sortRels1Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            }
-
-                        }
-
-                    }
-                    // second rel sort
-                    if (props.sortRelsBy2) {
-
-                        // find out the attribute type
-                        const relObjRelHasAttr = relations.find((relObj) => props.sortRelsBy2 in relObj.relation);
-
-                        if (typeof relObjRelHasAttr !== "undefined") {
-
-                            if (typeof relObjRelHasAttr.relation[props.sortRelsBy2] === "string") {
-
-                                relations.sort((objA, objB) => {
-
-                                    return props.sortRelsBy2 in objA.relation && props.sortRelsBy2 in objB.relation
-                                        ? objA.relation[props.sortRelsBy2].localeCompare(objB.relation[props.sortRelsBy2]) > 0
-                                            ? props.sortRels2Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            } else if (typeof relObjRelHasAttr.relation[props.sortRelsBy2] === "number") {
-
-                                relations.sort((objA, objB) => {
-
-                                    return props.sortRelsBy2 in objA.relation && props.sortRelsBy2 in objB.relation
-                                        ? objA.relation[props.sortRelsBy2] - objB.relation[props.sortRelsBy2] > 0
-                                            ? props.sortRels2Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            } else if (typeof relObjRelHasAttr.relation[props.sortRelsBy2] === "boolean") {
-
-                                relations.sort((objA, objB) => {
-
-                                    return props.sortRelsBy2 in objA.relation && props.sortRelsBy2 in objB.relation
-                                        ? objA.relation[props.sortRelsBy2] > objB.relation[props.sortRelsBy2]
-                                            ? props.sortRels2Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            }
-
-                        }
-
-                    }
-
-                    // Sort role players
-
-                    // First role player sort
-
-                    if (props.sortRoleplayersBy1) {
-
-                        // Relation role players
-
-                        // Find out the attribute type
-                        let nodeRelRpHasAttr = undefined;
-
-                        for (const relObj of relations) {
-
-                            nodeRelRpHasAttr = relObj.roleplayers.find((rp) => props.sortRoleplayersBy1 in rp);
-                            if (typeof nodeRelRpHasAttr !== "undefined") {
-
-                                break;
-
-                            }
-
-                        }
-                        if (typeof nodeRelRpHasAttr !== "undefined") {
-
-                            for (const relObj of relations) {
-
-                                if (typeof nodeRelRpHasAttr[props.sortRoleplayersBy1] === "string") {
-
-                                    relObj.roleplayers.sort((objA, objB) => {
-
-                                        return props.sortRoleplayersBy1 in objA && props.sortRoleplayersBy1 in objB
-                                            ? objA[props.sortRoleplayersBy1].localeCompare(objB[props.sortRoleplayersBy1]) > 0
-                                                ? props.sortRoleplayers1Descend
-                                                    ? -1
-                                                    : 1
-                                                : -1
-                                            : 0;
-
-                                    });
-
-                                } else if (typeof nodeRelRpHasAttr[props.sortRoleplayersBy1] === "number") {
-
-                                    relObj.roleplayers.sort((objA, objB) => {
-
-                                        return props.sortRoleplayersBy1 in objA && props.sortRoleplayersBy1 in objB
-                                            ? objA[props.sortRoleplayersBy1] - objB[props.sortRoleplayersBy1] > 0
-                                                ? props.sortRoleplayers1Descend
-                                                    ? -1
-                                                    : 1
-                                                : -1
-                                            : 0;
-
-                                    });
-
-                                } else if (typeof nodeRelRpHasAttr[props.sortRoleplayersBy1] === "boolean") {
-
-                                    relObj.roleplayers.sort((objA, objB) => {
-
-                                        return props.sortRoleplayersBy1 in objA && props.sortRoleplayersBy1 in objB
-                                            ? objA[props.sortRoleplayersBy1] > objB[props.sortRoleplayersBy1]
-                                                ? props.sortRoleplayers1Descend
-                                                    ? -1
-                                                    : 1
-                                                : -1
-                                            : 0;
-
-                                    });
-
-                                }
-
-                            }
-
-                        }
-
-                        // Related role players
-
-                        // Find out the attribute type
-
-                        let nodeRpHasAttr = related.find((rp) => props.sortRoleplayersBy1 in rp);
-
-                        if (typeof nodeRpHasAttr !== "undefined") {
-
-                            if (typeof nodeRpHasAttr[props.sortRoleplayersBy1] === "string") {
-
-                                related.sort((objA, objB) => {
-
-                                    return props.sortRoleplayersBy1 in objA && props.sortRoleplayersBy1 in objB
-                                        ? objA[props.sortRoleplayersBy1].localeCompare(objB[props.sortRoleplayersBy1]) > 0
-                                            ? props.sortRoleplayers1Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            } else if (typeof nodeRpHasAttr[props.sortRoleplayersBy1] === "number") {
-
-                                related.sort((objA, objB) => {
-
-                                    return props.sortRoleplayersBy1 in objA && props.sortRoleplayersBy1 in objB
-                                        ? objA[props.sortRoleplayersBy1] - objB[props.sortRoleplayersBy1] > 0
-                                            ? props.sortRoleplayers1Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            } else if (typeof nodeRpHasAttr[props.sortRoleplayersBy1] === "boolean") {
-
-                                related.sort((objA, objB) => {
-
-                                    return props.sortRoleplayersBy1 in objA && props.sortRoleplayersBy1 in objB
-                                        ? objA[props.sortRoleplayersBy1] > objB[props.sortRoleplayersBy1]
-                                            ? props.sortRoleplayers1Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            }
-
-                        }
-
-                    }
-
-                    // Second role player sort
-
-                    if (props.sortRoleplayersBy2) {
-
-                        // relation role players
-                        // find out the attribute type
-                        let nodeRelRpHasAttr = undefined;
-
-                        for (const relObj of relations) {
-
-                            nodeRelRpHasAttr = relObj.roleplayers.find((rp) => props.sortRoleplayersBy2 in rp);
-                            if (typeof nodeRelRpHasAttr !== "undefined") {
-
-                                break;
-
-                            }
-
-                        }
-
-                        if (typeof nodeRelRpHasAttr !== "undefined") {
-
-                            for (const relObj of relations) {
-
-                                if (typeof nodeRelRpHasAttr[props.sortRoleplayersBy2] === "string") {
-
-                                    relObj.roleplayers.sort((objA, objB)=> {
-
-                                        return props.sortRoleplayersBy2 in objA && props.sortRoleplayersBy2 in objB
-                                            ? objA[props.sortRoleplayersBy2].localeCompare(objB[props.sortRoleplayersBy2]) > 0
-                                                ? props.sortRoleplayers2Descend
-                                                    ? -1
-                                                    : 1
-                                                : -1
-                                            : 0;
-                                    });
-
-                                } else if (typeof nodeRelRpHasAttr[props.sortRoleplayersBy2] === "number") {
-
-                                    relObj.roleplayers.sort((objA, objB) => {
-
-                                        return props.sortRoleplayersBy2 in objA && props.sortRoleplayersBy2 in objB
-                                            ? objA[props.sortRoleplayersBy2] - objB[props.sortRoleplayersBy2] > 0
-                                                ? props.sortRoleplayers2Descend
-                                                    ? -1
-                                                    : 1
-                                                : -1
-                                            : 0;
-
-                                    });
-
-                                } else if (typeof nodeRelRpHasAttr[props.sortRoleplayersBy2] === "boolean") {
-
-                                    relObj.roleplayers.sort((objA, objB) => {
-
-                                        return props.sortRoleplayersBy2 in objA && props.sortRoleplayersBy2 in objB
-                                            ? objA[props.sortRoleplayersBy2] > objB[props.sortRoleplayersBy2]
-                                                ? props.sortRoleplayers2Descend
-                                                    ? -1
-                                                    : 1
-                                                : -1
-                                            : 0;
-
-                                    });
-
-                                }
-
-                            }
-
-                        }
-
-                        // Related role players
-
-                        // Find out the attribute type
-
-                        const nodeRpHasAttr = related.find((rp) => props.sortRoleplayersBy2 in rp);
-
-                        if (typeof nodeRpHasAttr !== "undefined") {
-
-                            if (typeof nodeRpHasAttr[props.sortRoleplayersBy2] === "string") {
-
-                                related.sort((objA, objB) => {
-
-                                    return props.sortRoleplayersBy2 in objA && props.sortRoleplayersBy2 in objB
-                                        ? objA[props.sortRoleplayersBy2].localeCompare(objB[props.sortRoleplayersBy2]) > 0
-                                            ? props.sortRoleplayers2Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            } else if (typeof nodeRpHasAttr[props.sortRoleplayersBy2] === "number") {
-
-                                related.sort((objA, objB) => {
-
-                                    return props.sortRoleplayersBy2 in objA && props.sortRoleplayersBy2 in objB
-                                        ? objA[props.sortRoleplayersBy2] - objB[props.sortRoleplayersBy2] > 0
-                                            ? props.sortRoleplayers2Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            } else if (typeof nodeRpHasAttr[props.sortRoleplayersBy2] === "boolean") {
-
-                                related.sort((objA, objB) => {
-
-                                    return props.sortRoleplayersBy2 in objA && props.sortRoleplayersBy2 in objB
-                                        ? objA[props.sortRoleplayersBy2] > objB[props.sortRoleplayersBy2]
-                                            ? props.sortRoleplayers2Descend
-                                                ? -1
-                                                : 1
-                                            : -1
-                                        : 0;
-
-                                });
-
-                            }
-
-                        }
-
-                    }
-
-                }
+                // REMOVED FOR NOW
 
                 // place node relative to node zoom node
                 /* eslint-disable one-var */
                 const [
+                    // number of relations
                     nRel,
+                    // sum function
                     sum
                 ] = [
                     relations.length,
@@ -1101,7 +682,9 @@ function Graph2D (props) {
                 ];
 
                 const [
+                    // total number of roleplayers + relations/2 - 0.5
                     nRelRp,
+                    // 
                     nRp
                 ] = [
                     relations.length
@@ -1156,12 +739,14 @@ function Graph2D (props) {
                         relationObj.roleplayers
                     ];
 
-                    relNode.fx = nodeZoom.x + marX * 2;
+                    // relNode.fx = nodeZoom.x + marX * 2;
+                    relNode.fx = nodeZoom.x + marX 
                     relNode.fy = yMin + kRel * marYRel;
 
                     for (const roleplayer of roleplayers) {
 
-                        roleplayer.fx = nodeZoom.x + marX * 2 / 3;
+                        // roleplayer.fx = nodeZoom.x + marX * 2 / 3;
+                        roleplayer.fx = nodeZoom.x + marX * 3;
                         roleplayer.fy = yMin + kRelRp * marYRelRp;
                         // if too close to nodeZoom and relation is below nodeZoom in height, shift rp down another notch
                         if (roleplayer.fy - nodeZoom.y < marYMin && (yMin + kRel * marYRel > nodeZoom.y)) {
@@ -1198,18 +783,6 @@ function Graph2D (props) {
                     }
 
                 });
-                
-                // <DELETE ?
-
-                // fgRef.current.centerAt(
-                //     nodeZoom.fx + marX / 2,
-                //     nodeZoom.fy,
-                //     250
-                // );
-
-                // fgRef.current.zoom(4,250)
-
-                // /DELETE>
 
             } else if (nodePreviousFCoordinatesById) {
 
@@ -1219,7 +792,7 @@ function Graph2D (props) {
                     [
                         node.fx,
                         node.fy
-                    ] = nodePreviousFCoordinatesById[node.nodeId];
+                    ] = nodePreviousFCoordinatesById[node[props.nodeId]];
 
                 });
 
@@ -1241,24 +814,38 @@ function Graph2D (props) {
             }
 
             // pan and zoom
-            const nodeFilterFn = (nodeTmp) => {
+            // const nodeFilterFn = (nodeTmp) => {
 
-                return nodeIdsVisibleNew.includes(nodeTmp[props.nodeId]) 
-                    ? true 
-                    : false;
+            //     return nodeIdsVisibleNew.length > 0 && nodeIdsVisibleNew.includes(nodeTmp[props.nodeId]);
 
-            };
+            // };
 
-            fgRef.current.zoomToFit(
-                250,
-                40,
-                nodeFilterFn
-            );
+            // fgRef.current.zoomToFit(
+            //     250,
+            //     40,
+            //     nodeFilterFn
+            // );
+            if (fgRef && nodesById && nodeZoomId) {
 
-            setNodeIdsVisible(nodeIdsVisibleNew);
-            setLinkIdsVisible(linkIdsVisibleNew);
+                fgRef.current.centerAt(
+                    nodesById[nodeZoomId].fx,
+                    nodesById[nodeZoomId].fy,
+                    250);
 
-            // console.log("useEffect on nodeZoomId ran");
+                fgRef.current.zoom(
+                    4,
+                    250
+                );
+
+            }
+
+            setNodeIdsInvisibleAuto(nodeZoomId
+                ? props.graphData.nodes.map((node) => node[props.nodeId]).filter((nodeId) => !nodeIdsVisibleNew.includes(nodeId)) 
+                : []);
+
+            setLinkIdsInvisibleAuto(nodeZoomId
+                ? props.graphData.links.map((link) => link[props.linkId]).filter((linkId) => !linkIdsVisibleNew.includes(linkId))
+                : []);
 
         }
 
@@ -1266,7 +853,7 @@ function Graph2D (props) {
     [
         props.useCoordinates,
         props.pixelUnitRatio,
-        centreCoordinates,
+        // props.centreCoordinates,
         nodeZoomId,
         props.sortRelsBy1,
         props.sortRelsBy2,
@@ -1358,33 +945,94 @@ function Graph2D (props) {
     // },[props.graphData])
 
     /* eslint-disable one-var */
+    // const nodeLabelFunction = (node) => {
+
+    //     props.nodeLabel in node
+    //         ? node[props.nodeLabel]
+    //             ? node[props.nodeLabel]
+    //             : node[props.nodeId]
+    //         : node[props.nodeId];
+
+    // };
+
+    // this function prepares the tooltip shown on node hover
+    // const nodeLabelFunction = (node) => `<div><b>${node[props.nodeLabel]}</b>: <span>${node[props.nodeId]}</span></div>`
+
     const nodeLabelFunction = (node) => {
 
-        props.nodeLabel in node
-            ? node[props.nodeLabel]
-                ? node[props.nodeLabel]
-                : node[props.nodeId]
-            : node[props.nodeId];
+        let identityRows = `<tr>
+                <td><span style="font-weight:bold">rootType </span></td>
+                <td>${node.__rootType}</td>
+            </tr>
+            <tr>
+                <td><span style="font-weight:bold">thingType </span></td>
+                <td>${node.__thingType}</td>
+            </tr>`;
+        
+        if ("__abstract" in node) {
 
-    };
-
-
-    const nodeVisibilityFunction = (node) => {
-
-        let visible = true;
-        if (nodeIdsVisible.length) {
-
-            if (nodeIdsVisible.indexOf(node[props.nodeId]) === -1) {
-
-                visible = false;
-
-            }
+            identityRows = `${identityRows}
+                <tr>
+                    <td><span style="font-weight:bold">abstract </span></td>
+                    <td>${node.__abstract}</td>
+                </tr>`;
 
         }
-        return visible;
+        if ("__is_inferred" in node) {
+
+            identityRows = `${identityRows}
+                <tr>
+                    <td><span style="font-weight:bold">is_inferred </span></td>
+                    <td>${node.__is_inferred}</td>
+                </tr>`;
+
+        }
+
+        if ("__value" in node) {
+
+            identityRows = `${identityRows}
+                <tr>
+                    <td><span style="font-weight:bold">value </span></td>
+                    <td>${node.__value}</td>
+                </tr>`;
+
+        }
+
+        const keyPredicate = (key) => !props.invisibleProps.includes(key);
+
+        const nodeTypedbAttributes = Object.filter(
+            node,
+            keyPredicate
+        );
+
+        let attributeRows = null;
+
+        if (Object.keys(nodeTypedbAttributes).length) {
+
+            attributeRows = Object.keys(nodeTypedbAttributes).map((k) => {
+
+                return (
+                    `<tr>
+                        <td><span style="font-weight:bold">${k} </span></td>
+                        <td>${node[k]}</td>
+                    </tr>`
+                );
+
+            });
+
+        }
+
+
+        const tableOut = attributeRows
+            ? `<table>${identityRows}${attributeRows}</table>`
+            : `<table>${identityRows}</table>`;
+
+
+        return tableOut;
 
     };
 
+    const nodeVisibilityFunction = (node) => !nodeIdsInvisibleAuto.includes(node[props.nodeId]) && !props.nodeIdsInvisibleUser.includes(node[props.nodeId]);
 
     const nodeColorFunction =
         (node) => {
@@ -1725,7 +1373,7 @@ function Graph2D (props) {
 
             // Two-step highlighting if rootType is entity and not a schema node
             // this is hard-coded for typedb-vis-utils
-            if (node.rootType === "entity" && node.thingType !== node.nodeId) {
+            if (node.__rootType === "entity" && node.__thingType !== node[props.nodeId]) {
 
                 // We cannot simply iterate over neighbourNodeIds nor its length adding
                 // since we are adding to it
@@ -1815,7 +1463,7 @@ function Graph2D (props) {
     const handleNodeDragEnd = (node, translate) => {
         setNodeIdsDrag([]);
         setLinkIdsNodesDrag([]);
-
+    };
         // from https://github.com/vasturiano/force-graph/blob/master/example/multi-selection/index.html
         // if (nodesSelected.length) {
         //     const nodesSelectedIds = nodesSelected.map(node=>node[props.nodeId])
@@ -1829,7 +1477,7 @@ function Graph2D (props) {
         // node.fx = node.x;
         // node.fy = node.y;
         // node.fz = node.z;
-    };
+    // };
 
     // const handleNodeHover = node => {
     //     if (node) {
@@ -1845,23 +1493,23 @@ function Graph2D (props) {
     //     link? setLinkHovered(link) : setLinkHovered(null)
     // };
 
-    // set centreCoordinates
-    useEffect( () => {
+    // set centreCoordinates on component init
+    useEffect(
+        () => {
 
-        if (fgRef.current.getGraphBbox() && props.centreCoordinates) {
-
-            setCentreCoordinates(props.graphData.nodes.length
+            props.setProps({"centreCoordinates": props.graphData.nodes.length && fgRef.current.getGraphBbox()
                 ? {
                     "x": 0.5 * (fgRef.current.getGraphBbox().x[0] + fgRef.current.getGraphBbox().x[1]),
                     "y": 0.5 * (fgRef.current.getGraphBbox().y[0] + fgRef.current.getGraphBbox().y[1])
-                } 
-                : fgRef.current.screen2GraphCoords(window.innerWidth / 2, 
-                    window.innerHeight / 2));
+                }
+                : fgRef.current.screen2GraphCoords(
+                    window.innerWidth / 2,
+                    window.innerHeight / 2
+                )
+            });
 
-        }
-
-    },
-    [props.centreCoordinates]
+        },
+        []
     );
 
     const handleBackgroundClick = (event) => {
@@ -1915,24 +1563,31 @@ function Graph2D (props) {
 
     };
 
-    useEffect(() => setNodeIdsVisible(props.nodeIdsVisible),[props.nodeIdsVisible]);
+    // useEffect(() => setNodeIdsVisible((nodeIdsVisible) => nodeIdsVisible.filter((nodeId) => props.nodeIdsVisibleFilter.includes(nodeId))),
+    //     [props.nodeIdsVisibleFilter]
+    // );
 
-    useEffect(() => setLinkIdsVisible(props.linkIdsVisible),[props.linkIdsVisible]);
+    // useEffect(() => setLinkIdsVisible((linkIdsVisible) => linkIdsVisible.filter((linkId) => props.linkIdsVisibleFilter.includes(linkId))),
+    //     [props.linkIdsVisibleFilter]
+    // );
 
-    useEffect(() => setNodeIdsHighlight(props.nodeIdsHighlight),[props.nodeIdsHighlight]);
+    useEffect(() => setNodeIdsHighlight(props.nodeIdsHighlightUser),
+        [props.nodeIdsHighlightUser]);
 
-    useEffect(() => setLinkIdsHighlight(props.linkIdsHighlight),[props.linkIdsHighlight]);
+    useEffect(() => setLinkIdsHighlight(props.linkIdsHighlightUser),
+        [props.linkIdsHighlightUser]);
 
 
-    useEffect(() => {
+    useEffect(
+        () => {
 
-        if (props.nodeZoomId) {
+            if (props.nodeZoomId) {
 
-            setNodeZoomId(props.nodeZoomId);
+                setNodeZoomId(props.nodeZoomId);
 
-        }
+            }
 
-    },
+        },
     [props.nodeZoomId]
     );
 
@@ -1953,9 +1608,9 @@ function Graph2D (props) {
         // https://www.w3schools.com/tags/canvas_globalalpha.asp
         // initialize color
         // provide a sensible default
-        let backgroundColor_tmp = backgroundColor ? validateColor(backgroundColor) ? backgroundColor : "#000000" : "#000000";
+        let backgroundColor_tmp = props.backgroundColor ? validateColor(props.backgroundColor) ? props.backgroundColor : "#000000" : "#000000";
         let color = props.nodeColor in node ? validateColor(node[props.nodeColor]) ? node[props.nodeColor] : "#0000ff" : "#0000ff";
-        let textColor = nodeTextAutoColor ? invert(backgroundColor_tmp) : color;
+        let textColor = props.nodeTextAutoColor ? invert(backgroundColor_tmp) : color;
         let globalAlpha = 1
         const label = props.nodeLabel in node ? node[props.nodeLabel] ? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId];
         const iconSize = nodeIconRelSize ? nodeIconRelSize : 12; // sensible default
@@ -2047,134 +1702,168 @@ function Graph2D (props) {
         if (img_src === null & props.nodeIcon in node & useNodeIcon) {
             // icon
             if (node[props.nodeIcon]) {
-                const nodeIcon_obj = node[props.nodeIcon];
-                ctx.font = `${iconSize}px ${Object.keys(nodeIcon_obj)[0]}`;
+                // const nodeIcon_obj = node[props.nodeIcon];
+                ctx.font = `${iconSize}px ${"FontAwesome"}`;
                 ctx.fillStyle = color;
-                ctx.fillText(`${Object.values(nodeIcon_obj)[0]}`, node.x, node.y - iconSize / 1.7, iconSize);
+                ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize / 1.7, iconSize);
             }
         }
+        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.75))) {
 
-        // draw text background rectangle
-        ctx.font = `${fontSize}px Sans-Serif`;
-        const textWidth = ctx.measureText(label).width;
-        // add padding
-        const bckgDimensions = [textWidth, fontSize].map((n) => n + fontSize * 0.2);
-        ctx.fillStyle = backgroundColor_tmp;
-        ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
+            // draw text background rectangle
+            ctx.font = `${fontSize}px Sans-Serif`;
+            const textWidth = ctx.measureText(label).width;
+            // add padding
+            const bckgDimensions = [textWidth, fontSize].map((n) => n + fontSize * 0.2);
+            ctx.fillStyle = backgroundColor_tmp;
+            ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
 
-        // draw text label
-        if (nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
-            ctx.font = `${fontSize}px Sans-Serif bold`;
+            // draw text label
+            if (nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
+                ctx.font = `${fontSize}px Sans-Serif bold`;
+            }
+            
+            ctx.fillStyle = textColor
+            ctx.fillText(label, node.x, node.y);
+
         }
-        
-        ctx.fillStyle = textColor
-        ctx.fillText(label, node.x, node.y);
 
         ctx.restore();
     };
 
     const nodeCanvasObjectModeFunction = (node) => props.nodeImg in node && useNodeImg || props.nodeIcon in node && useNodeIcon ? node[props.nodeImg] || node[props.nodeIcon] ? "replace" : "after" : "after";
 
-    const linkVisibilityFunction = (link) => {
-        let visible = true;
-        if (nodeIdsVisible.length) {
-            // use nodeIdsVisible.length as criterion, since it shows whether or not a filter is applied.
-            // if we use links, often it will be empty, and no links will be invisible
-            if (linkIdsVisible.indexOf(link[props.linkId]) === -1) {
-                visible = false;
-            }
-        }
-        return visible;
-    };
+    const linkVisibilityFunction = (link) => !linkIdsInvisibleAuto.includes(link[props.linkId]) && !props.linkIdsInvisibleUser.includes(link[props.linkId]);
 
     const linkColorFunction = (link) => {
-        let color = linkAutoColor
-            ? invert(backgroundColor)
-            : validateColor(linkColor)
-                ? linkColor
-                :  invert(backgroundColor)
+        let color = props.linkAutoColor
+            ? invert(props.backgroundColor)
+            : validateColor(props.linkColor)
+                ? props.linkColor
+                : invert(props.backgroundColor);
         // is link selected?
         if (linksSelected.length) {
             color = darken(0.2, color);
-            if (linksSelected.map((linkSel)=>linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
-                color = saturate(0.2,color);
-                color = lighten(0.2,color);
+            if (linksSelected.map((linkSel) => linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+
+                color = saturate(0.2, color);
+                color = lighten(0.2, color);
+
             }
         }
         // is link connected to node being dragged?
         if (linkIdsNodesDrag.length) {
-            color = darken(0.2, color);
-            if (linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
-                color = saturate(0.2,color);
-                color = lighten(0.2, color);
-            }
-        }
-        // are link source and target selected?
-        if (nodesSelected.length) {
+
             color = darken(0.3, color);
-            if (nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkSource]) && nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkTarget])) {
+            if (linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
+
                 color = saturate(0.2,color);
                 color = lighten(0.3, color);
+
             }
+        }
+
+        if (props.currentZoomPan && "k" in props.currentZoomPan) {
+
+            color = darken(1 / (1 + props.currentZoomPan.k / 1.5), color);
+
+        }
+
+        // are link source and target selected?
+        if (nodesSelected.length) {
+
+            color = darken(0.3, color);
+            if (nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkSource]) && nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkTarget])) {
+
+                color = saturate(0.2,color);
+                color = lighten(0.3, color);
+
+            }
+
         }
         return color;
     };
 
     const linkWidthFunction = (link) => {
-        let width = linkWidth;
+        let width = props.linkWidth;
         // is link selected?
         if (linksSelected.length) {
-            width = width * 0.9;
+
+            width *= 0.9;
             if (linksSelected.map((linkSel)=>linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+
                 width = width * 4;
+
             }
+
         }
         // is link highlighted?
         if (linkIdsNodesDrag.length) {
-            width = width * 0.9;
+
+            width *= 0.9;
+
             if (linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
-                width = width * 1.5;
+
+                width *= 1.5;
+
             }
+
         }
         // are link source and target selected?
         if (nodesSelected.length) {
-            width = width * 0.9;
+
+            width *= 0.9;
             if (nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkSource]) && nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkTarget])) {
-                width = width * 1.5;
+
+                width *= 1.5;
+
             }
+
         }
         return width;
     };
 
     const linkCanvasObjectFunction = (link, ctx) => {
-        let color = linkAutoColor
-            ? invert(backgroundColor)
-            : validateColor(linkColor)
-                ? linkColor
-                :  invert(backgroundColor)
+        let color = props.linkAutoColor
+            ? invert(props.backgroundColor)
+            : validateColor(props.linkColor)
+                ? props.linkColor
+                :  invert(props.backgroundColor)
         // is link selected?
         if (linksSelected.length) {
+
             color = darken(0.2, color);
             if (linksSelected.map((linkSel)=>linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
+
                 color = saturate(0.2,color);
                 color = lighten(0.2,color);
+
             }
+
         }
         // is link connected to node being dragged?
         if (linkIdsNodesDrag.length) {
+
             color = darken(0.2, color);
             if (linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
+
                 color = saturate(0.2,color);
                 color = lighten(0.2, color);
+
             }
+
         }
         // are link source and target selected?
         if (nodesSelected.length) {
+
             color = darken(0.3, color);
             if (nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkSource]) && nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkTarget])) {
+
                 color = saturate(0.2,color);
                 color = lighten(0.3, color);
+
             }
+
         }
         
         const MAX_FONT_SIZE = 4;
@@ -2215,7 +1904,7 @@ function Graph2D (props) {
         ctx.translate(textPos.x, textPos.y);
         ctx.rotate(textAngle);
 
-        ctx.fillStyle = backgroundColor;
+        ctx.fillStyle = props.backgroundColor;
         ctx.fillRect(- bckgDimensions[0] / 2, - bckgDimensions[1] / 2, ...bckgDimensions);
 
         ctx.textAlign = "center";
@@ -2318,24 +2007,6 @@ function Graph2D (props) {
         setPauseAnimation(false);
     },[resumeAnimation]);
 
-    useEffect( () => {
-        if (props.centerAt){
-            fgRef.current.centerAt(...props.centerAt);
-        }
-    },[props.centerAt]);
-
-    useEffect( () => {
-        if (props.zoom){
-            fgRef.current.zoom(...props.zoom);
-        }
-    },[props.zoom]);
-
-    useEffect( () => {
-        if (props.zoomToFit){
-            fgRef.current.zoomToFit(...props.zoomToFit);
-        }
-    },[props.zoomToFit]);
-
     // useEffect( () => {
     //     if (props.cameraPosition){
     //         fgRef.current.zoom(...props.cameraPosition)
@@ -2391,11 +2062,29 @@ function Graph2D (props) {
 
     useEffect( () => {
         if (props.getGraphBbox){
-            setGraphBbox(fgRef.current.getGraphBbox());
+            props.setProps({"graphBbox":fgRef.current.getGraphBbox()});
         }
     },[props.getGraphBbox]);
 
 
+    useEffect( () => {
+        if (props.centerAt){
+            fgRef.current.centerAt(...props.centerAt);
+        }
+    },[props.centerAt]);
+
+    
+    useEffect( () => {
+        if (props.zoom){
+            fgRef.current.zoom(...props.zoom);
+        }
+    },[props.zoom]);
+
+    useEffect( () => {
+        if (props.zoomToFit){
+            fgRef.current.zoomToFit(...props.zoomToFit);
+        }
+    },[props.zoomToFit]);
     /*
     * Send selected state values to the parent component.
     * setProps is a prop that is automatically supplied
@@ -2412,7 +2101,7 @@ function Graph2D (props) {
     useEffect( () => {props.setProps({"nodeRightClickedViewpointCoordinates":nodeRightClickedViewpointCoordinates});},[nodeRightClickedViewpointCoordinates]);
     useEffect( () => {props.setProps({"linkClicked":linkClicked});},[linkClicked]);
     useEffect( () => {props.setProps({"linkRightClicked":linkRightClicked});},[linkRightClicked]);
-    useEffect( () => {props.setProps({"graphBbox":graphBbox});},[graphBbox]);
+
     useEffect( () => {props.setProps({"nodesSelected":nodesSelected});},[nodesSelected]);
     useEffect( () => {props.setProps({"linksSelected":linksSelected});},[linksSelected]);
 
@@ -2420,6 +2109,7 @@ function Graph2D (props) {
         <div id={props.id}>
                 <ForceGraph2D
                     ref={fgRef}
+                    key={props.key}
                     /**
                     * data input
                     */
@@ -2434,7 +2124,7 @@ function Graph2D (props) {
                     // props
                     width={props.size.width}
                     height={window.innerHeight * props.heightRatio}
-                    backgroundColor={backgroundColor}
+                    backgroundColor={props.backgroundColor}
                     // showNavInfo={showNavInfo}
                     // yOffset: 1.5, // AR
                     // glScale: 200 // AR
@@ -2508,7 +2198,7 @@ function Graph2D (props) {
                     * Render control
                     */
                     // numDimensions={props.numDimensions}
-                    forceEngine={forceEngine}
+                    forceEngine={props.forceEngine}
                     // dagMode={dagMode}
                     // dagLevelDistance={props.dagLevelDistance}
                     // dagNodeFilter={dagNodeFilter} // TODO: function
@@ -2519,7 +2209,7 @@ function Graph2D (props) {
                     ngraphPhysics={props.ngraphPhysics}
                     warmupTicks={props.warmupTicks}
                     cooldownTicks={props.cooldownTicks}
-                    cooldownTime={cooldownTime}
+                    cooldownTime={props.cooldownTime}
                     // onEngineTick: // TODO: function
                     onEngineStop={onEngineStopFunction}
                     /**
@@ -2537,17 +2227,24 @@ function Graph2D (props) {
                     // onLinkCenterHover // not exposed
                     onBackgroundClick={handleBackgroundClick}
                     onBackgroundRightClick={handleBackgroundRightClick}
+                    onZoomEnd={(args) => {
+
+                        props.setProps({"currentZoomPan":args})
+                        // console.log("currentZoomPan")
+                        // console.log(args)
+                        }
+                    }
                     linkHoverPrecision={props.linkHoverPrecision}
                     // onZoom // TODO: function
                     // onZoomEnd // TODO: function
                     // controlType={controlType}
-                    enableNodeDrag={enableNodeDrag}
-                    enableZoomPanInteraction={enableZoomPanInteraction} 
+                    enableNodeDrag={props.enableNodeDrag}
+                    enableZoomPanInteraction={props.enableZoomPanInteraction} 
                     // enableNavigationControls={enableNavigationControls} 
-                    enablePointerInteraction={enablePointerInteraction} 
+                    enablePointerInteraction={props.enablePointerInteraction} 
                     onChange={(e) => {
                         props.setProps({
-                            "graphData":e.target.graphData
+                            "graphData":e.target.graphData,
                         });}}
             />
             <div id = "dat-gui-div">
@@ -2555,10 +2252,10 @@ function Graph2D (props) {
                     data={guiSettings}
                     onUpdate={handleUpdate}>
                     <DatFolder title='graph settings' closed={true}>
-                        <DatFolder title='Container layout' closed={true}>
-                            <DatColor path='backgroundColor' label='backgroundColor'/>
+                        {/* <DatFolder title='Container layout' closed={true}> */}
+                            {/* <DatColor path='backgroundColor' label='backgroundColor'/> */}
                             {/* <DatBoolean path='showNavInfo' label='showNavInfo'/> */}
-                            </DatFolder>
+                            {/* </DatFolder> */}
                         <DatFolder title='d3Force' closed={true}>
                             <DatNumber path='link' label='link' min={0} max={100} step={1} />
                             <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
@@ -2573,29 +2270,29 @@ function Graph2D (props) {
                             {/* <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/> */}
                             <DatBoolean path='useNodeIcon' label='useNodeIcon'/>
                             <DatBoolean path='useNodeImg' label='useNodeImg'/>
-                            <DatBoolean path='nodeTextAutoColor' label='nodeTextAutoColor'/>
+                            {/* <DatBoolean path='nodeTextAutoColor' label='nodeTextAutoColor'/> */}
                             </DatFolder>
-                        <DatFolder title='Link styling' closed={true}>
+                        {/* <DatFolder title='Link styling' closed={true}>
                             <DatBoolean path='linkAutoColor' label='linkAutoColor'/>
                             <DatColor path='linkColor' label='linkColor'/>
-                            <DatNumber path='linkWidth' label='linkWidth' min={0.1} max={5} step={0.1}/>
+                            <DatNumber path='linkWidth' label='linkWidth' min={0.1} max={5} step={0.1}/> */}
                             {/* <DatNumber path='linkCurvature' label='linkCurvature' min={0} max={1} step={0.1}/> */}
-                            </DatFolder>
+                            {/* </DatFolder> */}
                         <DatFolder title='Force engine configuration' closed = {true}>
-                            <DatSelect path='forceEngine' label='forceEngine' options={["d3", "ngraph"]}/>
+                            {/* <DatSelect path='forceEngine' label='forceEngine' options={["d3", "ngraph"]}/> */}
                             {/* <DatBoolean path='dagModeOn' label='dagModeOn'/> */}
                             {/* <DatSelect path='dagMode' label='dagMode' options={["td", "bu", "lr", "rl", "radialout", "radialin"]}/> */}
-                            <DatNumber path='cooldownTime' label='cooldownTime' min={1000} max={15000} step={1000}/>
+                            {/* <DatNumber path='cooldownTime' label='cooldownTime' min={1000} max={15000} step={1000}/> */}
                             <DatBoolean path='fixNodes' label='fix nodes'/>
                             <DatButton label='reheat simulation' onClick={reheatFunction}/>
                             </DatFolder>
-                        <DatFolder title='Interaction' closed = {true}>
+                        {/* <DatFolder title='Interaction' closed = {true}> */}
                             {/* <DatSelect title='controlType' label='controlType' options={["trackball", "orbit", "fly"]}/> */}
-                            <DatBoolean path='enableNodeDrag' label='enableNodeDrag'/>
-                            <DatBoolean path='enableZoomPanInteraction' label='enableZoomPanInteraction'/>
+                            {/* <DatBoolean path='enableNodeDrag' label='enableNodeDrag'/> */}
+                            {/* <DatBoolean path='enableZoomPanInteraction' label='enableZoomPanInteraction'/> */}
                             {/* <DatBoolean path='enableNavigationControls' label='enableNavigationControls'/> */}
-                            <DatBoolean path='enablePointerInteraction' label='enablePointerInteraction'/>
-                            </DatFolder>
+                            {/* <DatBoolean path='enablePointerInteraction' label='enablePointerInteraction'/> */}
+                            {/* </DatFolder> */}
                         </DatFolder>
                 </DatGui>
             </div>
@@ -2612,6 +2309,11 @@ const graphSharedProptypes = {
      * The ID used to identify this component in Dash callbacks.
      */
     "id": PropTypes.string.isRequired,
+
+    /**
+    * The key used to identify this component in React
+     */
+    "key": PropTypes.string,
 
     /**
      * Dash-assigned callback that should be called to report property changes
@@ -3058,7 +2760,7 @@ const graphSharedProptypes = {
     "resumeAnimation": PropTypes.bool,
 
     /**
-    * Set the coordinates of the center of the viewport. This method can be used to perform panning on the 2D canvas programmatically. Each of the x, y coordinates is optional, allowing for motion in just one dimension. An optional 3rd argument defines the duration of the transition (in ms) to animate the canvas motion.
+    * This method can be used to perform panning on the 2D canvas programmatically. Note that the name is misleading: the arguments result in relative movement, not absolute location. Each of the x, y coordinates is optional, allowing for motion in just one dimension. An optional 3rd argument defines the duration of the transition (in ms) to animate the canvas motion.
     */
     "centerAt": PropTypes.array,
 
@@ -3075,7 +2777,7 @@ const graphSharedProptypes = {
     /**
     * Re-position the camera, in terms of x, y, z coordinates. Each of the coordinates is optional, allowing for motion in just some dimensions. The optional second argument can be used to define the direction that the camera should aim at, in terms of an {x,y,z} point in the 3D space. The 3rd optional argument defines the duration of the transition (in ms) to animate the camera motion. A value of 0 (default) moves the camera immediately to the final position. By default the camera will face the center of the graph at a z distance proportional to the amount of nodes in the system. 3D
     */
-    "cameraPosition": PropTypes.array,
+    // "cameraPosition": PropTypes.array,
 
     /**
     * Access the internal ThreeJS Scene.
@@ -3310,10 +3012,15 @@ const graphSharedProptypes = {
     "linkHoverPrecision": PropTypes.number,
 
     /**
-    * Callback function for zoom/pan events. The current zoom transform is included as single argument onZoom({ k, x, y }). Note that onZoom is triggered by user interaction as well as programmatic zooming/panning with zoom() and centerAt(). 2D
+    * Calls zoom() method. ([number], [ms])
     */
-    // onZoom: PropTypes.func, // not exposed
+    zoom: PropTypes.arrayOf(PropTypes.number), // not exposed
 
+
+    /**
+    * Calls centerAt() method. ([x], [y], [ms])
+    */
+    centerAt: PropTypes.arrayOf(PropTypes.number), // not exposed
     /**
     * Callback function for on 'end' of zoom/pan events. The current zoom transform is included as single argument onZoomEnd({ k, x, y }). Note that onZoomEnd is triggered by user interaction as well as programmatic zooming/panning with zoom() and centerAt().
     */
@@ -3349,7 +3056,9 @@ const graphSharedProptypes = {
     */
 
     /**
-    * Returns the current bounding box of the nodes in the graph, formatted as { x: [<num>, <num>], y: [<num>, <num>], z: [<num>, <num>] }. If no nodes are found, returns null. Accepts an optional argument to define a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful to calculate the bounding box of a portion of the graph.
+    * Returns the current bounding box of the nodes in the graph, formatted as { x: [<num>, <num>], y: [<num>, <num>], z: [<num>, <num>] }. 
+    * If no nodes are found, returns null. Accepts an optional argument to define a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. 
+    * This can be useful to calculate the bounding box of a portion of the graph.
     * Bounding box is saved as the graphBbox prop
     */
     "getGraphBbox": PropTypes.bool,
@@ -3399,7 +3108,7 @@ const graphSharedProptypes = {
     /**
      * The node attribute containing a URL
      */
-    "nodeURL": PropTypes.string,
+    // "nodeURL": PropTypes.string,
 
     /**
     * Whether or not to use the nodeImg. Overrides nodeIcon
@@ -3558,22 +3267,22 @@ const graphSharedProptypes = {
     /**
     * ids of highlighted nodes (through search)
     */
-    "nodeIdsHighlight": PropTypes.arrayOf(PropTypes.string),
+    "nodeIdsHighlightUser": PropTypes.arrayOf(PropTypes.string),
 
     /**
      * ids of visible nodes
      */
-    "nodeIdsVisible": PropTypes.arrayOf(PropTypes.string),
+    "nodeIdsInvisibleUser": PropTypes.arrayOf(PropTypes.string),
 
     /**
     * ids of highlighted links (through search)
     */
-    "linkIdsHighlight": PropTypes.arrayOf(PropTypes.string),
+    "linkIdsHighlightUser": PropTypes.arrayOf(PropTypes.string),
 
     /**
      * ids of visible links
      */
-    "linkIdsVisible": PropTypes.arrayOf(PropTypes.string),
+    "linkIdsInvisibleUser": PropTypes.arrayOf(PropTypes.string),
 
     /**
     * externalobject_source:
@@ -3591,7 +3300,7 @@ const graphSharedProptypes = {
         PropTypes.object]),
 
     /**
-    * origin coordinates
+    * origin coordinates. Read only! Updated when component initialized (and on zoom? https://github.com/vasturiano/react-force-graph/issues/33)
     */
     "centreCoordinates": PropTypes.objectOf(PropTypes.number),
 
@@ -3616,9 +3325,16 @@ const graphSharedProptypes = {
     "gravity": PropTypes.string,
 
     /**
+    * node props to hide on hover
+    */
+    "invisibleProps": PropTypes.arrayOf(PropTypes.string),
+
+    /**
     * max levels of neighbourhood selection around a node by repeat clicking
     */
     "maxDepth_neighbours_select": PropTypes.number,
+
+    "currentZoomPan":PropTypes.object
 
 };
 
