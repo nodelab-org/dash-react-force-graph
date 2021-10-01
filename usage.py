@@ -4,13 +4,14 @@ import dash_react_force_graph
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_html_components as html
+from dash_react_font_awesome_icon_picker import iconPicker
 # import dash_core_components as dcc
 import random
+import json
 
-app = dash.Dash(__name__,
+app = dash.Dash(__name__
     #prevent_initial_callbacks=True,
 )
-
 
 def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=[]):
     '''
@@ -56,30 +57,36 @@ def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=[]):
             print(graphData[links_key][i])
             # print(graphData[links_key][i]["source"])
             if type(graphData[links_key][i]["source"]) == dict:
-                graphData[links_key][i]["source"] = graphData[links_key][i]["source"]["nodeId"]
+                graphData[links_key][i]["source"] = graphData[links_key][i]["source"]["__nodeId"]
             if type(graphData[links_key][i]["target"]) == dict:
-                graphData[links_key][i]["target"] = graphData[links_key][i]["target"]["nodeId"]
+                graphData[links_key][i]["target"] = graphData[links_key][i]["target"]["__nodeId"]
     
     return graphData
 
 
+# with open('/Users/rkm916/Documents/data_roles.json', 'r') as f:
+#     graphData = json.load(f)
+
+# print("")
+# print("graphData")
+# print(json.dumps(graphData,indent=3))
 graphData = {
     "nodes":[
-        {"nodeId":"1",  "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}, "rootType":"entity"},
-        {"nodeId":"2", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}, "rootType":"entity"},
-        {"nodeId":"3",  "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}, "rootType":"entity"},
-        {"nodeId":"4",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":{"FontAwesome":"\uF007"}, "rootType":"entity"},
-        {"nodeId":"5",  "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200", "rootType":"entity"},
-        {"nodeId":"6",  "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300", "rootType":"entity"},
-        {"nodeId":"7",  "__nodeLabel":"Strawberry Fields Ltd", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/11/200/300", "rootType":"entity"},
-        {"nodeId":"8",  "__nodeLabel":"The Fundamentally Supine Authority", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/16/200/300", "rootType":"entity"},
-        {"nodeId":"9",  "__nodeLabel":"neighbours", "__nodeColor":"tomato", "rootType":"relation"},
-        {"nodeId":"10",  "__nodeLabel":"employment", "__nodeColor":"tomato", "rootType":"relation"},
-        {"nodeId":"11",  "__nodeLabel":"employment", "__nodeColor":"tomato", "rootType":"relation"},
-        {"nodeId":"12",  "__nodeLabel":"employment", "__nodeColor":"tomato", "rootType":"relation"},
-        {"nodeId":"13",  "__nodeLabel":"neighbours", "__nodeColor":"tomato", "rootType":"relation"},
-        {"nodeId":"14",  "__nodeLabel":"employment", "__nodeColor":"tomato", "rootType":"relation"},
-        {"nodeId":"15",  "__nodeLabel":"Jenny Howard", "__nodeColor":"cornflowerblue", "__nodeIcon": {"FontAwesome":"\uF007"}, "rootType":"entity"}
+        {"__nodeId":"1",  "is_inferred":False, "name": "Joe Benson", "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
+        {"__nodeId":"2", "is_inferred":False,  "name": "Daniella M", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
+        {"__nodeId":"3", "is_inferred":False, "name": "Susan T", "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
+        {"__nodeId":"4", "is_inferred":False, "name": "Ed Smith",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
+        {"__nodeId":"5",  "is_inferred":False, "name": "Chevron", "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200", "__thingType":"corporation", "__rootType":"entity"},
+        {"__nodeId":"6",  "is_inferred":False, "name": "Friends of the Earth", "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300", "__thingType":"NGO", "__rootType":"entity"},
+        {"__nodeId":"7",  "is_inferred":False, "name": "Strawberry Fields Ltd", "__nodeLabel":"Strawberry Fields Ltd", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/11/200/300", "__thingType":"corporation", "__rootType":"entity"},
+        {"__nodeId":"8",  "is_inferred":False, "name": "The Fundamentally Supine Authority", "__nodeLabel":"The Fundamentally Supine Authority", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/16/200/300", "__thingType":"government", "__rootType":"entity"},
+        {"__nodeId":"9",  "is_inferred":False, "__nodeLabel":"neighbours", "__nodeColor":"tomato", "__thingType":"neighbours", "__rootType":"relation"},
+        {"__nodeId":"10", "is_inferred":False,  "__nodeLabel":"employment", "__nodeColor":"tomato", "__thingType":"employment", "__rootType":"relation"},
+        {"__nodeId":"11", "is_inferred":False,  "__nodeLabel":"employment", "__nodeColor":"tomato", "__thingType":"employment", "__rootType":"relation"},
+        {"__nodeId":"12", "is_inferred":True, "__nodeLabel":"employment", "__nodeColor":"tomato", "__thingType":"employment", "__rootType":"relation"},
+        {"__nodeId":"13", "is_inferred":False,  "__nodeLabel":"neighbours", "__nodeColor":"tomato", "__thingType":"employment", "__rootType":"relation"},
+        {"__nodeId":"14", "is_inferred":False,  "__nodeLabel":"employment", "__nodeColor":"tomato", "__thingType":"employment", "__rootType":"relation"},
+        {"__nodeId":"15", "is_inferred":False,  "name": "Jenny Howard", "__nodeLabel":"Jenny Howard", "__nodeColor":"cornflowerblue", "__nodeIcon": "\uF007", "__thingType":"person", "__rootType":"entity"}
 
         ],
     "links":[
@@ -104,48 +111,69 @@ graphData = {
 
 app.layout = html.Div([
     html.Br(),
+    dcc.Dropdown(
+        id="dropdown-type",
+        placeholder="__thingType",
+        options=[]
+    ),
+    iconPicker(
+        id='iconPicker',
+        value='FaCircle',
+        hideSearch=False,
+    ),
+    dcc.Dropdown(
+        placeholder ="invisible nodes",
+        id="dropdown-nodeIdsInvisibleUser",
+        options=[],
+        multi=True
+    ),
+    dcc.Dropdown(
+        placeholder="invisible links",
+        id="dropdown-linkIdsInvisibleUser",
+        options=[],
+        multi=True
+    ),
     html.Button("add random node", id="button-add"),
     html.Button("delete random node", id="button-delete"),
-
     
     dash_react_force_graph.Graph2D(
         id='graph2D',
         graphData=graphData,
         heightRatio=0.8,
-        nodeId="nodeId",
+        nodeId="__nodeId",
         nodeLabel="__nodeLabel",
         nodeColor="__nodeColor",
         nodeIcon="__nodeIcon",
         nodeImg="__nodeImg",
-        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"}
+        nodeIcon_fontsheets=  "https://kit.fontawesome.com/a6e0eeba63.js"}
     ),
     html.Label("sortRelsBy1"),
     dcc.Dropdown(
         id="dropdown-sortRelsBy1",
         options=[
             {"label":"__nodeLabel", "value":"__nodeLabel"},
-            {"label":"nodeId", "value":"nodeId"},
+            {"label":"__nodeId", "value":"__nodeId"},
         ]),
     html.Label("sortRelsBy2"),
     dcc.Dropdown(
         id="dropdown-sortRelsBy2",
         options=[
             {"label":"__nodeLabel", "value":"__nodeLabel"},
-            {"label":"nodeId", "value":"nodeId"},
+            {"label":"__nodeId", "value":"__nodeId"},
         ]),
     html.Label("sortRoleplayersBy1"),
     dcc.Dropdown(
         id="dropdown-sortRoleplayersBy1",
         options=[
             {"label":"__nodeLabel", "value":"__nodeLabel"},
-            {"label":"nodeId", "value":"nodeId"},
+            {"label":"__nodeId", "value":"__nodeId"},
         ]),
     html.Label("sortRoleplayersBy2"),
     dcc.Dropdown(
         id="dropdown-sortRoleplayersBy2",
         options=[
             {"label":"__nodeLabel", "value":"__nodeLabel"},
-            {"label":"nodeId", "value":"nodeId"},
+            {"label":"__nodeId", "value":"__nodeId"},
         ]),
     html.Label("sortRels1Descend"),
     dcc.Dropdown(
@@ -175,19 +203,6 @@ app.layout = html.Div([
             {"label":"True", "value":"True"},
             {"label":"False", "value":"False"},
         ]),
-
-    # dash_react_force_graph.Graph2D(
-    #     id='graph2D',
-    #     graphData=graphData,
-    #     heightRatio=0.45,
-    #     nodeId="nodeId",
-    #     nodeLabel="__nodeLabel",
-    #     nodeColor="__nodeColor",
-    #     nodeIcon="__nodeIcon",
-    #     nodeImg="__nodeImg",
-    #     nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
-    # ),
-    # html.Div(id='output-nodeHovered-2D'),
     html.Br(),
     html.Div(id='output-nodeClicked-2D'),
     html.Br(),
@@ -196,23 +211,51 @@ app.layout = html.Div([
     html.Div(id='output-linksSelected-2D'),
     html.Br(),
     html.Div(id='output-nodeRightClicked-2D'),
-    # html.Div(id='output-graphData-2D'),
-    # html.H2("Graph2D"),
-    # html.Div(id='output-nodeClicked-2D'),
-    # html.Div(id='output-nodeRightClicked-2D'),
-    # html.Br(),
-    # html.Br(),
-    # dash_react_force_graph.Graph2D(
-    #     id='graph2D',
-    #     graphData=graphData,
-    #     heightRatio=0.45,
-    #     nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
-    # ),
-    # html.Div(id='output-nodeHovered-2D'),
-    # html.Div(id='output-nodeClicked-2D'),
-    # html.Div(id='output-nodeRightClicked-2D'),
+
 ])
 
+
+
+# CALLBACKS 
+
+@app.callback(
+    [
+        Output("dropdown-nodeIdsInvisibleUser","options"),
+        Output("dropdown-linkIdsInvisibleUser","options")
+    ],
+    [
+        Input("graph2D","graphData"),
+    ]
+)
+def populate_dropdown_node_link_ids_invisible_user(graphdata):
+    return [
+        [{"label":node["__nodeId"], "value":node["__nodeId"]} for node in graphdata["nodes"]],
+        [{"label":link["id"], "value":link["id"]} for link in graphdata["links"]]
+    ]
+
+
+@app.callback(
+        Output("graph2D","nodeIdsInvisibleUser"),
+    [
+        Input("dropdown-nodeIdsInvisibleUser","value"),
+    ],
+)
+def update_nodeidsinvisible_user(value):
+    return [value] if not type(value) is list else value
+
+
+
+@app.callback(
+        Output("graph2D","linkIdsInvisibleUser"),
+    [
+        Input("dropdown-linkIdsInvisibleUser","value"),
+    ],
+)
+def update_linkidsinvisible_user(value):
+    return [value] if not type(value) is list else value
+
+
+# sort
 @app.callback(
     Output("graph2D","sortRelsBy1"),
     [Input("dropdown-sortRelsBy1","value")])
@@ -261,6 +304,9 @@ def sort_rps_1_desc(value):
 def sort_rps_2_desc(value):
     return bool(value)
 
+
+# add or delete notes
+
 @app.callback(
 [
     # Output('output-nodeHovered-2D', 'children'),
@@ -277,11 +323,11 @@ def sort_rps_2_desc(value):
     Input('graph2D', 'nodeRightClicked'),
 ])
 def display_clicked_selected_nodes_2D(
-nodeClicked,
-nodesSelected,
-linksSelected,
-nodeRightClicked):
-    return [
+    nodeClicked,
+    nodesSelected,
+    linksSelected,
+    nodeRightClicked):
+        return [
         "clicked node: {}".format(nodeClicked),
         "selected nodes: {}".format(nodesSelected),
         "selected links: {}".format(linksSelected),
@@ -290,15 +336,31 @@ nodeRightClicked):
 
 
 
+@app.callback(
+    Output("dropdown-type","options"),
+    Input("graph2D","graphData")
+)
+def populate_dropdown_type(graphData):
+    return [{"label":thingType, "value":thingType} for thingType in set([node["__thingType"] for node in graphData["nodes"]])]
+
+
 @app.callback(Output('graph2D', 'graphData'),
     [
         Input('button-add', 'n_clicks'),
-        Input('button-delete', 'n_clicks')
+        Input('button-delete', 'n_clicks'),
+        Input("iconPicker","value")
     ],
     [
+        State("dropdown-type","value"),
         State("graph2D","graphData")
     ])
-def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
+def update_graphdata(
+    n_clicks_add, 
+    n_clicks_delete, 
+    icon, 
+    thingType_selected,
+    graphData
+    ):
     ctx = dash.callback_context
 
     if not ctx.triggered:
@@ -312,13 +374,13 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
     graphData = rm_graphData_render_data(graphData, graph_lib="2D", coordinates_rm=[])
 
     if trigger_id == "button-add":
-        newNodeId = max([int(node["nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
-        newNode = {"nodeId":newNodeId, "__nodeLabel":"new_node_{}".format(newNodeId), "__nodeColor":"orange"}
+        newNodeId = max([int(node["__nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
+        newNode = {"__nodeId":newNodeId, "__nodeLabel":"new_node_{}".format(newNodeId), "__nodeColor":"orange", "__thingType":"TBC"}
 
         if len(graphData["nodes"]):
             ridx =  random.randrange(len(graphData["nodes"]))
             newLinkId = max([int(link["id"]) for link in graphData["links"]])+1 if len(graphData["links"]) else 1
-            newLink = {"id":newLinkId, "source":newNode["nodeId"], "target": graphData["nodes"][ridx]["nodeId"], "label":"new_link_{}".format(newLinkId)}
+            newLink = {"id":newLinkId, "source":newNode["__nodeId"], "target": graphData["nodes"][ridx]["__nodeId"], "label":"new_link_{}".format(newLinkId)}
             graphData["links"].append(newLink)
 
         graphData["nodes"].append(newNode)
@@ -331,86 +393,19 @@ def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
         nodeDel = graphData["nodes"].pop(ridx)
 
         if len(graphData["links"]):
-            graphData["links"] = list(filter(lambda link: not nodeDel["nodeId"] in [link["source"], link["target"]], graphData["links"]))
+            graphData["links"] = list(filter(lambda link: not nodeDel["__nodeId"] in [link["source"], link["target"]], graphData["links"]))
+    
+    elif trigger_id == "iconPicker":
+        # set icon
+        for node in graphData["nodes"]:
+            if node["__thingType"]==thingType_selected:
+                pass
 
     print("")
     print("returning graphData: {} ".format(graphData))
-
-
     return graphData
 
 
-
-
-# @app.callback(
-# [
-#     # Output('output-nodeHovered-2D', 'children'),
-#     Output('output-nodeClicked-2D',  'children'),
-#     Output('output-nodeRightClicked-2D',  'children'),
-# ],
-# [
-#     # Input('graph2D', 'nodeHovered'),
-#     Input('graph2D', 'nodeClicked'),
-#     Input('graph2D', 'nodeRightClicked'),
-# ])
-# def display_selected_nodes_2D( nodeClicked, nodeRightClicked):
-#     return ["clicked node: {}".format(nodeClicked), "rightclicked node: {}".format(nodeRightClicked)]
-
-# @app.callback(
-#     Output('graph2D', 'd3ReheatSimulation'),
-# [
-#     Input('button-reheat', 'n_clicks')])
-# def reheat_graphData_2D(n_clicks):
-#     return True
-
-# @app.callback(
-#     Output('graph2D', 'd3Force_call'),
-# [
-#     Input('slider-d3Force-charge-strength', 'value')])
-# def update_d3Force_charge_strength(slidervalue):
-#     return {"name":"charge", "method":"strength", "method_args":[slidervalue]}
-
-# @app.callback(Output('graph2D', 'graphData'),
-#     [
-#         Input('button-add', 'n_clicks'),
-#         Input('button-delete', 'n_clicks')
-#     ],
-#     [
-#         State("graph2D","graphData")
-#     ])
-# def add_delete_random_node_2D(n_clicks_add, n_clicks_delete, graphData):
-#     ctx = dash.callback_context
-
-#     if not ctx.triggered:
-#         raise PreventUpdate
-#     else:
-#         trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
-
-#     graphData = rm_graphData_render_data(graphData, graph_lib="2D", coordinates_rm=[])
-
-#     if trigger_id == "button-add":
-#         newNodeId = max([int(node["nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
-#         newNode = {"nodeId":newNodeId, "__nodeLabel":"new_node_".format(newNodeId), "__nodeColor":"orange"}
-
-#         if len(graphData["nodes"]):
-#             ridx =  random.randrange(len(graphData["nodes"]))
-#             newLinkId = max([int(link["id"]) for link in graphData["links"]])+1 if len(graphData["links"]) else 1
-#             newLink = {"id":newLinkId, "source":newNode["nodeId"], "target": graphData["nodes"][ridx]["nodeId"], "label":"new_link".format(newLinkId)}
-#             graphData["links"].append(newLink)
-
-#         graphData["nodes"].append(newNode)
-
-#     elif trigger_id == "button-delete":
-#         if not len(graphData["nodes"]):
-#             raise PreventUpdate
-
-#         ridx =  random.randrange(len(graphData["nodes"]))
-#         nodeDel = graphData["nodes"].pop(ridx)
-
-#         if len(graphData["links"]):
-#             graphData["links"] = list(filter(lambda link: not nodeDel["nodeId"] in [link["source"], link["target"]], graphData["links"]))
-
-#     return graphData
 
 
 if __name__ == '__main__':
