@@ -145,7 +145,7 @@ app.layout = html.Div([
         nodeColor="__nodeColor",
         nodeIcon="__nodeIcon",
         nodeImg="__nodeImg",
-        nodeIcon_fontsheets=  "https://kit.fontawesome.com/a6e0eeba63.js"}
+        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"}
     ),
     html.Label("sortRelsBy1"),
     dcc.Dropdown(
