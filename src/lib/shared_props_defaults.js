@@ -71,10 +71,10 @@ const objSharedProps = {
     // linkThreeObject: null // 3D, VR, AR, not exposed
     // linkThreeObjectExtend:true, // 3D, VR, AR, not exposed
     // linkPositionUpdate: null, // function, not exposed
-    linkDirectionalArrowLength:3,
-    linkDirectionalArrowColor:"color",
-    linkDirectionalArrowRelPos:0.95,
-    linkDirectionalArrowResolution: 8, // 3D, VR, AR
+    // linkDirectionalArrowLength:3,
+    // linkDirectionalArrowColor:"color",
+    // linkDirectionalArrowRelPos:0.95,
+    // linkDirectionalArrowResolution: 8, // 3D, VR, AR
     linkDirectionalParticles: 0,
     linkDirectionalParticleSpeed: 0.01,
     linkDirectionalParticleWidth: 0.5,
@@ -92,7 +92,7 @@ const objSharedProps = {
     // onRenderFramePost: null, //TODO not ported (cannot pass methods as arguments to Dash a component)
     // methods
     pauseAnimation: false, // to call the pauseAnimation method, pass True
-    resumeAnimation: false, // to call the resumeAnimation method, pass True
+    // resumeAnimation: false, // to call the resumeAnimation method, pass True
     centerAt: null,// to call the centerAt method, pass a list or tuple ([x], [y], [ms]) (TODO)
     zoom: null, // to call the zoom method, pass a list or tuple ([number], [ms])
     zoomToFit: null,// to call the zoomToFit method, pass a list or tuple ([ms], [px], [nodeFilterFn])

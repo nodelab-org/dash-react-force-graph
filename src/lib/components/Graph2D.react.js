@@ -149,14 +149,14 @@ function Graph2D (props) {
             linkIdsHighlight,
             setLinkIdsHighlight
         ],
-        [
-            pauseAnimation,
-            setPauseAnimation
-        ],
-        [
-            resumeAnimation,
-            setResumeAnimation
-        ],
+        // [
+        //     pauseAnimation,
+        //     setPauseAnimation
+        // ],
+        // [
+        //     resumeAnimation,
+        //     setResumeAnimation
+        // ],
         [
             nodesSelected,
             setNodesSelected
@@ -198,8 +198,8 @@ function Graph2D (props) {
         useState([]),
         useState([]),
         useState([]),
-        useState(false),
-        useState(true),
+        // useState(false),
+        // useState(true),
         // useState(null),
         useState([]),
         useState([]),
@@ -342,8 +342,8 @@ function Graph2D (props) {
      * Finally, update nodesById
      */
 
-    if (props.graphData && "nodes" in props.graphData && "links" in props.graphData) { 
-    
+    if (props.graphData && "nodes" in props.graphData && "links" in props.graphData) {
+
         /* eslint-disable one-var */
         const [
             nodeIdsAllNew,
@@ -382,7 +382,24 @@ function Graph2D (props) {
              * since we only need it on the next render
              */
 
-            setNodeZoomId(null);
+            if (nodeZoomId) {
+
+                setNodeZoomId(null);
+
+                // remove f coordinates
+                props.graphData.nodes.forEach((node) => {
+
+                    if ("fx" in node) {
+
+                        delete node.fx;
+                        delete node.fy;
+
+                    }
+
+                });
+
+            }
+
             setNodeClicked(null);
             setNodeRightClicked(null);
             setGraphDataIdsAll({
@@ -945,20 +962,20 @@ function Graph2D (props) {
     const nodeLabelFunction = (node) => {
 
         let identityRows = `<tr>
-                <td><span style="font-weight:bold">rootType </span></td>
-                <td>${node.__rootType}</td>
+                <td><span style="font-weight:bold">rootType</span></td>
+                <td>" ${node.__rootType}"</td>
             </tr>
             <tr>
-                <td><span style="font-weight:bold">thingType </span></td>
-                <td>${node.__thingType}</td>
+                <td><span style="font-weight:bold">thingType</span></td>
+                <td>" ${node.__thingType}"</td>
             </tr>`;
-        
+
         if ("__abstract" in node) {
 
             identityRows = `${identityRows}
                 <tr>
-                    <td><span style="font-weight:bold">abstract </span></td>
-                    <td>${node.__abstract}</td>
+                    <td><span style="font-weight:bold">abstract</span></td>
+                    <td>" ${node.__abstract}"</td>
                 </tr>`;
 
         }
@@ -966,8 +983,8 @@ function Graph2D (props) {
 
             identityRows = `${identityRows}
                 <tr>
-                    <td><span style="font-weight:bold">is_inferred </span></td>
-                    <td>${node.__is_inferred}</td>
+                    <td><span style="font-weight:bold">is_inferred</span></td>
+                    <td>" ${node.__is_inferred}"</td>
                 </tr>`;
 
         }
@@ -976,8 +993,18 @@ function Graph2D (props) {
 
             identityRows = `${identityRows}
                 <tr>
-                    <td><span style="font-weight:bold">value </span></td>
-                    <td>${node.__value}</td>
+                    <td><span style="font-weight:bold">value</span></td>
+                    <td>" ${node.__value}"</td>
+                </tr>`;
+
+        }
+
+        if ("__scope" in node) {
+
+            identityRows = `${identityRows}
+                <tr>
+                    <td><span style="font-weight:bold">scope</span></td>
+                    <td>" ${node.__scope}"</td>
                 </tr>`;
 
         }
@@ -997,8 +1024,8 @@ function Graph2D (props) {
 
                 return (
                     `<tr>
-                        <td><span style="font-weight:bold">${k} </span></td>
-                        <td>${node[k]}</td>
+                        <td><span style="font-weight:bold">${k}</span></td>
+                        <td>" ${node[k]}"</td>
                     </tr>`
                 );
 
@@ -1654,7 +1681,7 @@ function Graph2D (props) {
         const imgSize = nodeImgRelSize ? nodeImgRelSize : 12; // sensible default
 
         // ctx.globalAlpha = 0.9;
-        ctx.fontWeight = "normal";
+        let fontWeightText = "normal";
         let fontSize = Math.max(11 / globalScale,5);
 
         // modify style parameters if node is selected and/or highlighted
@@ -1684,7 +1711,7 @@ function Graph2D (props) {
                 // ctx.globalAlpha = 1
                 color = lighten(0.3, color);
                 textColor = lighten(0.3, textColor);
-                ctx.fontWeight = "bold";
+                fontWeightText = "bold";
                 globalAlpha = 1
             } else {
                 globalAlpha = globalAlpha * 0.8
@@ -1699,7 +1726,7 @@ function Graph2D (props) {
                 //ctx.globalAlpha = 1
                 color = lighten(0.3, color);
                 textColor = lighten(0.3, textColor);
-                ctx.fontWeight = "bold";
+                fontWeightText = "bold";
                 globalAlpha = 1
             } else {
                 globalAlpha = globalAlpha * 0.8
@@ -1742,11 +1769,12 @@ function Graph2D (props) {
                 // const nodeIcon_obj = node[props.nodeIcon];
                 ctx.font = `${iconSize}px ${"FontAwesome"}`;
                 ctx.fillStyle = color;
+                ctx.fontWeight = 900;
                 ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize / 1.7, iconSize);
             }
         }
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.75))) {
-
+            ctx.fontWeight = fontWeightText
             // draw text background rectangle
             ctx.font = `${fontSize}px Sans-Serif`;
             const textWidth = ctx.measureText(label).width;
@@ -1821,6 +1849,8 @@ function Graph2D (props) {
         return color;
     };
 
+    // const linkDirectionalArrowColorFunction = (link) => link.color
+
     const linkWidthFunction = (link) => {
         let width = props.linkWidth;
         // is link selected?
@@ -1866,7 +1896,8 @@ function Graph2D (props) {
             : validateColor(props.linkColor)
                 ? props.linkColor
                 :  invert(props.backgroundColor)
-        // is link selected?
+        
+                // is link selected?
         if (linksSelected.length) {
 
             color = darken(0.2, color);
@@ -1881,11 +1912,11 @@ function Graph2D (props) {
         // is link connected to node being dragged?
         if (linkIdsNodesDrag.length) {
 
-            color = darken(0.2, color);
+            color = darken(0.3, color);
             if (linkIdsNodesDrag.indexOf(link[props.linkId]) !== -1) {
 
                 color = saturate(0.2,color);
-                color = lighten(0.2, color);
+                color = lighten(0.3, color);
 
             }
 
@@ -2035,19 +2066,27 @@ function Graph2D (props) {
         }
     },[props.emitParticle]);
 
-    useEffect( () => {
-        if (pauseAnimation){
-            fgRef.current.pauseAnimation();
-        }
-        setResumeAnimation(false);
-    },[pauseAnimation]);
+    if (fgRef && "current" in fgRef && fgRef.current) {
+        
+        props.pauseAnimation
+            ? fgRef.current.pauseAnimation()
+            : fgRef.current.resumeAnimation();
 
-    useEffect( () => {
-        if (resumeAnimation){
-            fgRef.current.resumeAnimation();
-        }
-        setPauseAnimation(false);
-    },[resumeAnimation]);
+    }
+
+    // useEffect( () => {
+    //     if (pauseAnimation){
+    //         fgRef.current.pauseAnimation();
+    //     }
+    //     setResumeAnimation(false);
+    // },[pauseAnimation]);
+
+    // useEffect( () => {
+    //     if (resumeAnimation){
+    //         fgRef.current.resumeAnimation();
+    //     }
+    //     setPauseAnimation(false);
+    // },[resumeAnimation]);
 
     // useEffect( () => {
     //     if (props.cameraPosition){
@@ -2219,10 +2258,10 @@ function Graph2D (props) {
                     //     }}
                     // linkThreeObjectExtend={props.linkThreeObjectExtend}
                     // linkPositionUpdate: null, // function, not exposed
-                    linkDirectionalArrowLength={props.linkDirectionalArrowLength}
-                    linkDirectionalArrowColor={props.linkDirectionalArrowColor}
-                    linkDirectionalArrowRelPos={props.linkDirectionalArrowRelPos}
-                    linkDirectionalArrowResolution={props.linkDirectionalArrowResolution}
+                    linkDirectionalArrowLength={0}
+                    // linkDirectionalArrowColor={linkDirectionalArrowColorFunction}
+                    // linkDirectionalArrowRelPos={props.linkDirectionalArrowRelPos}
+                    // linkDirectionalArrowResolution={props.linkDirectionalArrowResolution}
                     linkDirectionalParticles={props.linkDirectionalParticles}
                     linkDirectionalParticleSpeed={props.linkDirectionalParticleSpeed}
                     linkDirectionalParticleWidth={props.linkDirectionalParticleSpeed}
@@ -2799,7 +2838,7 @@ const graphSharedProptypes = {
     /**
     * Resumes the rendering cycle of the component, and re-enables the user interaction. This method can be used together with pauseAnimation for performance optimization purposes.
     */
-    "resumeAnimation": PropTypes.bool,
+    // "resumeAnimation": PropTypes.bool,
 
     /**
     * This method can be used to perform panning on the 2D canvas programmatically. Note that the name is misleading: the arguments result in relative movement, not absolute location. Each of the x, y coordinates is optional, allowing for motion in just one dimension. An optional 3rd argument defines the duration of the transition (in ms) to animate the canvas motion.
