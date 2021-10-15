@@ -1,67 +1,73 @@
 import dash
 import dash_core_components as dcc
 import dash_react_force_graph
+import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_html_components as html
 from dash_react_font_awesome_icon_picker import iconPicker
 # import dash_core_components as dcc
 import random
-import json
+
 
 app = dash.Dash(__name__
     #prevent_initial_callbacks=True,
 )
+def reset_link_source_target(links):
+    if links and type(links[0]["source"]) is dict:
+        for link in links:
+            link["source"] = link["source"]["__nodeId"]
+            link["target"] = link["target"]["__nodeId"]
+    return links
+# def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=[]):
+#     '''
+#     @usage remove the data inserted into graphData by react-force-graph components.
+#     @param graphData: graphData used by react-force-graph
+#     @param graph_lib: one of "2D", "2D" (not yet "AR", "VR")
+#     @param coordinates_rm: which coordinates to remove
+#     @return graphData, with data removed
+#     '''
 
-def rm_graphData_render_data(graphData, graph_lib, coordinates_rm=[]):
-    '''
-    @usage remove the data inserted into graphData by react-force-graph components.
-    @param graphData: graphData used by react-force-graph
-    @param graph_lib: one of "2D", "2D" (not yet "AR", "VR")
-    @param coordinates_rm: which coordinates to remove
-    @return graphData, with data removed
-    '''
+#     links_key = "edges" if graph_lib == "cytoscape" else "links"
 
-    links_key = "edges" if graph_lib == "cytoscape" else "links"
+#     # do not remove indexColor?
+#     nodes_keys_rm = ["index", "vx","vy"]
+#     if graph_lib == "3D":
+#         nodes_keys_rm.append("vz")
 
-    # do not remove indexColor?
-    nodes_keys_rm = ["index", "vx","vy"]
-    if graph_lib == "3D":
-        nodes_keys_rm.append("vz")
+#     links_keys_rm = ["index","__controlPoints"]
 
-    links_keys_rm = ["index","__controlPoints"]
+#     if graph_lib == "3D":
+#         nodes_keys_rm.append("__threeObj")
+#         links_keys_rm += ["__arrowObj",   "__curve", "__lineObj"]
 
-    if graph_lib == "3D":
-        nodes_keys_rm.append("__threeObj")
-        links_keys_rm += ["__arrowObj",   "__curve", "__lineObj"]
+#     nodes_keys_rm += coordinates_rm
 
-    nodes_keys_rm += coordinates_rm
-
-    if len(nodes_keys_rm) > 0:
-        for i in range(len(graphData["nodes"])):
-            for each_key in nodes_keys_rm:
-                if each_key in graphData["nodes"][i].keys():
-                    graphData["nodes"][i].pop(each_key)
-    # links
-    if len(links_keys_rm) > 0:
-        for i in range(len(graphData[links_key])):
-            for each_key in links_keys_rm:
-                if each_key in graphData[links_key][i].keys():
-                    graphData[links_key][i].pop(each_key)
+#     if len(nodes_keys_rm) > 0:
+#         for i in range(len(graphData["nodes"])):
+#             for each_key in nodes_keys_rm:
+#                 if each_key in graphData["nodes"][i].keys():
+#                     graphData["nodes"][i].pop(each_key)
+#     # links
+#     if len(links_keys_rm) > 0:
+#         for i in range(len(graphData[links_key])):
+#             for each_key in links_keys_rm:
+#                 if each_key in graphData[links_key][i].keys():
+#                     graphData[links_key][i].pop(each_key)
     
-    # reactforcegraph substitutes the whole node object for the id upon render; reverse this for consistency
-    if len(graphData[links_key])>0:
-        for i in range(len(graphData[links_key])):
-            print("")
-            print('graphData[links_key][i]')
-            print(graphData[links_key][i])
-            # print(graphData[links_key][i]["source"])
-            if type(graphData[links_key][i]["source"]) == dict:
-                graphData[links_key][i]["source"] = graphData[links_key][i]["source"]["__nodeId"]
-            if type(graphData[links_key][i]["target"]) == dict:
-                graphData[links_key][i]["target"] = graphData[links_key][i]["target"]["__nodeId"]
+#     # reactforcegraph substitutes the whole node object for the id upon render; reverse this for consistency
+#     if len(graphData[links_key])>0:
+#         for i in range(len(graphData[links_key])):
+#             print("")
+#             print('graphData[links_key][i]')
+#             print(graphData[links_key][i])
+#             # print(graphData[links_key][i]["source"])
+#             if type(graphData[links_key][i]["source"]) == dict:
+#                 graphData[links_key][i]["source"] = graphData[links_key][i]["source"]["__nodeId"]
+#             if type(graphData[links_key][i]["target"]) == dict:
+#                 graphData[links_key][i]["target"] = graphData[links_key][i]["target"]["__nodeId"]
     
-    return graphData
+#     return graphData
 
 
 # with open('/Users/rkm916/Documents/data_roles.json', 'r') as f:
@@ -110,7 +116,21 @@ graphData = {
     }
 
 app.layout = html.Div([
+
     html.Br(),
+    dbc.Input(
+        id="input-zoom",
+        placeholder="zoom"
+    ),
+    dbc.Input(
+        id="input-pan-x",
+        placeholder="x"
+    ),
+    dbc.Input(
+        id="input-pan-y",
+        placeholder="y"
+    ),
+    dbc.Button("apply", id="button-zoom-pan-apply"),
     dcc.Dropdown(
         id="dropdown-type",
         placeholder="__thingType",
@@ -212,11 +232,34 @@ app.layout = html.Div([
     html.Br(),
     html.Div(id='output-nodeRightClicked-2D'),
 
+
 ])
 
 
 
-# CALLBACKS 
+
+@app.callback(
+    Output("graph2D","newZoomPan"),
+    [Input("button-zoom-pan-apply", "n_clicks")],
+    [
+        State("input-zoom", "value"),
+        State("input-pan-x", "value"),
+        State("input-pan-y", "value")
+    ], disable_initial_call=True
+)
+def zoom_pan(n_clicks, zoom, x, y):
+    if not all([n_clicks, zoom, x, y]):
+        raise PreventUpdate
+    return {"k":zoom, "x":x, "y":y}
+
+# @app.callback(
+#     Output('output-currentZoomPan',"children"),
+#     Input("graph2D", "currentZoomPan")
+# )
+# def update_currentZoomPan(currentZoomPan):
+#     print(f"currentZoomPan: {currentZoomPan}")
+#     return currentZoomPan
+
 
 @app.callback(
     [
@@ -370,17 +413,22 @@ def update_graphdata(
 
     print("")
     print("received graphData: {} ".format(graphData))
-
-    graphData = rm_graphData_render_data(graphData, graph_lib="2D", coordinates_rm=[])
+    
+    graphData["links"] = reset_link_source_target(graphData["links"])
+    # graphData = rm_graphData_render_data(graphData, graph_lib="2D", coordinates_rm=[])
 
     if trigger_id == "button-add":
-        newNodeId = max([int(node["__nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1
-        newNode = {"__nodeId":newNodeId, "__nodeLabel":"new_node_{}".format(newNodeId), "__nodeColor":"orange", "__thingType":"TBC"}
+        newNodeId = str(max([int(node["__nodeId"]) for node in graphData["nodes"]])+1 if len(graphData["nodes"]) else 1)
+        newNode = {"__nodeId":newNodeId, "__nodeLabel":"new_node_{}".format(newNodeId), "__nodeColor":"orange", "__thingType":"TBC", "__rootType":"entity"}
 
         if len(graphData["nodes"]):
             ridx =  random.randrange(len(graphData["nodes"]))
             newLinkId = max([int(link["id"]) for link in graphData["links"]])+1 if len(graphData["links"]) else 1
             newLink = {"id":newLinkId, "source":newNode["__nodeId"], "target": graphData["nodes"][ridx]["__nodeId"], "label":"new_link_{}".format(newLinkId)}
+            print("graphData['links'][0]")
+            print(graphData['links'][0])
+            print("newLink")
+            print(newLink)
             graphData["links"].append(newLink)
 
         graphData["nodes"].append(newNode)

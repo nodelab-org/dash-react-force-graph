@@ -96,6 +96,7 @@ const objSharedProps = {
     centerAt: null,// to call the centerAt method, pass a list or tuple ([x], [y], [ms]) (TODO)
     zoom: null, // to call the zoom method, pass a list or tuple ([number], [ms])
     zoomToFit: null,// to call the zoomToFit method, pass a list or tuple ([ms], [px], [nodeFilterFn])
+    backgroundRightClickScreenCoords:null,
     cameraPosition:	null, // 3D
     // scene: // TODO method
     // camera: // TODO method
@@ -192,6 +193,9 @@ const objSharedProps = {
     sortRoleplayers1Descend: false,
     sortRoleplayers2Descend: false,
     nodesSelected: [],
+    linksSelected: [],
+    nodeIdsInvisibleAuto: [],
+    linkIdsInvisibleAuto: [],
     // nodeIdsDrag: [],
     // nodeClicked: null,
     // nodeClickedViewpointCoordinates:null,
@@ -211,8 +215,9 @@ const objSharedProps = {
     linkIdsInvisibleUser: [],
     externalobject_source: null,
     externalobject_input: null,
+    // "addNodeNeighbours": true,
     // centreCoordinates: {x:300, y:300, z:300}, // just initial values
-    useCoordinates: false,
+    "useCoordinates": false,
     "pixelUnitRatio": null,
     "showCoordinates": null,
     "gravity": null,
@@ -243,6 +248,7 @@ const objSharedProps = {
         "__source",
         "__target",
         "__sub",
+        "__super",
         "__plays",
         "__relates",
         "__owns",
@@ -250,6 +256,8 @@ const objSharedProps = {
         "__related_by",
         "__scope",
         "__owns@key",
+        "__owned_by",
+        "__owned_by @key",
         "__indexColor",
         "index",
         "x",
