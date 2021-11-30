@@ -33,13 +33,14 @@ const objSharedProps = {
     */
     // props
     nodeRelSize: 5,
-    nodeIconRelSize: 12,
-    nodeImgRelSize: 12,
+    nodeIconRelSize: 12.5,
+    nodeImgRelSize: 12.5,
     nodeVal:"__nodeVal",
     nodeLabel: "__nodeLabel",
     // nodeDesc: "desc" // VR only
     // nodeVisibility: True // not exposed, use nodeIdsVisible prop instead
     nodeColor: "__nodeColor",
+    nodeTextColor: "#000000",
     nodeTextAutoColor: true,
     nodeAutoColorBy: null,
     nodeOpacity:0.75, // 3D, VR, AR only
@@ -63,7 +64,7 @@ const objSharedProps = {
     linkLineDash: null, // falsy value disables dashing
     linkWidth:1,
     linkResolution: 6,
-    // linkCurvature: 0,
+    linkCurvature: 0.0,
     // linkCurveRotation: 0, // 3D, VR, AR,
     // linkMaterial: null, // 3D, VR, AR, not exposed
     // linkCanvasObject: null // 2D, not exposed
@@ -71,9 +72,9 @@ const objSharedProps = {
     // linkThreeObject: null // 3D, VR, AR, not exposed
     // linkThreeObjectExtend:true, // 3D, VR, AR, not exposed
     // linkPositionUpdate: null, // function, not exposed
-    // linkDirectionalArrowLength:3,
-    // linkDirectionalArrowColor:"color",
-    // linkDirectionalArrowRelPos:0.95,
+    linkDirectionalArrowLength:3,
+    linkDirectionalArrowColor:"color",
+    linkDirectionalArrowRelPos:0.80,
     // linkDirectionalArrowResolution: 8, // 3D, VR, AR
     linkDirectionalParticles: 0,
     linkDirectionalParticleSpeed: 0.01,
@@ -111,7 +112,7 @@ const objSharedProps = {
     // props
 
     numDimensions: 3, // 3D, VR, AR
-    // forceEngine: "d3",
+    forceEngine: "d3",
     // dagMode: null,
     // dagModeOn: false,
     // dagLevelDistance: null,
@@ -196,11 +197,13 @@ const objSharedProps = {
     linksSelected: [],
     nodeIdsInvisibleAuto: [],
     linkIdsInvisibleAuto: [],
+    minZoom: 0.1,
+    maxZoom: 10,
     // nodeIdsDrag: [],
     // nodeClicked: null,
     // nodeClickedViewpointCoordinates:null,
     // nodeRightClicked: null,
-    // nodeRightClickedViewpointCoordinates:null,
+    nodeRightClickedViewpointCoordinates:{},
     // nodeHovered: null,
     // nodeHoveredViewpointCoordinates:null,
     // linkClicked:null,
@@ -220,56 +223,22 @@ const objSharedProps = {
     "useCoordinates": false,
     "pixelUnitRatio": null,
     "showCoordinates": null,
-    "gravity": null,
+    // "gravity": null,
     "invisibleProps": [
-        "__rootType",
-        "__thingType",
-        "__nodeId",
-        "__abstract",
-        "__is_inferred",
-        "__value",
-        "__nodeLabel",
-        "__nodeColor",
-        "__nodeAutoColorBy",
-        "__nodeVal",
-        "__nodeIcon",
-        "__nodeImg",
-        "__nodeURL",
-        "__nodeAttachment",
-        "__nodeBody",
-        "__nodeLabelAttribute",
-        "__nodeColorAttribute",
-        "__nodeIconAttribute",
-        "__nodeImgAttribute",
-        "__nodeValAttribute",
-        "__nodeURLAttribute",
-        "__nodeAttachmentAttribute",
-        "__nodeBodyAttribute",
-        "__source",
-        "__target",
-        "__sub",
-        "__super",
-        "__plays",
-        "__relates",
-        "__owns",
-        "__played_by",
-        "__related_by",
-        "__scope",
-        "__owns@key",
-        "__owned_by",
-        "__owned_by @key",
-        "__indexColor",
+        "iid",
         "index",
         "x",
         "y",
         "fx",
         "fy",
         "vx",
-        "vy",
-        "__depth",
-        "__lateral_rank"
+        "vy"
     ],
-    "maxDepth_neighbours_select": 4
+    "updateNeighbours": true,
+    "forceRefresh": 0,
+    "n_rightClicks": 0,
+    "maxDepth_neighbours_select": 4,
+    
 };
 
 export default objSharedProps;

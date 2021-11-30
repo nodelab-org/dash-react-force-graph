@@ -20,7 +20,7 @@ import objSharedProps from "../shared_props_defaults.js"
 import SpriteText from 'three-spritetext';
 import * as THREE from 'THREE';
 import {CSS2DRenderer, CSS2DObject} from 'three-css2drender'
-import ThreeGeo from 'three-geo';
+// import ThreeGeo from 'three-geo';
 // import * as material_UI from '@material-ui/icon_fontsheets'; // doesn't work: Module not found: Error: Can't resolve '@material-ui/icon_fontsheets' in '/Users/rkm916/Sync/projects/2020-dashforcegraph/src/lib/components'
 // see https://stackoverflow.com/questions/42051588/wildcard-or-asterisk-vs-named-or-selective-import-es6-javascript
 

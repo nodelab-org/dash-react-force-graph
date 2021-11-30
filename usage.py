@@ -1,11 +1,13 @@
 import dash
 import dash_core_components as dcc
 import dash_react_force_graph
+from dash_react_font_awesome_icon_picker import DashIconPicker
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 import dash_html_components as html
 from dash_react_font_awesome_icon_picker import iconPicker
+from fa5_cheatsheet import dict_fa5_cheatsheet
 # import dash_core_components as dcc
 import random
 
@@ -78,8 +80,8 @@ def reset_link_source_target(links):
 # print(json.dumps(graphData,indent=3))
 graphData = {
     "nodes":[
-        {"__nodeId":"1",  "is_inferred":False, "name": "Joe Benson", "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
-        {"__nodeId":"2", "is_inferred":False,  "name": "Daniella M", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
+        {"__nodeId":"1",  "is_inferred":False, "name": "Joe Benson", "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Joe. I am 55 years old and enjoy nature and working. My weakness? I am rather longwinded. This is to be expected, since I have a big mouth."},
+        {"__nodeId":"2", "is_inferred":False,  "name": "Daniella M", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Daniella. I am 61 years old and enjoy brisk runs. That and watching old Friends episodes."},
         {"__nodeId":"3", "is_inferred":False, "name": "Susan T", "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
         {"__nodeId":"4", "is_inferred":False, "name": "Ed Smith",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
         {"__nodeId":"5",  "is_inferred":False, "name": "Chevron", "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200", "__thingType":"corporation", "__rootType":"entity"},
@@ -115,137 +117,214 @@ graphData = {
         ]#
     }
 
-app.layout = html.Div([
-
-    html.Br(),
-    dbc.Input(
-        id="input-zoom",
-        placeholder="zoom"
-    ),
-    dbc.Input(
-        id="input-pan-x",
-        placeholder="x"
-    ),
-    dbc.Input(
-        id="input-pan-y",
-        placeholder="y"
-    ),
-    dbc.Button("apply", id="button-zoom-pan-apply"),
-    dcc.Dropdown(
-        id="dropdown-type",
-        placeholder="__thingType",
-        options=[]
-    ),
-    iconPicker(
-        id='iconPicker',
-        value='FaCircle',
-        hideSearch=False,
-    ),
-    dcc.Dropdown(
-        placeholder ="invisible nodes",
-        id="dropdown-nodeIdsInvisibleUser",
-        options=[],
-        multi=True
-    ),
-    dcc.Dropdown(
-        placeholder="invisible links",
-        id="dropdown-linkIdsInvisibleUser",
-        options=[],
-        multi=True
-    ),
-    html.Button("add random node", id="button-add"),
-    html.Button("delete random node", id="button-delete"),
-    
-    dash_react_force_graph.Graph2D(
-        id='graph2D',
-        graphData=graphData,
-        heightRatio=0.8,
-        nodeId="__nodeId",
-        nodeLabel="__nodeLabel",
-        nodeColor="__nodeColor",
-        nodeIcon="__nodeIcon",
-        nodeImg="__nodeImg",
-        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"}
-    ),
-    html.Label("sortRelsBy1"),
-    dcc.Dropdown(
-        id="dropdown-sortRelsBy1",
-        options=[
-            {"label":"__nodeLabel", "value":"__nodeLabel"},
-            {"label":"__nodeId", "value":"__nodeId"},
+app.layout = dbc.Container(
+    fluid=True,
+    children=[
+        dbc.Container(
+            children=[
+                dbc.Row(
+                    children=[
+                        dbc.Col([
+                            dbc.InputGroup([
+                                dbc.Input(
+                                    id="input-zoom",
+                                    placeholder="zoom"
+                                ),
+                                dbc.Input(
+                                    id="input-pan-x",
+                                    placeholder="pan x"
+                                ),
+                                dbc.Input(
+                                    id="input-pan-y",
+                                    placeholder="pan y"
+                                ),
+                                dbc.Button("apply zoom/pan", id="button-zoom-pan-apply"),
+                            ])
+                        ]
+                        )
+                    ]
+                ),
+                dbc.Row(
+                    children=[
+                        dbc.Col([
+                            dbc.InputGroup([
+                                dbc.Select(
+                                    id="dropdown-type",
+                                    placeholder="thingType",
+                                    options=[])
+                                ]),
+                                dbc.Button("repopulate", id="button-repopulate-dropdown-type"),
+                                DashIconPicker(
+                                    id='iconPicker',
+                                    value='FaCircle',
+                                    hideSearch=False,
+                                ),
+                            ])
+                    ]
+                ),
+                dbc.Row(
+                    children=[
+                        dbc.Col([
+                            dcc.Dropdown(
+                                placeholder ="invisible nodes",
+                                id="dropdown-nodeIdsInvisibleUser",
+                                options=[],
+                                multi=True
+                            )
+                        ]),
+                        dbc.Col([
+                            dcc.Dropdown(
+                                placeholder="invisible links",
+                                id="dropdown-linkIdsInvisibleUser",
+                                options=[],
+                                multi=True
+                            ),
+                        ]),
+                    ]
+                ),
+                dbc.Row(
+                    children=[
+                        dbc.Col([
+                            dbc.ButtonGroup(
+                                size="sm",
+                                children=[
+                                    html.Button("add random node", id="button-add"),
+                                    html.Button("delete random node", id="button-delete"),
+                                ]
+                            )
+                        ]),
+                    ]
+                )
+            ]
+        ),
+        dbc.Container([
+            dbc.Row([
+                dbc.Col([
+                    dash_react_force_graph.Graph2D(
+                        id='graph2D',
+                        graphData=graphData,
+                        heightRatio=0.8,
+                        nodeId="__nodeId",
+                        nodeLabel="__nodeLabel",
+                        nodeColor="__nodeColor",
+                        nodeIcon="__nodeIcon",
+                        nodeImg="__nodeImg",
+                        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
+                        backgroundColor="#030039"
+                    ),
+                ])
+            ])
         ]),
-    html.Label("sortRelsBy2"),
-    dcc.Dropdown(
-        id="dropdown-sortRelsBy2",
-        options=[
-            {"label":"__nodeLabel", "value":"__nodeLabel"},
-            {"label":"__nodeId", "value":"__nodeId"},
-        ]),
-    html.Label("sortRoleplayersBy1"),
-    dcc.Dropdown(
-        id="dropdown-sortRoleplayersBy1",
-        options=[
-            {"label":"__nodeLabel", "value":"__nodeLabel"},
-            {"label":"__nodeId", "value":"__nodeId"},
-        ]),
-    html.Label("sortRoleplayersBy2"),
-    dcc.Dropdown(
-        id="dropdown-sortRoleplayersBy2",
-        options=[
-            {"label":"__nodeLabel", "value":"__nodeLabel"},
-            {"label":"__nodeId", "value":"__nodeId"},
-        ]),
-    html.Label("sortRels1Descend"),
-    dcc.Dropdown(
-        id="dropdown-sortRels1Descend",
-        options=[
-            {"label":"True", "value":"True"},
-            {"label":"False", "value":"False"},
-        ]),
-    html.Label("sortRels2Descend"),
-    dcc.Dropdown(
-        id="dropdown-sortRels2Descend",
-        options=[
-            {"label":"True", "value":"True"},
-            {"label":"False", "value":"False"},
-        ]),
-    html.Label("sortRoleplayers1Descend"),
-    dcc.Dropdown(
-        id="dropdown-sortRoleplayers1Descend",
-        options=[
-            {"label":"True", "value":"True"},
-            {"label":"False", "value":"False"},
-        ]),
-    html.Label("sortRoleplayers2Descend"),
-    dcc.Dropdown(
-        id="dropdown-sortRoleplayers2Descend",
-        options=[
-            {"label":"True", "value":"True"},
-            {"label":"False", "value":"False"},
-        ]),
-    html.Br(),
-    html.Div(id='output-nodeClicked-2D'),
-    html.Br(),
-    html.Div(id='output-nodesSelected-2D'),
-    html.Br(),
-    html.Div(id='output-linksSelected-2D'),
-    html.Br(),
-    html.Div(id='output-nodeRightClicked-2D'),
-
-
-])
-
-
+        dbc.Container([
+            dbc.Row([
+                dbc.Col([
+                    dbc.Select(
+                        placeholder="sort rels by 1",
+                        id="dropdown-sortRelsBy1",
+                        options=[
+                            {"label":"__nodeLabel", "value":"__nodeLabel"},
+                            {"label":"__nodeId", "value":"__nodeId"},
+                    ]),
+                ]),
+                dbc.Col([
+                    dbc.Select(
+                        placeholder="sort rels by 2",
+                        id="dropdown-sortRelsBy2",
+                        options=[
+                            {"label":"__nodeLabel", "value":"__nodeLabel"},
+                            {"label":"__nodeId", "value":"__nodeId"},
+                    ]),
+                ]),
+                dbc.Col([
+                    dbc.Select(
+                        placeholder="sort roleplayers by 1",
+                        id="dropdown-sortRoleplayersBy1",
+                        options=[
+                            {"label":"__nodeLabel", "value":"__nodeLabel"},
+                            {"label":"__nodeId", "value":"__nodeId"},
+                        ]),
+                ]),
+                dbc.Col([
+                    dbc.Select(
+                        placeholder="sort roleplayers by 2",
+                        id="dropdown-sortRoleplayersBy2",
+                        options=[
+                            {"label":"__nodeLabel", "value":"__nodeLabel"},
+                            {"label":"__nodeId", "value":"__nodeId"},
+                        ]),
+                ]),
+                dbc.Col([
+                    dbc.Select(
+                        placeholder="sort rels 1 descend",
+                        id="dropdown-sortRels1Descend",
+                        options=[
+                            {"label":"True", "value":"True"},
+                            {"label":"False", "value":"False"},
+                        ]),
+                ]),
+                dbc.Col([
+                    dbc.Select(
+                        placeholder="sort rels 2 descend",
+                        id="dropdown-sortRels2Descend",
+                        options=[
+                            {"label":"True", "value":"True"},
+                            {"label":"False", "value":"False"},
+                        ]),
+                ]),
+                dbc.Col([
+                    dbc.Select(
+                        placeholder="sort rps 1 descend",
+                        id="dropdown-sortRoleplayers1Descend",
+                        options=[
+                            {"label":"True", "value":"True"},
+                            {"label":"False", "value":"False"},
+                        ]),
+                ]),
+                dbc.Col([
+                    dbc.Select(
+                        placeholder="sort rps 2 descend",
+                        id="dropdown-sortRoleplayers2Descend",
+                        options=[
+                            {"label":"True", "value":"True"},
+                            {"label":"False", "value":"False"},
+                    ]),
+                ]),
+            ]),
+            dbc.Row([
+                dbc.Col([
+                    html.H6("nodeRightClicked"),
+                    html.Div(id='output-nodeRightClicked-2D'),
+                ]),
+            ]),
+            dbc.Row([
+                dbc.Col([
+                    html.H6("nodesSelected"),
+                    html.Div(id='output-nodesSelected-2D'),
+                ]),
+            ]),
+            dbc.Row([
+                dbc.Col([
+                    html.H6("linksSelected"),
+                    html.Div(id='output-linksSelected-2D'),
+                ]),
+            ]),
+        ]
+        )
+    ]
+)
 
 
 @app.callback(
     Output("graph2D","newZoomPan"),
-    [Input("button-zoom-pan-apply", "n_clicks")],
+    [
+        Input("button-zoom-pan-apply", "n_clicks")
+    ],
     [
         State("input-zoom", "value"),
         State("input-pan-x", "value"),
         State("input-pan-y", "value")
-    ], disable_initial_call=True
+    ], 
+    disable_initial_call=True
 )
 def zoom_pan(n_clicks, zoom, x, y):
     if not all([n_clicks, zoom, x, y]):
@@ -352,26 +431,20 @@ def sort_rps_2_desc(value):
 
 @app.callback(
 [
-    # Output('output-nodeHovered-2D', 'children'),
-    Output('output-nodeClicked-2D',  'children'),
     Output('output-nodesSelected-2D',  'children'),
     Output('output-linksSelected-2D',  'children'),
     Output('output-nodeRightClicked-2D',  'children'),
 ],
 [
-    # Input('graph2D', 'nodeHovered'),
-    Input('graph2D', 'nodeClicked'),
     Input('graph2D', 'nodesSelected'),
     Input('graph2D', 'linksSelected'),
     Input('graph2D', 'nodeRightClicked'),
 ])
 def display_clicked_selected_nodes_2D(
-    nodeClicked,
     nodesSelected,
     linksSelected,
     nodeRightClicked):
         return [
-        "clicked node: {}".format(nodeClicked),
         "selected nodes: {}".format(nodesSelected),
         "selected links: {}".format(linksSelected),
         "rightclicked node: {}".format(nodeRightClicked),
@@ -381,13 +454,50 @@ def display_clicked_selected_nodes_2D(
 
 @app.callback(
     Output("dropdown-type","options"),
-    Input("graph2D","graphData")
+    Input("button-repopulate-dropdown-type", "n_clicks"),
+    State("graph2D","graphData")
 )
-def populate_dropdown_type(graphData):
-    return [{"label":thingType, "value":thingType} for thingType in set([node["__thingType"] for node in graphData["nodes"]])]
+def populate_dropdown_type(n_clicks, graphdata):
+    ctx = dash.callback_context
+    if not ctx.triggered:
+        raise PreventUpdate
+    else:
+        trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
+    
+    print("populate_dropdown_type")
+    
+    return [
+        {"label":thingType, "value":thingType} for thingType in set([node["__thingType"] for node in graphdata["nodes"]])
+        ] if graphdata and graphdata["nodes"]  else []
 
 
-@app.callback(Output('graph2D', 'graphData'),
+# @app.callback(
+#     Output("select-node-for-icon-update", "options"),
+#     Input("graph2D", "graphData")
+# )
+# def populate_select_node_for_icon_update(graphData):
+    
+#     return [
+#         {"value":node["__nodeId"], "label":node["__nodeLabel"]} for node in graphData["nodes"]
+#     ] if graphData and len(graphData["nodes"]) else []
+
+
+# @app.callback(
+#     Output("graph2D","graphData"),
+
+#     State("graph2D","graphData")
+# )
+# def update_node_icon(
+
+#     ):
+#     pass
+
+
+@app.callback(
+    [
+        Output('graph2D', 'graphData'),
+        Output('graph2D', 'forceRefresh')
+    ],
     [
         Input('button-add', 'n_clicks'),
         Input('button-delete', 'n_clicks'),
@@ -395,14 +505,16 @@ def populate_dropdown_type(graphData):
     ],
     [
         State("dropdown-type","value"),
-        State("graph2D","graphData")
+        State("graph2D","graphData"),
+        State('graph2D', 'forceRefresh')
     ])
 def update_graphdata(
     n_clicks_add, 
     n_clicks_delete, 
     icon, 
     thingType_selected,
-    graphData
+    graphData,
+    previousForceRefreshCount
     ):
     ctx = dash.callback_context
 
@@ -410,10 +522,12 @@ def update_graphdata(
         raise PreventUpdate
     else:
         trigger_id = ctx.triggered[0]["prop_id"].split(".")[0]
-
+    
     print("")
     print("received graphData: {} ".format(graphData))
-    
+    if previousForceRefreshCount == None:
+        previousForceRefreshCount = 0
+    forceRefreshCount = dash.no_update
     graphData["links"] = reset_link_source_target(graphData["links"])
     # graphData = rm_graphData_render_data(graphData, graph_lib="2D", coordinates_rm=[])
 
@@ -447,11 +561,11 @@ def update_graphdata(
         # set icon
         for node in graphData["nodes"]:
             if node["__thingType"]==thingType_selected:
-                pass
-
+                node["__nodeIcon"] = dict_fa5_cheatsheet[icon]
+        forceRefreshCount = previousForceRefreshCount + 1
     print("")
     print("returning graphData: {} ".format(graphData))
-    return graphData
+    return [graphData, forceRefreshCount]
 
 
 
