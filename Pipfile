@@ -7,7 +7,6 @@ name = "pypi"
 dash = "==1.19.0"
 pyyaml = "*"
 dash-bootstrap-components = "*"
-dash-react-font-awesome-icon-picker = {path = "./../dash_react_font_awesome_icon_picker/dist/dash_react_font_awesome_icon_picker-0.0.1-py3-none-any.whl"}
 
 [requires]
 python_version = "3.5"
