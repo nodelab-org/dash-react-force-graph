@@ -386,6 +386,7 @@ function Graph2D (props) {
 
 
     const reheatFunction = () => {
+        console.log("reheatFunction fired")
 
         if (nodeZoomId) {
 
@@ -667,7 +668,7 @@ function Graph2D (props) {
 
                     if (props.nodeZoomId) {
 
-                        console.log("incrementing refreshNodeZoom")
+                        console.log("incrementing refreshNodeZoom");
 
                         setRefreshNodeZoom((rnz) => rnz + 1);
 
@@ -917,7 +918,7 @@ function Graph2D (props) {
                             nTargetSource,
                             nSource,
                             2
-                        ) - 1) * marYMin //+ targetNodeObjs.length/2;
+                        ) - 1) * marYMin; //+ targetNodeObjs.length/2;
                     // const yMin = nodeZoom.y - height / 2;
                     const yMin = nodesByIdNew[nodeZoomId].fy - height / 2;
 
@@ -1173,9 +1174,9 @@ function Graph2D (props) {
                     : []);
 
                 console.log("nodeZoomId")
-                console.log(deepCopy(nodeZoomId))
+                console.log(cloneDeep(nodeZoomId))
                 console.log("props.nodeZoomId")
-                console.log(deepCopy(props.nodeZoomId))
+                console.log(cloneDeep(props.nodeZoomId))
                 if (nodeZoomId !== props.nodeZoomId) {
                     console.log("setProps: nodeZoomId (line 1140)");
                     props.setProps({"nodeZoomId": nodeZoomId});
@@ -1588,7 +1589,7 @@ function Graph2D (props) {
 
                     // Clicking already selected node with no key -> node zoom
                     if (nodeZoomId !== node[props.nodeId]) {
-                        
+
                         console.log("setting nodeZoomId")
 
                         setNodeZoomId(node[props.nodeId]);
