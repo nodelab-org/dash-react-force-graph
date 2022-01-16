@@ -1100,6 +1100,7 @@ function Graph2D (props) {
                     graphDataNodes.every((node) => node[props.nodeId] in nodePreviousFCoordinatesById)) {
 
                     console.log("nodeZoomId useEffect: block 3. Revert to nodePreviousFCoordinatesById");
+
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
                         [
@@ -1144,7 +1145,7 @@ function Graph2D (props) {
                     ? props.graphData.links.map((link) => link[props.linkId]).filter((linkId) => !linkIdsVisibleNew.includes(linkId))
                     : []);
 
-                if (props.nodeZoomId && nodeZoomId && nodeZoomId !== props.nodeZoomId) {
+                if (nodeZoomId && nodeZoomId !== props.nodeZoomId) {
                     console.log("setProps: nodeZoomId (line 1140)");
                     props.setProps({"nodeZoomId": nodeZoomId});
 
