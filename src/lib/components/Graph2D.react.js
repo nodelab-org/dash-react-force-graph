@@ -665,13 +665,26 @@ function Graph2D (props) {
 
                     if (props.nodeZoomId) {
 
-                        console.log("incrementing refreshNodeZoom");
+                        if (props.nodeZoomId === nodeZoomId) {
 
-                        setRefreshNodeZoom((rnz) => rnz + 1);
+                            console.log("incrementing refreshNodeZoom");
+
+                            setRefreshNodeZoom((rnz) => rnz + 1);
+
+
+                        } else {
+
+                            setNodeZoomId(props.nodeZoomId);
+
+                        }
+
+
+
+                    } else {
+
+                        fgRef.current.d3ReheatSimulation();
 
                     }
-
-                    fgRef.current.d3ReheatSimulation();
 
                 }
 
@@ -2018,19 +2031,19 @@ function Graph2D (props) {
     [props.linkIdsHighlightUser]
     );
 
-    useEffect(
+    // useEffect(
 
-        () => {
+    //     () => {
 
-            if (props.nodeZoomId !== nodeZoomId) {
+    //         if (props.nodeZoomId !== nodeZoomId) {
 
-                setNodeZoomId(props.nodeZoomId);
+    //             setNodeZoomId(props.nodeZoomId);
 
-            }
+    //         }
 
-        },
-        [props.nodeZoomId]
-    );
+    //     },
+    //     [props.nodeZoomId]
+    // );
 
 
     // useEffect(() => {
