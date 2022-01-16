@@ -1056,7 +1056,9 @@ function Graph2D (props) {
 
                     setNodesById((_nbid) => nodesByIdNew);
 
-                } else if (props.useCoordinates && props.nodeCoordinates) {
+                } else if (
+                    props.useCoordinates && props.nodeCoordinates
+                ) {
 
                     console.log("nodeZoomId useEffect: block 2. Reset to nodeCoordinates")
 
@@ -1098,7 +1100,15 @@ function Graph2D (props) {
 
                     }));
 
-                    zoomToFitFunction();
+                    if (fgRef.current) {
+
+                        fgRef.current.zoomToFit(
+                            250,
+                            10,
+                            (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
+                        )
+                        
+                    }
 
                 } else if (nodePreviousFCoordinatesById &&
                     Object.keys(nodePreviousFCoordinatesById).length &&
@@ -1117,7 +1127,13 @@ function Graph2D (props) {
 
                     }));
 
-                    zoomToFitFunction();
+                    if (fgRef.current) {
+                        fgRef.current.zoomToFit(
+                            250,
+                            10,
+                            (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
+                        )
+                    }
 
                 } else {
 
@@ -1138,7 +1154,13 @@ function Graph2D (props) {
 
                     props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 7000)});
                     fgRef.current.d3ReheatSimulation();
-                    zoomToFitFunction();
+                    if (fgRef.current) {
+                        fgRef.current.zoomToFit(
+                            250,
+                            10,
+                            (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
+                        )
+                    }
 
                 }
 
@@ -1150,6 +1172,10 @@ function Graph2D (props) {
                     ? props.graphData.links.map((link) => link[props.linkId]).filter((linkId) => !linkIdsVisibleNew.includes(linkId))
                     : []);
 
+                console.log("nodeZoomId")
+                console.log(deepCopy(nodeZoomId))
+                console.log("props.nodeZoomId")
+                console.log(deepCopy(props.nodeZoomId))
                 if (nodeZoomId !== props.nodeZoomId) {
                     console.log("setProps: nodeZoomId (line 1140)");
                     props.setProps({"nodeZoomId": nodeZoomId});
