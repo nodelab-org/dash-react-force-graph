@@ -479,14 +479,11 @@ function Graph2D (props) {
                     props.forceRefresh > forceRefreshCount
                 ) {
 
-                    setGraphDataIdsAll((_gDataIdsAll) => {
+                    setGraphDataIdsAll((_gDataIdsAll) => ({
+                        "links": linkIdsAllNew,
+                        "nodes": nodeIdsAllNew
+                    }));
 
-                        return {
-                            "links": linkIdsAllNew,
-                            "nodes": nodeIdsAllNew
-                        };
-
-                    });
 
                     const nodesClone = cloneDeep(props.graphData.nodes);
 
@@ -775,7 +772,7 @@ function Graph2D (props) {
                     ];
 
                     console.log("this is nodeZoom");
-                    console.log(nodesByIdNew[nodeZoomId]);
+                    console.log(cloneDeep(nodesByIdNew[nodeZoomId]));
 
                     nodesByIdNew[nodeZoomId].fx = "x" in nodesByIdNew[nodeZoomId]
                         ? nodesByIdNew[nodeZoomId].x
@@ -1031,8 +1028,6 @@ function Graph2D (props) {
 
                         if (nodeIdsVisibleNew.includes(node[props.nodeId])) {
 
-                            console.log(node);
-
                             node.fx = nodesByIdNew[node[props.nodeId]].fx;
                             node.fy = nodesByIdNew[node[props.nodeId]].fy;
 
@@ -1068,6 +1063,11 @@ function Graph2D (props) {
                     console.log("props.nodeZoomId (should be the old nodeZoomId)")
                     console.log(props.nodeZoomId)
 
+                    console.log("cloneDeep(graphDataNodes before setting coordinates)")
+                    console.log(cloneDeep(graphDataNodes))
+                    console.log("cloneDeep(props.graphData.links)")
+                    console.log(cloneDeep(props.graphData.links))
+
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
                         const [
@@ -1100,6 +1100,10 @@ function Graph2D (props) {
                         return node;
 
                     }));
+
+
+                    console.log("cloneDeep(graphDataNodes) after setting coordinates")
+                    console.log(cloneDeep(graphDataNodes))
 
                     if (fgRef.current) {
 
