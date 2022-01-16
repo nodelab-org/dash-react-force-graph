@@ -1060,6 +1060,11 @@ function Graph2D (props) {
 
                     console.log("nodeZoomId useEffect: block 2. Reset to nodeCoordinates")
 
+                    console.log("nodeZoomId (should be null!)")
+                    console.log(nodeZoomId)
+                    console.log("props.nodeZoomId (should be the old nodeZoomId)")
+                    console.log(props.nodeZoomId)
+
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
                         const [
