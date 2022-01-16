@@ -1145,7 +1145,7 @@ function Graph2D (props) {
                     ? props.graphData.links.map((link) => link[props.linkId]).filter((linkId) => !linkIdsVisibleNew.includes(linkId))
                     : []);
 
-                if (nodeZoomId && nodeZoomId !== props.nodeZoomId) {
+                if (nodeZoomId !== props.nodeZoomId) {
                     console.log("setProps: nodeZoomId (line 1140)");
                     props.setProps({"nodeZoomId": nodeZoomId});
 
