@@ -2829,25 +2829,25 @@ function Graph2D (props) {
                     // onLinkCenterHover // not exposed
                     onBackgroundClick={handleBackgroundClick}
                     onBackgroundRightClick={handleBackgroundRightClick}
-                    onZoom={(_args) => {
-                        if (
-                            props.linkRightClicked ||
-                            props.linkRightClickedViewpointCoordinates ||
-                            props.nodeClicked ||
-                            props.nodeRightClicked || 
-                            props.nodeRightClickedViewpointCoordinates
-                            ) {
-                            console.log("onZoom")
-                            props.setProps({
-                                // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
-                                "linkRightClicked": null,
-                                "linkRightClickedViewPointCoordinates":null,
-                                "nodeClicked":null,
-                                "nodeRightClicked": null,
-                                "nodeRightClickedViewpointCoordinates": null
-                            });
-                        }
-                    }}
+                    // onZoom={(_args) => {
+                    //     if (
+                    //         props.linkRightClicked ||
+                    //         props.linkRightClickedViewpointCoordinates ||
+                    //         props.nodeClicked ||
+                    //         props.nodeRightClicked || 
+                    //         props.nodeRightClickedViewpointCoordinates
+                    //         ) {
+                    //         console.log("onZoom")
+                    //         props.setProps({
+                    //             // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
+                    //             "linkRightClicked": null,
+                    //             "linkRightClickedViewPointCoordinates":null,
+                    //             "nodeClicked":null,
+                    //             "nodeRightClicked": null,
+                    //             "nodeRightClickedViewpointCoordinates": null
+                    //         });
+                    //     }
+                    // }}
                     onZoomEnd={(args) => {
                         if (args && 
                             ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
