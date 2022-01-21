@@ -5,8 +5,8 @@ using Dash
 const resources_path = realpath(joinpath( @__DIR__, "..", "deps"))
 const version = "0.0.1"
 
-include("dash_graph2d.jl")
-include("dash_graph3d.jl")
+include("jl/dash_graph2d.jl")
+include("jl/dash_graph3d.jl")
 
 function __init__()
     DashBase.register_package(

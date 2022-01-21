@@ -300,7 +300,6 @@ function Graph2D (props) {
             if (!props.useCoordinates &&
                 props.forceEngine === "d3" &&
                 props.graphData &&
-                "nodes" in props.graphData &&
                 props.graphData.nodes.length) {
 
                 if (props.fixNodes &&
@@ -438,7 +437,6 @@ function Graph2D (props) {
         () => {
 
             if (props.graphData &&
-                "nodes" in props.graphData &&
                 (props.graphData.nodes.length ||
                     graphDataNodes.length)) {
 
@@ -487,10 +485,10 @@ function Graph2D (props) {
 
                     const nodesClone = cloneDeep(props.graphData.nodes);
 
-                    if ((props.linksSelected && props.linksSelected.length) ||
+                    if (("linksSelected" in props && props.linksSelected.length) ||
                         props.nodeRightClicked ||
                         props.nodeRightClickedViewpointCoordinates ||
-                        (props.nodesSelected && props.nodesSelected.length)) {
+                        ("nodesSelected" in props && props.nodesSelected.length)) {
 
                         props.setProps({
                             // "linksSelected": [],
@@ -524,56 +522,59 @@ function Graph2D (props) {
 
                         });
 
-                        if (nodesClone.length && props.graphData.links.length) {
+                        if (
+                            nodesClone.length &&
+                            props.graphData.links.length
+                        ) {
 
-                            const nodeIds = nodesClone.map((node) => node[props.nodeId]);
+                            const [
+                                nodeIds,
+                                linksClone
+                            ] = [
+                                nodesClone.map((node) => node[props.nodeId]),
+                                cloneDeep(props.graphData.links)
+                            ];
 
-                            if ("links" in props.graphData) {
+                            linksClone.forEach((link) => {
 
-                                const linksClone = cloneDeep(props.graphData.links)
+                                if (typeof link.source !== "string") {
 
-                                linksClone.forEach((link) => {
+                                    link.source = link.source[props.nodeId];
+                                    link.target = link.target[props.nodeId];
 
-                                    if (typeof link.source !== "string") {
+                                }
 
-                                        link.source = link.source[props.nodeId];
-                                        link.target = link.target[props.nodeId];
-
-                                    }
-
-                                    const [
-                                        idxSourceNode,
-                                        idxTargetNode
-                                    ] = [
-                                        nodeIds.indexOf(link[props.linkSource]),
-                                        nodeIds.indexOf(link[props.linkTarget])
-                                    ];
-            
-                                    // If link label type not in node.__source, add key
-                                    if (!(link[props.linkLabel] in nodesClone[idxSourceNode].__source)) {
-            
-                                        nodesClone[idxSourceNode]
-                                            .__source[link[props.linkLabel]] = {};
-            
-                                    }
-            
+                                const [
+                                    idxSourceNode,
+                                    idxTargetNode
+                                ] = [
+                                    nodeIds.indexOf(link[props.linkSource]),
+                                    nodeIds.indexOf(link[props.linkTarget])
+                                ];
+        
+                                // If link label type not in node.__source, add key
+                                if (!(link[props.linkLabel] in nodesClone[idxSourceNode].__source)) {
+        
                                     nodesClone[idxSourceNode]
-                                        .__source[link[props.linkLabel]][link[props.linkId]] = link[props.linkTarget];
+                                        .__source[link[props.linkLabel]] = {};
+        
+                                }
+        
+                                nodesClone[idxSourceNode]
+                                    .__source[link[props.linkLabel]][link[props.linkId]] = link[props.linkTarget];
+        
+                                // If link label type not in node.__target, add key
+                                if (!(link[props.linkLabel] in nodesClone[idxTargetNode].__target)) {
+        
+                                    nodesClone[idxTargetNode].__target[link[props.linkLabel]] = {};
+        
+                                }
+        
+                                nodesClone[idxTargetNode]
+                                    .__target[link[props.linkLabel]][link[props.linkId]] = link[props.linkSource];  
+        
+                            });
             
-                                    // If link label type not in node.__target, add key
-                                    if (!(link[props.linkLabel] in nodesClone[idxTargetNode].__target)) {
-            
-                                        nodesClone[idxTargetNode].__target[link[props.linkLabel]] = {};
-            
-                                    }
-            
-                                    nodesClone[idxTargetNode]
-                                        .__target[link[props.linkLabel]][link[props.linkId]] = link[props.linkSource];  
-            
-                                });
-            
-                            }
-
                         }
 
                     }
@@ -750,7 +751,7 @@ function Graph2D (props) {
             console.log("nodeZoomId useEffect fired");
 
             // checkpoint 1: should the nodeZoom effect run at all?
-            if (props.graphData && "nodes" in props.graphData && props.graphData.nodes.length > 1) {
+            if (props.graphData && props.graphData.nodes.length > 1) {
 
                 const [
                     nodeIdsVisibleNew,
@@ -1190,12 +1191,12 @@ function Graph2D (props) {
                     ? props.graphData.links.map((link) => link[props.linkId]).filter((linkId) => !linkIdsVisibleNew.includes(linkId))
                     : []);
 
-                console.log("nodeZoomId")
-                console.log(cloneDeep(nodeZoomId))
-                console.log("props.nodeZoomId")
-                console.log(cloneDeep(props.nodeZoomId))
+                // console.log("nodeZoomId")
+                // console.log(cloneDeep(nodeZoomId))
+                // console.log("props.nodeZoomId")
+                // console.log(cloneDeep(props.nodeZoomId))
                 if (nodeZoomId !== props.nodeZoomId) {
-                    console.log("setProps: nodeZoomId (line 1140)");
+                    // console.log("setProps: nodeZoomId (line 1140)");
                     props.setProps({"nodeZoomId": nodeZoomId});
 
                 }
@@ -1658,7 +1659,7 @@ function Graph2D (props) {
 
     const handleLinkRightClick = (link, event) => {
         console.log("handleLinkRightClick")
-        
+
         if (link) {
 
             const start = link[props.linkSource];
@@ -1695,7 +1696,10 @@ function Graph2D (props) {
 
     const handleNodeDrag = (node, translate) => {
         console.log("handleNodeDrag")
-        if (props.nodeRightClicked ||
+        if (props.linkRightClicked ||
+            props.linkRightClickedViewpointCoordinates || 
+            props.nodeClicked ||
+            props.nodeRightClicked ||
             props.nodeRightClickedViewpointCoordinates) {
 
             props.setProps({
@@ -1844,12 +1848,12 @@ function Graph2D (props) {
     // fix dragged nodes in place
     const handleNodeDragEnd = (node, translate) => {
         console.log("handleNodeDragEnd")
-        if (nodeIdsDrag) {
+        if (nodeIdsDrag.length) {
 
             setNodeIdsDrag((_nids) => []);
 
         }
-        if (linkIdsNodesDrag) {
+        if (linkIdsNodesDrag.length) {
 
             setLinkIdsNodesDrag((_lids) => []);
 
@@ -2825,16 +2829,25 @@ function Graph2D (props) {
                     // onLinkCenterHover // not exposed
                     onBackgroundClick={handleBackgroundClick}
                     onBackgroundRightClick={handleBackgroundRightClick}
-                    // onZoom={(_args) => {
-                    //     if (props.nodeRightClickedViewpointCoordinates && props.n_nodeRightClicks && props.n_nodeRightClicks>1) {
-                    //         console.log("onZoom")
-                    //         props.setProps({
-                    //             // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
-                    //             // "nodeRightClicked": null,
-                    //             "nodeRightClickedViewpointCoordinates": null
-                    //         });
-                    //     }
-                    // }}
+                    onZoom={(_args) => {
+                        if (
+                            props.linkRightClicked ||
+                            props.linkRightClickedViewpointCoordinates ||
+                            props.nodeClicked ||
+                            props.nodeRightClicked || 
+                            props.nodeRightClickedViewpointCoordinates
+                            ) {
+                            console.log("onZoom")
+                            props.setProps({
+                                // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
+                                "linkRightClicked": null,
+                                "linkRightClickedViewPointCoordinates":null,
+                                "nodeClicked":null,
+                                "nodeRightClicked": null,
+                                "nodeRightClickedViewpointCoordinates": null
+                            });
+                        }
+                    }}
                     onZoomEnd={(args) => {
                         if (args && 
                             ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
