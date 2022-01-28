@@ -2845,8 +2845,8 @@ function Graph2D (props) {
                                 "linkRightClickedViewPointCoordinates":null,
                                 "nodeClicked":null,
                                 "nodeRightClicked": null,
-                                "nodeRightClickedViewpointCoordinates": null,
-                                "n_nodeRightClicks": null
+                                "nodeRightClickedViewpointCoordinates": null
+                                // "n_nodeRightClicks": null
                             });
                         }
                     }}
@@ -3991,7 +3991,7 @@ const graphSharedProptypes = {
     /**
     * node props to hide on hover, in addition to any with prop name prefixed by "__"
     */
-    "invisibleProps": PropTypes.arrayOf(PropTypes.string),
+    // "invisibleProps": PropTypes.arrayOf(PropTypes.string),
 
     /**
     * max levels of neighbourhood selection around a node by repeat clicking

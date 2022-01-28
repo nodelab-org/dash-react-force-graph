@@ -881,16 +881,6 @@
         "required": false,
         "description": "showCoordinates: whether or not to show pointer coordinates in hover tooltip (not yet used)"
       },
-      "invisibleProps": {
-        "type": {
-          "name": "arrayOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "node props to hide on hover, in addition to any with prop name prefixed by \"__\""
-      },
       "maxDepth_neighbours_select": {
         "type": {
           "name": "number"

@@ -18,10 +18,9 @@ enablePointerInteraction=NULL,
 enableZoomPanInteraction=NULL, externalobjectInput=NULL,
 externalobject_source=NULL, fixNodes=NULL, forceEngine=NULL,
 forceRefresh=NULL, getGraphBbox=NULL, graphData=NULL,
-heightRatio=NULL, invisibleProps=NULL, key=NULL,
-linkAutoColor=NULL, linkAutoColorBy=NULL, linkColor=NULL,
-linkCurvature=NULL, linkDesc=NULL,
-linkDirectionalArrowColor=NULL,
+heightRatio=NULL, key=NULL, linkAutoColor=NULL,
+linkAutoColorBy=NULL, linkColor=NULL, linkCurvature=NULL,
+linkDesc=NULL, linkDirectionalArrowColor=NULL,
 linkDirectionalArrowLength=NULL,
 linkDirectionalArrowRelPos=NULL,
 linkDirectionalArrowResolution=NULL,
@@ -107,8 +106,6 @@ Bounding box is saved as the graphBbox prop}
 Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{heightRatio}{Numeric. height of component as proportion of container}
-
-\item{invisibleProps}{List of characters. node props to hide on hover, in addition to any with prop name prefixed by "__"}
 
 \item{key}{Character. The key used to identify this component in React}
 

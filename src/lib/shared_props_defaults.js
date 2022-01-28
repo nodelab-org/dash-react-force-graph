@@ -224,16 +224,16 @@ const objSharedProps = {
     "pixelUnitRatio": null,
     "showCoordinates": null,
     // "gravity": null,
-    "invisibleProps": [
-        "iid",
-        "index",
-        "x",
-        "y",
-        "fx",
-        "fy",
-        "vx",
-        "vy"
-    ],
+    // "invisibleProps": [
+    //     "iid",
+    //     "index",
+    //     "x",
+    //     "y",
+    //     "fx",
+    //     "fy",
+    //     "vx",
+    //     "vy"
+    // ],
     "updateNeighbours": true,
     "forceRefresh": 0,
     "n_rightClicks": 0,
