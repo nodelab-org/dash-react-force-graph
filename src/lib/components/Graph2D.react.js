@@ -148,6 +148,10 @@ function Graph2D (props) {
             guiSettings,
             setGuiSettings
         ],
+        [
+            onZoomHasFired,
+            setOnZoomHasFired
+        ],
         fgRef
     ] = [
         useState([]),
@@ -182,6 +186,7 @@ function Graph2D (props) {
             "useNodeIcon": props.useNodeIcon,
             "useNodeImg": props.useNodeImg
         }),
+        useState(false),
         useRef(null)
     ];
     /* eslint-enable one-var */
@@ -2866,14 +2871,15 @@ function Graph2D (props) {
                     onBackgroundClick={handleBackgroundClick}
                     onBackgroundRightClick={handleBackgroundRightClick}
                     onZoom={(_args) => {
-                        if (
-                            // props.linkRightClicked ||
-                            // props.linkRightClickedViewpointCoordinates ||
-                            // props.nodeClicked ||
-                            // props.nodeRightClicked || 
-                            // props.nodeRightClickedViewpointCoordinates ||
-                            props.n_nodeRightClicks
-                            ) {
+                        if (onZoomHasFired && (
+                            props.linkRightClicked ||
+                            props.linkRightClickedViewpointCoordinates ||
+                            props.nodeClicked ||
+                            props.nodeRightClicked || 
+                            props.nodeRightClickedViewpointCoordinates
+                            )
+                            // props.n_nodeRightClicks
+                        ) {
                             console.log("onZoom")
                             props.setProps({
                                 // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
@@ -2884,6 +2890,8 @@ function Graph2D (props) {
                                 "nodeRightClickedViewpointCoordinates": null
                                 // "n_nodeRightClicks": null
                             });
+                        } else {
+                            setOnZoomHasFired(ozhf => true);
                         }
                     }}
                     onZoomEnd={(args) => {
