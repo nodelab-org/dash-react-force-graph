@@ -2867,11 +2867,11 @@ function Graph2D (props) {
                     onBackgroundRightClick={handleBackgroundRightClick}
                     onZoom={(_args) => {
                         if (
-                            props.linkRightClicked ||
-                            props.linkRightClickedViewpointCoordinates ||
-                            props.nodeClicked ||
-                            props.nodeRightClicked || 
-                            props.nodeRightClickedViewpointCoordinates ||
+                            // props.linkRightClicked ||
+                            // props.linkRightClickedViewpointCoordinates ||
+                            // props.nodeClicked ||
+                            // props.nodeRightClicked || 
+                            // props.nodeRightClickedViewpointCoordinates ||
                             props.n_nodeRightClicks && props.n_nodeRightClicks > 1
                             ) {
                             console.log("onZoom")
