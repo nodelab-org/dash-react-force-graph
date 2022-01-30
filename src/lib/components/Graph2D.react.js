@@ -175,7 +175,7 @@ function Graph2D (props) {
         useState({
             "center": 0.52,
             "charge": -45,
-            "link": 50,
+            "link": 60,
             "linkCurvature": props.linkCurvature,
             "nodeRelSize": props.nodeRelSize,
             "radial": 0.00,
@@ -250,7 +250,6 @@ function Graph2D (props) {
         },
         [guiSettings.nodeRelSize]
     );
-
 
     useEffect(
         () => {
@@ -383,40 +382,80 @@ function Graph2D (props) {
     //     //}
     // });
 
-
+    /* eslint-disable one-var */
     const reheatFunction = () => {
-        console.log("reheatFunction fired")
 
+        console.log("reheatFunction fired")
+        
         if (nodeZoomId) {
 
             setNodeZoomId(null)
 
-        } else {
 
-            if (!props.useCoordinates && 
-                graphDataNodes &&
-                props.fixNodes) {
+        } else if (graphDataNodes) {
+
+            if (props.useCoordinates && props.nodeCoordinates) {
+
+                setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
+                    // restore fixed coordinates
+
+                    const [
+                        coordX,
+                        coordY
+                    ] = [
+                        typeof props.nodeCoordinates === "string"
+                            ? props.nodeCoordinates in node
+                                ? node[props.nodeCoordinates].x
+                                : null
+                            : "x" in props.nodeCoordinates && props.nodeCoordinates.x in node
+                                ? node[props.nodeCoordinates.x]
+                                : null,
+                        typeof props.nodeCoordinates === "string"
+                            ? props.nodeCoordinates in node
+                                ? node[props.nodeCoordinates].y
+                                : null
+                            : "y" in props.nodeCoordinates && props.nodeCoordinates.y in node
+                                ? node[props.nodeCoordinates.y]
+                                : null
+                    ];
+
+                    if (coordX && coordY) {
+
+                        node.fx = coordX;
+                        node.fy = coordY;
+
+                    }
+
+                    return node;
+
+                }));
+
+            } else if (props.fixNodes) {
+                // free up fixed nodes
 
                 setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
                     if ("fx" in node) {
-            
+
                         delete node.fx;
                         delete node.fy;
-            
+
                     }
                     return node;
 
                 }));
+
+                props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 7000)});
+
+                fgRef.current.d3ReheatSimulation();
+
             }
-
-            props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 7000)});
-
-            fgRef.current.d3ReheatSimulation()
 
         }
 
     }
+
+    /* eslint-enable one-var */
 
     /**
      * Check whether any node or links ids have changed
@@ -578,6 +617,8 @@ function Graph2D (props) {
                         }
 
                     }
+                    
+                    // set coordinates
 
                     if (nodesClone.length && props.graphData.nodes.length) {
 
@@ -679,11 +720,14 @@ function Graph2D (props) {
 
                         }
 
-
-
                     } else {
 
                         fgRef.current.d3ReheatSimulation();
+                        fgRef.current.zoomToFit(
+                            250,
+                            10,
+                            (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId])
+                        )
 
                     }
 
@@ -1022,12 +1066,8 @@ function Graph2D (props) {
                             relYMax = nodesByIdNew[targetNode[props.nodeId]].fy;
 
                         }
-                        // add extra half space between rps of each rel
-                        // kRel += 1;
-                        // kRelRp += 0.5;
 
-                    }//);
-
+                    }
 
                     sourceNodes.forEach((sNode) => {
 
@@ -1037,7 +1077,6 @@ function Graph2D (props) {
 
                     });
 
-                    console.log("setGraphDataNodes")
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
                         if (nodeIdsVisibleNew.includes(node[props.nodeId])) {
@@ -1070,17 +1109,8 @@ function Graph2D (props) {
                     props.useCoordinates && props.nodeCoordinates
                 ) {
 
-                    console.log("nodeZoomId useEffect: block 2. Reset to nodeCoordinates")
-
-                    console.log("nodeZoomId (should be null!)")
-                    console.log(nodeZoomId)
-                    console.log("props.nodeZoomId (should be the old nodeZoomId)")
-                    console.log(props.nodeZoomId)
-
-                    console.log("cloneDeep(graphDataNodes before setting coordinates)")
-                    console.log(cloneDeep(graphDataNodes))
-                    console.log("cloneDeep(props.graphData.links)")
-                    console.log(cloneDeep(props.graphData.links))
+                    // ! nodeZoomId
+                    // restore nodeCoordinates
 
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
@@ -1115,23 +1145,23 @@ function Graph2D (props) {
 
                     }));
 
+                    // if (fgRef.current) {
 
-                    console.log("cloneDeep(graphDataNodes) after setting coordinates")
-                    console.log(cloneDeep(graphDataNodes))
+                    //     fgRef.current.zoomToFit(
+                    //         250,
+                    //         10,
+                    //         (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
+                    //     )
 
-                    if (fgRef.current) {
-
-                        fgRef.current.zoomToFit(
-                            250,
-                            10,
-                            (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
-                        )
-                        
-                    }
+                    // }
 
                 } else if (nodePreviousFCoordinatesById &&
                     Object.keys(nodePreviousFCoordinatesById).length &&
                     graphDataNodes.every((node) => node[props.nodeId] in nodePreviousFCoordinatesById)) {
+                    
+                    // ! nodeZoomId
+
+                    // no nodeCoordinates, restore fixed coordinates
 
                     console.log("nodeZoomId useEffect: block 3. Revert to nodePreviousFCoordinatesById");
 
@@ -1146,17 +1176,22 @@ function Graph2D (props) {
 
                     }));
 
-                    if (fgRef.current) {
-                        fgRef.current.zoomToFit(
-                            250,
-                            10,
-                            (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
-                        )
-                    }
+                    // if (fgRef.current) {
+
+                    //     fgRef.current.zoomToFit(
+                    //         250,
+                    //         10,
+                    //         (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
+                    //     );
+
+                    // }
 
                 } else {
-
+                    
+                    // ! nodeZoomI
+                    // neither nodeCoordinates nor have nodes settled in fixed coordinates automatically
                     // set nodes free and reheat simulation
+
                     console.log("nodeZoomId useEffect: block 4. Free nodes and reheat.")
 
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
@@ -1172,14 +1207,16 @@ function Graph2D (props) {
                     }));
 
                     props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 7000)});
+
                     fgRef.current.d3ReheatSimulation();
-                    if (fgRef.current) {
-                        fgRef.current.zoomToFit(
-                            250,
-                            10,
-                            (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
-                        )
-                    }
+
+                    // if (fgRef.current) {
+                    //     fgRef.current.zoomToFit(
+                    //         250,
+                    //         10,
+                    //         (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
+                    //     )
+                    // }
 
                 }
 
@@ -1191,10 +1228,6 @@ function Graph2D (props) {
                     ? props.graphData.links.map((link) => link[props.linkId]).filter((linkId) => !linkIdsVisibleNew.includes(linkId))
                     : []);
 
-                // console.log("nodeZoomId")
-                // console.log(cloneDeep(nodeZoomId))
-                // console.log("props.nodeZoomId")
-                // console.log(cloneDeep(props.nodeZoomId))
                 if (nodeZoomId !== props.nodeZoomId) {
                     // console.log("setProps: nodeZoomId (line 1140)");
                     props.setProps({"nodeZoomId": nodeZoomId});
@@ -1232,6 +1265,28 @@ function Graph2D (props) {
     );
     /* eslint-enable complexity */
     /* eslint-enable max-depth */
+
+    // this shouldn't be necessary but we try to make right click open pie menu. 
+    // Currently it only works after user has zoomed/panned once
+
+    useEffect( () => {
+        
+        props.setProps({
+
+            "linkRightClicked": null,
+            "linkRightClickedViewPointCoordinates":null,
+            "nodeClicked":null,
+            "nodeRightClicked": null,
+            "nodeRightClickedViewpointCoordinates": null
+            // "n_nodeRightClicks": null
+        });
+
+        }, 
+        []
+    );
+
+
+
     /* eslint-disable one-var */
 
     // this function prepares the tooltip shown on node hover
@@ -2434,7 +2489,7 @@ function Graph2D (props) {
         setGuiSettings( (guiSettings) => ({...guiSettings, 
                     "charge": -45,
                     "center": 0.52,
-                    "link": 50,
+                    "link": 60,
                     "radial": 0.00
                 }
         ))
