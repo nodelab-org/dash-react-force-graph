@@ -1266,27 +1266,6 @@ function Graph2D (props) {
     /* eslint-enable complexity */
     /* eslint-enable max-depth */
 
-    // this shouldn't be necessary but we try to make right click open pie menu. 
-    // Currently it only works after user has zoomed/panned once
-
-    useEffect( () => {
-        
-        props.setProps({
-
-            "linkRightClicked": null,
-            "linkRightClickedViewPointCoordinates":null,
-            "nodeClicked":null,
-            "nodeRightClicked": null,
-            "nodeRightClickedViewpointCoordinates": null
-            // "n_nodeRightClicks": null
-        });
-
-        }, 
-        []
-    );
-
-
-
     /* eslint-disable one-var */
 
     // this function prepares the tooltip shown on node hover
@@ -1691,20 +1670,22 @@ function Graph2D (props) {
 
 
     const handleNodeRightClick = (node, event) => {
-        console.log("handleNodeRightClick")
+        
+        console.log("handleNodeRightClick");
+
         if (node) {
 
             props.setProps({
                 "linkRightClicked": null,
                 "linkRightClickedViewpointCoordinates": null,
+                "n_nodeRightClicks": props.n_nodeRightClicks? props.n_nodeRightClicks + 1 : 1,
+                "nodeRightClicked": node,
                 "nodeRightClickedViewpointCoordinates": fgRef.current
                     ? fgRef.current.graph2ScreenCoords(
                         node.x,
-                        node.y //+ 77/props.currentZoomPan.k
+                        node.y
                     )
-                    : null,
-                "nodeRightClicked": node,
-                "n_nodeRightClicks": props.n_nodeRightClicks? props.n_nodeRightClicks + 1 : 1,
+                    : null
             });
 
         }
@@ -2891,14 +2872,14 @@ function Graph2D (props) {
                             props.nodeClicked ||
                             props.nodeRightClicked || 
                             props.nodeRightClickedViewpointCoordinates ||
-                            props.n_nodeRightClicks
+                            props.n_nodeRightClicks && props.n_nodeRightClicks > 1
                             ) {
                             console.log("onZoom")
                             props.setProps({
                                 // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
                                 "linkRightClicked": null,
                                 "linkRightClickedViewPointCoordinates":null,
-                                "nodeClicked":null,
+                                // "nodeClicked":null,
                                 "nodeRightClicked": null,
                                 "nodeRightClickedViewpointCoordinates": null
                                 // "n_nodeRightClicks": null
