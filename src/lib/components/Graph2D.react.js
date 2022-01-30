@@ -241,9 +241,9 @@ function Graph2D (props) {
 
             if (nodeRelSize !== null && guiSettings.nodeRelSize !== nodeRelSize) {
 
-                setNodeRelSize(guiSettings.nodeRelSize);
-                setNodeIconRelSize(guiSettings.nodeRelSize * 2.5);
-                setNodeImgRelSize(guiSettings.nodeRelSize * 2.5);
+                setNodeRelSize(nrz => guiSettings.nodeRelSize);
+                setNodeIconRelSize(nirz => guiSettings.nodeRelSize * 2.5);
+                setNodeImgRelSize(nirz => guiSettings.nodeRelSize * 2.5);
 
             }
 
@@ -256,7 +256,7 @@ function Graph2D (props) {
 
             if (linkCurvature !== null && guiSettings.linkCurvature !== linkCurvature) {
 
-                setLinkCurvature(guiSettings.linkCurvature);
+                setLinkCurvature(lcur => guiSettings.linkCurvature);
 
             }
 
@@ -269,7 +269,7 @@ function Graph2D (props) {
 
             if (guiSettings.useNodeIcon !== useNodeIcon) {
 
-                setUseNodeIcon(guiSettings.useNodeIcon);
+                setUseNodeIcon(nIcon => guiSettings.useNodeIcon);
 
             }
 
@@ -282,7 +282,7 @@ function Graph2D (props) {
 
             if (guiSettings.useNodeImg !== useNodeImg) {
 
-                setUseNodeImg(guiSettings.useNodeImg);
+                setUseNodeImg(nImg => guiSettings.useNodeImg);
 
             }
 
@@ -389,7 +389,7 @@ function Graph2D (props) {
         
         if (nodeZoomId) {
 
-            setNodeZoomId(null)
+            setNodeZoomId(nz => null)
 
 
         } else if (graphDataNodes) {
@@ -716,7 +716,7 @@ function Graph2D (props) {
 
                         } else {
 
-                            setNodeZoomId(props.nodeZoomId);
+                            setNodeZoomId(nz => props.nodeZoomId);
 
                         }
 
@@ -1220,11 +1220,11 @@ function Graph2D (props) {
 
                 }
 
-                setNodeIdsInvisibleAuto(nodeZoomId
+                setNodeIdsInvisibleAuto(niva => nodeZoomId
                     ? props.graphData.nodes.map((node) => node[props.nodeId]).filter((nodeId) => !nodeIdsVisibleNew.includes(nodeId))
                     : []);
 
-                setLinkIdsInvisibleAuto(nodeZoomId
+                setLinkIdsInvisibleAuto(liva => nodeZoomId
                     ? props.graphData.links.map((link) => link[props.linkId]).filter((linkId) => !linkIdsVisibleNew.includes(linkId))
                     : []);
 
@@ -1644,7 +1644,7 @@ function Graph2D (props) {
 
                         console.log("setting nodeZoomId")
 
-                        setNodeZoomId(node[props.nodeId]);
+                        setNodeZoomId(nz => node[props.nodeId]);
 
                     }
 
@@ -1846,8 +1846,8 @@ function Graph2D (props) {
 
             // assign unique ids to nodeIdsDrag prop
             neighbourNodeIds.push(node[props.nodeId]);
-            setNodeIdsDrag([...new Set(neighbourNodeIds)]);
-            setLinkIdsNodesDrag([...new Set(linkIds)]);
+            setNodeIdsDrag(nid => [...new Set(neighbourNodeIds)]);
+            setLinkIdsNodesDrag(lind => [...new Set(linkIds)]);
 
             /**
              * drag all selected nodes and fix in place afterwards
@@ -1981,7 +1981,7 @@ function Graph2D (props) {
 
         if (nodeZoomId) {
 
-            setNodeZoomId(null);
+            setNodeZoomId(nz => null);
 
         }
 
@@ -2013,7 +2013,7 @@ function Graph2D (props) {
 
         if (nodeZoomId) {
 
-            setNodeZoomId(null);
+            setNodeZoomId(nz => null);
 
         }
 
@@ -2059,13 +2059,13 @@ function Graph2D (props) {
     //     [props.linkIdsVisibleFilter]
     // );
 
-    useEffect(() => setNodeIdsHighlight(props.nodeIdsHighlightUser
+    useEffect(() => setNodeIdsHighlight(nih => props.nodeIdsHighlightUser
         ? props.nodeIdsHighlightUser
         : []),
     [props.nodeIdsHighlightUser]
     );
 
-    useEffect(() => setLinkIdsHighlight(props.linkIdsHighlightUser
+    useEffect(() => setLinkIdsHighlight(lih => props.linkIdsHighlightUser
         ? props.linkIdsHighlightUser
         : []),
     [props.linkIdsHighlightUser]
@@ -2872,7 +2872,7 @@ function Graph2D (props) {
                             // props.nodeClicked ||
                             // props.nodeRightClicked || 
                             // props.nodeRightClickedViewpointCoordinates ||
-                            props.n_nodeRightClicks && props.n_nodeRightClicks > 1
+                            props.n_nodeRightClicks
                             ) {
                             console.log("onZoom")
                             props.setProps({
