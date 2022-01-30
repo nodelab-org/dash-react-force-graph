@@ -149,8 +149,8 @@ function Graph2D (props) {
             setGuiSettings
         ],
         [
-            onZoomHasFired,
-            setOnZoomHasFired
+            onZoomFired,
+            setOnZoomFired
         ],
         fgRef
     ] = [
@@ -186,7 +186,7 @@ function Graph2D (props) {
             "useNodeIcon": props.useNodeIcon,
             "useNodeImg": props.useNodeImg
         }),
-        useState(false),
+        useState(0),
         useRef(null)
     ];
     /* eslint-enable one-var */
@@ -2871,16 +2871,17 @@ function Graph2D (props) {
                     onBackgroundClick={handleBackgroundClick}
                     onBackgroundRightClick={handleBackgroundRightClick}
                     onZoom={(_args) => {
-                        if (onZoomHasFired && (
-                            props.linkRightClicked ||
-                            props.linkRightClickedViewpointCoordinates ||
-                            props.nodeClicked ||
-                            props.nodeRightClicked || 
-                            props.nodeRightClickedViewpointCoordinates
+                        console.log("onZoom")
+                        if (
+                            onZoomFired>1 && (
+                                props.linkRightClicked ||
+                                props.linkRightClickedViewpointCoordinates ||
+                                props.nodeClicked ||
+                                props.nodeRightClicked || 
+                                props.nodeRightClickedViewpointCoordinates
                             )
                             // props.n_nodeRightClicks
                         ) {
-                            console.log("onZoom")
                             props.setProps({
                                 // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
                                 "linkRightClicked": null,
@@ -2890,9 +2891,9 @@ function Graph2D (props) {
                                 "nodeRightClickedViewpointCoordinates": null
                                 // "n_nodeRightClicks": null
                             });
-                        } else {
-                            setOnZoomHasFired(ozhf => true);
                         }
+                        setOnZoomFired(ozf=>ozf+1)
+                        
                     }}
                     onZoomEnd={(args) => {
                         if (args && 
