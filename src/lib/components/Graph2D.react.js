@@ -148,10 +148,6 @@ function Graph2D (props) {
             guiSettings,
             setGuiSettings
         ],
-        [
-            onZoomFired,
-            setOnZoomFired
-        ],
         fgRef
     ] = [
         useState([]),
@@ -186,7 +182,6 @@ function Graph2D (props) {
             "useNodeIcon": props.useNodeIcon,
             "useNodeImg": props.useNodeImg
         }),
-        useState(0),
         useRef(null)
     ];
     /* eslint-enable one-var */
@@ -728,11 +723,11 @@ function Graph2D (props) {
                     } else {
 
                         fgRef.current.d3ReheatSimulation();
-                        fgRef.current.zoomToFit(
-                            250,
-                            10,
-                            (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId])
-                        )
+                        // fgRef.current.zoomToFit(
+                        //     250,
+                        //     10,
+                        //     (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId])
+                        // )
 
                     }
 
@@ -2873,13 +2868,12 @@ function Graph2D (props) {
                     onZoom={(_args) => {
                         console.log("onZoom")
                         if (
-                            onZoomFired>1 && (
-                                props.linkRightClicked ||
-                                props.linkRightClickedViewpointCoordinates ||
-                                props.nodeClicked ||
-                                props.nodeRightClicked || 
-                                props.nodeRightClickedViewpointCoordinates
-                            )
+                            props.linkRightClicked ||
+                            props.linkRightClickedViewpointCoordinates ||
+                            props.nodeClicked ||
+                            props.nodeRightClicked || 
+                            props.nodeRightClickedViewpointCoordinates
+                        
                             // props.n_nodeRightClicks
                         ) {
                             props.setProps({
@@ -2892,17 +2886,24 @@ function Graph2D (props) {
                                 // "n_nodeRightClicks": null
                             });
                         }
-                        setOnZoomFired(ozf=>ozf+1)
                         
                     }}
                     onZoomEnd={(args) => {
-                        if (args && 
+                        // keep track of currentZoomPan
+                        console.log("onZoomEnd")
+                        console.log("args")
+                        console.log(args)
+                        console.log("props.currentZoomPan")
+                        console.log(props.currentZoomPan)
+                        if (
+                            args && 
                             ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
                                 "k" in props.currentZoomPan &&
                                 (props.currentZoomPan.k != args.k || 
                                     props.currentZoomPan.x != args.x ||
                                     props.currentZoomPan.y != args.y
                         ))) {
+                            console.log("set currentZoomPan prop")
 
                             props.setProps({
                                 "currentZoomPan":args
