@@ -269,7 +269,7 @@ function Graph2D (props) {
 
             if (nodeLabelRelSize !== null && guiSettings.nodeLabelRelSize !== nodeLabelRelSize) {
 
-                setNodeRelSize(nlrz => guiSettings.nodeLabelRelSize);
+                setNodeLabelRelSize(nlrz => guiSettings.nodeLabelRelSize);
 
             }
 
