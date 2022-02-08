@@ -32,9 +32,10 @@ const objSharedProps = {
     * node styling
     */
     // props
-    nodeRelSize: 5,
-    nodeIconRelSize: 12.5,
-    nodeImgRelSize: 12.5,
+    nodeRelSize: 6,
+    nodeIconRelSize: 12,
+    nodeImgRelSize: 12,
+    nodeLabelRelSize: 4,
     nodeVal:"__nodeVal",
     nodeLabel: "__nodeLabel",
     // nodeDesc: "desc" // VR only

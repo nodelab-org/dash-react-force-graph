@@ -43,8 +43,8 @@ nodeIcon=NULL, nodeIconRelSize=NULL,
 nodeIcon_fontsheets=NULL, nodeId=NULL,
 nodeIdsHighlightUser=NULL, nodeIdsInvisibleAuto=NULL,
 nodeIdsInvisibleUser=NULL, nodeImg=NULL,
-nodeImgRelSize=NULL, nodeLabel=NULL, nodeOpacity=NULL,
-nodeRelSize=NULL, nodeResolution=NULL,
+nodeImgRelSize=NULL, nodeLabel=NULL, nodeLabelRelSize=NULL,
+nodeOpacity=NULL, nodeRelSize=NULL, nodeResolution=NULL,
 nodeRightClicked=NULL,
 nodeRightClickedViewpointCoordinates=NULL,
 nodeTextAutoColor=NULL, nodeTextColor=NULL, nodeVal=NULL,
@@ -209,6 +209,8 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{nodeLabel}{Character. Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
 2D, 3D and VR}
+
+\item{nodeLabelRelSize}{Numeric. controls node label size}
 
 \item{nodeOpacity}{Numeric. Nodes sphere opacity, between [0,1]. 3D, VR, AR}
 
