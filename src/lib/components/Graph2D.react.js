@@ -152,6 +152,10 @@ function Graph2D (props) {
             guiSettings,
             setGuiSettings
         ],
+        [
+            zoomBool,
+            setZoomBool
+        ],
         fgRef
     ] = [
         useState([]),
@@ -188,6 +192,7 @@ function Graph2D (props) {
             "useNodeIcon": props.useNodeIcon,
             "useNodeImg": props.useNodeImg
         }),
+        useState(false),
         useRef(null)
     ];
     /* eslint-enable one-var */
@@ -1679,7 +1684,7 @@ function Graph2D (props) {
 
 
     const handleNodeRightClick = (node, event) => {
-        
+
         console.log("handleNodeRightClick");
 
         if (node) {
@@ -1687,7 +1692,9 @@ function Graph2D (props) {
             props.setProps({
                 "linkRightClicked": null,
                 "linkRightClickedViewpointCoordinates": null,
-                "n_nodeRightClicks": props.n_nodeRightClicks? props.n_nodeRightClicks + 1 : 1,
+                "n_nodeRightClicks": props.n_nodeRightClicks
+                    ? props.n_nodeRightClicks + 1
+                    : 1,
                 "nodeRightClicked": node,
                 "nodeRightClickedViewpointCoordinates": fgRef.current
                     ? fgRef.current.graph2ScreenCoords(
@@ -2863,24 +2870,33 @@ function Graph2D (props) {
                     onZoom={(_args) => {
                         console.log("onZoom")
                         if (
-                            props.linkRightClicked ||
-                            props.linkRightClickedViewpointCoordinates ||
-                            props.nodeRightClicked || 
-                            props.nodeRightClickedViewpointCoordinates
-                        
-                            // props.n_nodeRightClicks
+                                props.linkRightClicked ||
+                                props.linkRightClickedViewpointCoordinates ||
+                                props.nodeRightClicked || 
+                                props.nodeRightClickedViewpointCoordinates
+                                // props.n_nodeRightClicks
+
                         ) {
-                            props.setProps({
-                                // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
-                                "linkRightClicked": null,
-                                "linkRightClickedViewPointCoordinates":null,
-                                // "nodeClicked":null,
-                                "nodeRightClicked": null,
-                                "nodeRightClickedViewpointCoordinates": null
-                                // "n_nodeRightClicks": null
-                            });
+                            if (zoomBool) {
+
+                                props.setProps({
+                                    // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
+                                    "linkRightClicked": null,
+                                    "linkRightClickedViewPointCoordinates":null,
+                                    // "nodeClicked":null,
+                                    "nodeRightClicked": null,
+                                    "nodeRightClickedViewpointCoordinates": null
+                                    // "n_nodeRightClicks": null
+                                });
+
+                            } else {
+                                
+                                setZoomBool(zb => true);
+
+                            }
+
                         }
-                        
+
                     }}
                     onZoomEnd={(args) => {
                         // keep track of currentZoomPan
