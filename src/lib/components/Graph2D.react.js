@@ -484,7 +484,7 @@ function Graph2D (props) {
 
                 }));
 
-                props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 7000)});
+                props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 2500)});
 
                 fgRef.current.d3ReheatSimulation();
 
@@ -735,7 +735,7 @@ function Graph2D (props) {
                     // refresh selected or clicked node (with new neighbours)
 
                     if (props.nodesSelected) {
-
+                        console.log("setting nodesSelected!")
                         props.setProps({
                             "nodesSelected": props.nodesSelected.map((nodeSel) => nodesById[nodeSel.__nodeId])
                         });
@@ -743,7 +743,7 @@ function Graph2D (props) {
                     }
 
                     if (props.nodeClicked) {
-
+                        console.log("setting nodeClicked!")
                         props.setProps({
                             "nodeClicked": nodesById[props.nodeClicked.__nodeId]
                         });
@@ -1244,7 +1244,7 @@ function Graph2D (props) {
 
                     }));
 
-                    props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 7000)});
+                    props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 2500)});
 
                     fgRef.current.d3ReheatSimulation();
 
