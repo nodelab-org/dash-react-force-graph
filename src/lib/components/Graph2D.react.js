@@ -565,20 +565,6 @@ function Graph2D (props) {
 
                     const nodesClone = cloneDeep(props.graphData.nodes);
 
-                    if (("linksSelected" in props && props.linksSelected.length) ||
-                        props.nodeRightClicked ||
-                        props.nodeRightClickedViewpointCoordinates ||
-                        ("nodesSelected" in props && props.nodesSelected.length)) {
-
-                        props.setProps({
-                            "linkRightClicked": null,
-                            "linkRightClickedViewpointCoordinates": null,
-                            "nodeRightClicked": null,
-                            "nodeRightClickedViewpointCoordinates": null
-                        });
-
-                    }
-
                     if ((nodeIdsAddedNew.size ||
                         nodeIdsRemovedNew.size ||
                         linkIdsAddedNew.size ||
@@ -725,6 +711,44 @@ function Graph2D (props) {
                             node[props.nodeId],
                             node
                         ])));
+                    
+                    
+                    // reset right clicked node and link
+
+                    if (//("linksSelected" in props && props.linksSelected.length) ||
+                        props.linkRightClicked ||
+                        props.linkRightClickedViewpointCoordinates ||
+                        props.nodeRightClicked ||
+                        props.nodeRightClickedViewpointCoordinates
+                        // ("nodesSelected" in props && props.nodesSelected.length)
+                    ) {
+
+                        props.setProps({
+                            "linkRightClicked": null,
+                            "linkRightClickedViewpointCoordinates": null,
+                            "nodeRightClicked": null,
+                            "nodeRightClickedViewpointCoordinates": null
+                        });
+
+                    }
+
+                    // refresh selected or clicked node (with new neighbours)
+
+                    if (props.nodesSelected) {
+
+                        props.setProps({
+                            "nodesSelected": props.nodesSelected.map((nodeSel) => nodesById[nodeSel.__nodeId])
+                        });
+
+                    }
+
+                    if (props.nodeClicked) {
+
+                        props.setProps({
+                            "nodeClicked": nodesById[props.nodeClicked.__nodeId]
+                        });
+
+                    }
 
                     if (props.nodeZoomId) {
 
@@ -2877,23 +2901,15 @@ function Graph2D (props) {
                                 // props.n_nodeRightClicks
 
                         ) {
-                            if (zoomBool) {
-
-                                props.setProps({
-                                    // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
-                                    "linkRightClicked": null,
-                                    "linkRightClickedViewPointCoordinates":null,
-                                    // "nodeClicked":null,
-                                    "nodeRightClicked": null,
-                                    "nodeRightClickedViewpointCoordinates": null
-                                    // "n_nodeRightClicks": null
-                                });
-
-                            } else {
-                                
-                                setZoomBool(zb => true);
-
-                            }
+                            props.setProps({
+                                // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
+                                "linkRightClicked": null,
+                                "linkRightClickedViewPointCoordinates":null,
+                                // "nodeClicked":null,
+                                "nodeRightClicked": null,
+                                "nodeRightClickedViewpointCoordinates": null
+                                // "n_nodeRightClicks": null
+                            });
 
                         }
 
