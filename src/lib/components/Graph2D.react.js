@@ -733,22 +733,19 @@ function Graph2D (props) {
                     }
 
                     // refresh selected or clicked node (with new neighbours)
+                    // if (props.nodesSelected) {
+                    //     console.log("setting nodesSelected!")
+                    //     props.setProps({
+                    //         "nodesSelected": props.nodesSelected.map((nodeSel) => nodesById[nodeSel.__nodeId])
+                    //     });
+                    // }
 
-                    if (props.nodesSelected) {
-                        console.log("setting nodesSelected!")
-                        props.setProps({
-                            "nodesSelected": props.nodesSelected.map((nodeSel) => nodesById[nodeSel.__nodeId])
-                        });
-
-                    }
-
-                    if (props.nodeClicked) {
-                        console.log("setting nodeClicked!")
-                        props.setProps({
-                            "nodeClicked": nodesById[props.nodeClicked.__nodeId]
-                        });
-
-                    }
+                    // if (props.nodeClicked) {
+                    //     console.log("setting nodeClicked!")
+                    //     props.setProps({
+                    //         "nodeClicked": nodesById[props.nodeClicked.__nodeId]
+                    //     });
+                    // }
 
                     if (props.nodeZoomId) {
 
