@@ -680,20 +680,20 @@ function Graph2D (props) {
 
                             });
 
-                        } else {
+                        } //else {
 
-                            nodesClone.forEach((node) => {
+                        //     nodesClone.forEach((node) => {
 
-                                if ("fx" in node) {
+                        //         if ("fx" in node) {
 
-                                    delete node.fx;
-                                    delete node.fy;
+                        //             delete node.fx;
+                        //             delete node.fy;
 
-                                }
+                        //         }
 
-                            });
+                        //     });
 
-                        }
+                        // }
 
                     }
 
@@ -711,8 +711,7 @@ function Graph2D (props) {
                             node[props.nodeId],
                             node
                         ])));
-                    
-                    
+
                     // reset right clicked node and link
 
                     if (//("linksSelected" in props && props.linksSelected.length) ||
