@@ -2442,7 +2442,8 @@ function Graph2D (props) {
 
     const onEngineStopFunction = () => {
 
-        // used to fix coordinates and update graphData props with node x y positions
+        // 1. fix coordinates when nodes settle 
+        // 2. update graphData props with node fx fy positions
         if (graphDataNodes &&
             graphDataNodes.length &&
             props.fixNodes &&
@@ -2451,35 +2452,42 @@ function Graph2D (props) {
 
             console.log("onEngineStopFunction");
             
-            setGraphDataNodes((gDataNodes) => gDataNodes.map((node)=> {
+            // if any nodes have settled into coordinates that differ from the fixed coordinates
+            if (graphDataNodes.some((node) => node.x !== node.fx || node.y !== node.fy)) { 
 
-                    if ("x" in node && "y" in node) {
+                // set the new coordinates as the fixed coordinates
+                setGraphDataNodes((gDataNodes) => gDataNodes.map((node)=> {
+    
+                        if ("x" in node && "y" in node) {
+    
+                            node.fx = node.x;
+                            node.fy = node.y;
+    
+                        }
+                        return node;
+    
+                    }));
+                
+                // update nodePreviousFCoordinatesById too (used to 'recover' from nodeZoom view) 
+                setNodePreviousFCoordinatesById((_np) => Object.fromEntries(graphDataNodes
+                    .map((node) => [
+                        node[props.nodeId],
+                        [
+                            node.x,
+                            node.y
+                        ]
+                    ])));
 
-                        node.fx = node.x;
-                        node.fy = node.y;
-
-                    }
-                    return node;
-
-                }));
-            
-            setNodePreviousFCoordinatesById((_np) => Object.fromEntries(graphDataNodes
-                .map((node) => [
-                    node[props.nodeId],
-                    [
-                        node.x,
-                        node.y
-                    ]
-                ])));
-
-            props.setProps(
-                {
-                    "graphData": {
-                        "links": props.graphData.links,
-                        "nodes": graphDataNodes
-                    }
-                    // "updateNeighbours":false // not necessary since no change in nodes or links 
-                });
+                // finally, update node props. Is this useful, though?
+                props.setProps(
+                    {
+                        "graphData": {
+                            "links": props.graphData.links,
+                            "nodes": graphDataNodes
+                        }
+                        // "updateNeighbours":false // not necessary since no change in nodes or links 
+                    });
+            }
 
         }
 
