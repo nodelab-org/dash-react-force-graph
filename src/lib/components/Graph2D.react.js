@@ -2478,7 +2478,8 @@ function Graph2D (props) {
                         ]
                     ])));
 
-                // finally, update node props. Is this useful, though?
+                // finally, update graphdata props.
+                // this is needed to avoid resetting coordinates whenever Dash modifies the graphdata.
                 props.setProps(
                     {
                         "graphData": {
@@ -2486,7 +2487,7 @@ function Graph2D (props) {
                             "nodes": graphDataNodes
                         }
                         // "updateNeighbours":false // not necessary since no change in nodes or links 
-                    });
+                });
             }
 
         }
@@ -2953,7 +2954,15 @@ function Graph2D (props) {
                     onBackgroundRightClick={handleBackgroundRightClick}
                     onZoom={(args) => {
 
-                        if ( args && (
+                        if ( 
+                            args && 
+                            ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
+                                "k" in props.currentZoomPan &&
+                                (
+                                    props.currentZoomPan.k != args.k || 
+                                    props.currentZoomPan.x != args.x ||
+                                    props.currentZoomPan.y != args.y)
+                                ) && (
                                 props.linkRightClicked ||
                                 props.linkRightClickedViewpointCoordinates ||
                                 props.nodeRightClicked || 
@@ -2984,7 +2993,8 @@ function Graph2D (props) {
                             args && 
                             ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
                                 "k" in props.currentZoomPan &&
-                                (props.currentZoomPan.k != args.k || 
+                                (
+                                    props.currentZoomPan.k != args.k || 
                                     props.currentZoomPan.x != args.x ||
                                     props.currentZoomPan.y != args.y
                         ))) {
