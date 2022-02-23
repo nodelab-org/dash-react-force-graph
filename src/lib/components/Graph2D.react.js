@@ -62,6 +62,7 @@ const withSizeHOC = withSize({
 
 // };
 
+const MAX_COOLDOWNTIME_MS = 3000
 
 /* eslint-disable complexity */
 function Graph2D (props) {
@@ -181,7 +182,7 @@ function Graph2D (props) {
         useState({
             "center": 0.52,
             "charge": -45,
-            "link": 60,
+            "link": 65,
             "linkCurvature": props.linkCurvature,
             "nodeLabelRelSize": props.nodeLabelRelSize,
             "nodeRelSize": props.nodeRelSize,
@@ -289,7 +290,6 @@ function Graph2D (props) {
     useEffect(
         () => {
 
-            
             if (linkCurvature !== null && guiSettings.linkCurvature !== linkCurvature) {
 
                 console.log("useEffect: linkCurvature");
@@ -490,7 +490,7 @@ function Graph2D (props) {
 
                 }));
 
-                props.setProps({"cooldownTime": Math.min(graphDataNodes.length * 50, 2500)});
+                props.setProps({"cooldownTime": Math.min(graphDataNodes.length * 50, MAX_COOLDOWNTIME_MS)});
 
                 fgRef.current.d3ReheatSimulation();
 
@@ -1246,7 +1246,7 @@ function Graph2D (props) {
 
                     }));
 
-                    props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, 2500)});
+                    props.setProps({"cooldownTime": Math.min(graphDataNodes.length*50, MAX_COOLDOWNTIME_MS)});
 
                     fgRef.current.d3ReheatSimulation();
 
@@ -2518,7 +2518,7 @@ function Graph2D (props) {
         setGuiSettings( (guiSettings) => ({...guiSettings, 
                     "charge": -45,
                     "center": 0.52,
-                    "link": 60,
+                    "link": 65,
                     "radial": 0.00
                 }
         ))
