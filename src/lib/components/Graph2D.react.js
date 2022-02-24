@@ -17,8 +17,10 @@ import DatGui, {
 import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import validateColor from "validate-color";
-import importScript from "../customHooks/importScript.js";
-
+// import importScript from "../customHooks/importScript.js";
+import "../../../assets/fontawesome/css/fontawesome.css";
+import "../../../assets/fontawesome/css/solid.css";
+import "../../../assets/fontawesome/css/brands.css";
 // import useFontFace from '../customhooks/useFontFace.js';
 
 // import {forceCenter, forceManyBody, forceLink, forceRadial} from "d3";
@@ -194,12 +196,12 @@ function Graph2D (props) {
     ];
     /* eslint-enable one-var */
     // Import scripts https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
-    Object.keys(props.nodeIcon_fontsheets).map((key) => {
+    // Object.keys(props.nodeIcon_fontsheets).map((key) => {
 
-        importScript(props.nodeIcon_fontsheets[key]);
-        // useFontFace(key, props.nodeIcon_fontsheets[key])
+    //     importScript(props.nodeIcon_fontsheets[key]);
+    //     // useFontFace(key, props.nodeIcon_fontsheets[key])
 
-    });
+    // });
 
 
     useEffect(

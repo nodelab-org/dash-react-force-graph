@@ -24,6 +24,7 @@
   "author": "Jon Thompson <jjt@tutanota.com>",
   "license": "MIT",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.0.0",
     "d3": "^6.5.0",
     "d3-force": "^2.1.1",
     "lodash": "^4.17.21",
@@ -50,6 +51,7 @@
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-react": "^7.14.2",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "file-loader": "^6.2.0",
     "npm": "^6.1.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
