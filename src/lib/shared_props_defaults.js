@@ -181,7 +181,7 @@ const objSharedProps = {
     nodeImg: "__nodeImg",
     useNodeIcon: true,
     nodeIcon: "__nodeIcon",
-    nodeIcon_fontsheets: {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
+    // nodeIcon_fontsheets: {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
     linkId: "id",
     interactive: true,
     // updated:false,

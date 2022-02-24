@@ -624,13 +624,6 @@
         "required": false,
         "description": "The node attribute containing object with icon to display for each individual node."
       },
-      "nodeIcon_fontsheets": {
-        "type": {
-          "name": "object"
-        },
-        "required": false,
-        "description": "object with keys being fonts (string) and values being CSS sheets"
-      },
       "linkId": {
         "type": {
           "name": "string"

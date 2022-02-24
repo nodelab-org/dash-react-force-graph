@@ -3932,7 +3932,7 @@ const graphSharedProptypes = {
     /**
     * object with keys being fonts (string) and values being CSS sheets
     */
-    "nodeIcon_fontsheets": PropTypes.object,
+    // "nodeIcon_fontsheets": PropTypes.object,
 
     /**
     * The link attribute containing the unique link id
