@@ -18,9 +18,9 @@ import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import validateColor from "validate-color";
 // import importScript from "../customHooks/importScript.js";
-import "../../../assets/fontawesome/css/fontawesome.css";
-import "../../../assets/fontawesome/css/solid.css";
-import "../../../assets/fontawesome/css/brands.css";
+// import "../../../assets/fontawesome/css/fontawesome.css";
+// import "../../../assets/fontawesome/css/solid.css";
+// import "../../../assets/fontawesome/css/brands.css";
 // import useFontFace from '../customhooks/useFontFace.js';
 
 // import {forceCenter, forceManyBody, forceLink, forceRadial} from "d3";
