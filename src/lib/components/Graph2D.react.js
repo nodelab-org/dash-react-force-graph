@@ -17,7 +17,7 @@ import DatGui, {
 import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import validateColor from "validate-color";
-// import importScript from "../customHooks/importScript.js";
+import importScript from "../customHooks/importScript.js";
 // import "../../../assets/fontawesome/css/fontawesome.css";
 // import "../../../assets/fontawesome/css/solid.css";
 // import "../../../assets/fontawesome/css/brands.css";
@@ -62,7 +62,7 @@ const withSizeHOC = withSize({
 
 //     return result;
 
-// };
+// }; 
 
 const MAX_COOLDOWNTIME_MS = 3000
 
@@ -194,6 +194,13 @@ function Graph2D (props) {
         }),
         useRef(null)
     ];
+
+    [
+        "../fontawesome/brands.js",
+        "../fontawesome/solid.js",
+        "../fontawesome/fontawesome.js"
+    ].map((script) => importScript(script));
+
     /* eslint-enable one-var */
     // Import scripts https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
     // Object.keys(props.nodeIcon_fontsheets).map((key) => {
@@ -908,10 +915,10 @@ function Graph2D (props) {
                                 });
                                 linkIdsVisibleNew.push(linkId);
                                 nodeIdsVisibleNew.push(targetId);
-                                // check whether the target node has node_id === node thingtype, i.e. is a schema type. 
-                                // If so, don't show its neighbours.
-                                if (Object.values(targetNode.__target).length &&
-                                    nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId].__thingType
+                                // ~~check whether the target node has node_id === node thingtype, i.e. is a schema type. 
+                                // If so, don't show its neighbours.~~
+                                if (Object.values(targetNode.__target).length //&&
+                                    // nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId].__thingType
                                     ) {
 
                                     for (const [
