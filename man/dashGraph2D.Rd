@@ -49,8 +49,8 @@ nodeRightClickedViewpointCoordinates=NULL,
 nodeTextAutoColor=NULL, nodeTextColor=NULL, nodeVal=NULL,
 nodeZoomId=NULL, nodesSelected=NULL, numDimensions=NULL,
 pauseAnimation=NULL, pixelUnitRatio=NULL, refresh=NULL,
-rendererConfig=NULL, showCoordinates=NULL, size=NULL,
-sortRels1Descend=NULL, sortRels2Descend=NULL,
+rendererConfig=NULL, scripts=NULL, showCoordinates=NULL,
+size=NULL, sortRels1Descend=NULL, sortRels2Descend=NULL,
 sortRelsBy1=NULL, sortRelsBy2=NULL,
 sortRoleplayers1Descend=NULL, sortRoleplayers2Descend=NULL,
 sortRoleplayersBy1=NULL, sortRoleplayersBy2=NULL,
@@ -239,6 +239,8 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 \item{refresh}{Logical. Redraws all the nodes/links. 3D, VR, AR}
 
 \item{rendererConfig}{Named list. Configuration parameters to pass to the ThreeJS WebGLRenderer constructor. This prop only has an effect on component mount. 3D only}
+
+\item{scripts}{List of characters. }
 
 \item{showCoordinates}{Logical. showCoordinates: whether or not to show pointer coordinates in hover tooltip (not yet used)}
 

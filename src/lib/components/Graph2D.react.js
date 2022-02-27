@@ -195,20 +195,19 @@ function Graph2D (props) {
         useRef(null)
     ];
 
-    [
-        "assets/scripts/brands.js",
-        "assets/scripts/solid.js",
-        "assets/scripts/fontawesome.js"
-    ].map((script) => importScript(script));
+    // [
+    //     "public/js/brands.js",
+    //     "public/js/solid.js",
+    //     "public/js/fontawesome.js"
+    // ].map((script) => importScript(script));
 
     /* eslint-enable one-var */
     // Import scripts https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
-    // Object.keys(props.nodeIcon_fontsheets).map((key) => {
+    if (props.scripts) {
 
-    //     importScript(props.nodeIcon_fontsheets[key]);
-    //     // useFontFace(key, props.nodeIcon_fontsheets[key])
+        props.scripts.map((script) => importScript(script));
 
-    // });
+    }
 
 
     useEffect(
@@ -4168,8 +4167,10 @@ const graphSharedProptypes = {
     "forceRefresh": PropTypes.number,
     
     "n_nodeRightClicks": PropTypes.number,
-    "n_linkRightClicks": PropTypes.number
+    "n_linkRightClicks": PropTypes.number,
     // "redraw": PropTypes.number
+    "scripts":PropTypes.arrayOf(PropTypes.string)
+
 };
 
 Graph2D.propTypes = graphSharedProptypes;

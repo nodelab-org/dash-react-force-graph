@@ -922,6 +922,16 @@
         },
         "required": false,
         "description": ""
+      },
+      "scripts": {
+        "type": {
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
+        },
+        "required": false,
+        "description": ""
       }
     }
   },
