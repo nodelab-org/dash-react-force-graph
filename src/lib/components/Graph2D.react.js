@@ -196,9 +196,9 @@ function Graph2D (props) {
     ];
 
     [
-        "assets/scripts/fontawesome/brands.js",
-        "assets/scripts/fontawesome/solid.js",
-        "assets/scripts/fontawesome/fontawesome.js"
+        "assets/scripts/brands.js",
+        "assets/scripts/solid.js",
+        "assets/scripts/fontawesome.js"
     ].map((script) => importScript(script));
 
     /* eslint-enable one-var */
