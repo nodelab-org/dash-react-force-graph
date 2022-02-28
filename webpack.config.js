@@ -62,18 +62,25 @@ module.exports = (env, argv) => {
                     },
                 },
                 {
-                    test: /\.css$/,
+                    test: /\.(scss|css)$/,
                     use: [
                         {
                             // Creates `style` nodes from JS strings
                             loader: 'style-loader',
                             options: {
-                                insertAt: 'top'
+                                insertAt: 'top',
+                                sourceMap: true
                             }
                         },
                         {
                             // Translates CSS into CommonJS
                             loader: 'css-loader',
+                            options: {
+                                sourceMap: true
+                            }
+                        },
+                        {
+                            loader: 'resolve-url-loader'
                         },
                         // Compiles Sass to CSS
                         {
@@ -88,6 +95,7 @@ module.exports = (env, argv) => {
                             loader: 'file-loader',
                             options: {
                             name: '[name].[ext]',
+                            publicPath: 'assets/webfonts/',
                             outputPath: 'fonts/'
                             }
                         }
