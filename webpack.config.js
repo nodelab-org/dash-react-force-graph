@@ -65,14 +65,20 @@ module.exports = (env, argv) => {
                     test: /\.css$/,
                     use: [
                         {
+                            // Creates `style` nodes from JS strings
                             loader: 'style-loader',
                             options: {
                                 insertAt: 'top'
                             }
                         },
                         {
+                            // Translates CSS into CommonJS
                             loader: 'css-loader',
                         },
+                        // Compiles Sass to CSS
+                        {
+                            loader: 'sass-loader'
+                        }
                     ],
                 },
                 {

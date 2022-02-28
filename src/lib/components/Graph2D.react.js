@@ -34,6 +34,7 @@ import {invert, lighten, saturate, transparentize} from "polished";
 import {withSize} from "react-sizeme";
 import objSharedProps from "../shared_props_defaults.js";
 import "react-dat-gui/dist/index.css";
+
 /* eslint-enable sort-imports */
 
 // Use react resize-me to make canvas container width responsive
