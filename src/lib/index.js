@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import Graph2D from "./components/Graph2D.react";
 // import Graph3D from "./components/Graph3D.react";
-// import "../../assets/all.scss"
+import "../../assets/all.scss"
 // import "../../assets/css/fontawesome.css"
 // import "../../assets/css/v5-font-face.css"
 // import '../../node_modules/@fortawesome/fontawesome-free/webfonts';
