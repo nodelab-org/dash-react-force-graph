@@ -18,10 +18,11 @@ import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import validateColor from "validate-color";
 import importScript from "../customHooks/importScript.js";
-// import "../../../assets/fontawesome/css/fontawesome.css";
-// import "../../../assets/fontawesome/css/solid.css";
-// import "../../../assets/fontawesome/css/brands.css";
-// import useFontFace from '../customhooks/useFontFace.js';
+
+// const script = document.createElement('script');
+// script.src = "https://kit.fontawesome.com/a6e0eeba63.js";
+// script.async = true;
+// document.body.appendChild(script);
 
 // import {forceCenter, forceManyBody, forceLink, forceRadial} from "d3";
 
@@ -34,6 +35,19 @@ import {invert, lighten, saturate, transparentize} from "polished";
 import {withSize} from "react-sizeme";
 import objSharedProps from "../shared_props_defaults.js";
 import "react-dat-gui/dist/index.css";
+
+window.onload = function () {
+    var span = document.createElement('span');
+  
+    // span.className = 'fas';
+    span.className = 'fas';
+    span.style.display = 'none';
+    document.body.insertBefore(span, document.body.firstChild);
+    
+    alert(window.getComputedStyle(span, null).getPropertyValue('font-family'));
+      
+    document.body.removeChild(span);
+};
 
 /* eslint-enable sort-imports */
 
@@ -196,20 +210,26 @@ function Graph2D (props) {
         useRef(null)
     ];
 
-    // [
-    //     "public/js/brands.js",
-    //     "public/js/solid.js",
-    //     "public/js/fontawesome.js"
-    // ].map((script) => importScript(script));
+    [
+        "https://kit.fontawesome.com/a6e0eeba63.js",
+    //     // '../../../assets/scripts/solid.js',
+    //     // '../../../assets/scripts/brands.js',
+    //     // '../../../assets/scripts/fontawesome.js'
+    //     // '../../../node_modules/@fortawesome/fontawesome-free/js/solid.js',
+    //     // '../../../node_modules/@fortawesome/fontawesome-free/js/brands.js',
+    //     // We recommend referencing the fontawesome.js loader last.
+    //     // https://fontawesome.com/docs/web/setup/host-yourself/svg-js
+    //     // '../../../node_modules/@fortawesome/fontawesome-free/js/fontawesome.js'
+    ].map((script) => importScript(script));
 
     /* eslint-enable one-var */
     // Import scripts https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
-    if (props.scripts) {
+    // if (props.scripts) {
 
-        props.scripts.map((script) => importScript(script));
+    //     props.scripts.map((script) => importScript(script));
 
-    }
-
+    // }
+    // importScript("https://fontawesome.com/kits/a6e0eeba63")
 
     useEffect(
         () => {
@@ -2257,10 +2277,13 @@ function Graph2D (props) {
             if (node[props.nodeIcon]) {
                 // const nodeIcon_obj = node[props.nodeIcon];
                 ctx.font = `${iconSize}px ${"FontAwesome"}`;
+                // ctx.font = `${iconSize}px FontAwesome`;
+                // ctx.font = `10px FontAwesome`;
                 ctx.fillStyle = color;
                 ctx.fontWeight = 900;
                 // const icon = String.fromCharCode(parseInt(node[props.nodeIcon], 16));
-                ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize / 1.5, iconSize);
+                // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize / 1.5, iconSize);
+                ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
             }
         }
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.75))) {

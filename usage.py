@@ -80,9 +80,10 @@ def reset_link_source_target(links):
 # print(json.dumps(graphData,indent=3))
 graphData = {
     "nodes":[
-        {"__nodeId":"1",  "is_inferred":False, "name": "Joe Benson", "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Joe. I am 55 years old and enjoy nature and working. My weakness? I am rather longwinded. This is to be expected, since I have a big mouth."},
+        {"__nodeId":"1",  "is_inferred":False, "name": "Joe Benson", "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF001", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Joe. I am 55 years old and enjoy nature and working. My weakness? I am rather longwinded. This is to be expected, since I have a big mouth."},
         {"__nodeId":"2", "is_inferred":False,  "name": "Daniella M", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Daniella. I am 61 years old and enjoy brisk runs. That and watching old Friends episodes."},
-        {"__nodeId":"3", "is_inferred":False, "name": "Susan T", "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
+        # {"__nodeId":"3", "is_inferred":False, "name": "Susan T", "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
+        {"__nodeId":"3", "is_inferred":False, "name": "Susan T", "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":"fas fa-user", "__thingType":"person", "__rootType":"entity"},
         {"__nodeId":"4", "is_inferred":False, "name": "Ed Smith",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
         {"__nodeId":"5",  "is_inferred":False, "name": "Chevron", "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200", "__thingType":"corporation", "__rootType":"entity"},
         {"__nodeId":"6",  "is_inferred":False, "name": "Friends of the Earth", "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300", "__thingType":"NGO", "__rootType":"entity"},
@@ -209,7 +210,7 @@ app.layout = dbc.Container(
                         nodeColor="__nodeColor",
                         nodeIcon="__nodeIcon",
                         nodeImg="__nodeImg",
-                        nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
+                        # nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
                         backgroundColor="#030039"
                     ),
                 ])

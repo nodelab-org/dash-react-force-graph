@@ -2,6 +2,7 @@ const config = require('./webpack.config.js');
 const path = require('path');
 
 config.entry = {main: './src/demo/index.js'};
+// config.entry = {main: './src/lib/index.js'};
 config.output = {
     filename: './output.js',
     path: path.resolve(__dirname),

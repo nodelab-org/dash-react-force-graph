@@ -2,5 +2,3 @@
 
 export(dashGraph2D)
 export(dashGraph3D)
-export(dashGraph2DOriginal)
-export(dashDashReactForceGraph)
