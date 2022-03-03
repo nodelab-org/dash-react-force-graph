@@ -2283,7 +2283,8 @@ function Graph2D (props) {
                 ctx.fontWeight = 900;
                 // const icon = String.fromCharCode(parseInt(node[props.nodeIcon], 16));
                 // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize / 1.5, iconSize);
-                ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
+                ctx.fillText(String.fromCharCode(61449), node.x, node.y - 10 / 1.5, iconSize);
+                // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
             }
         }
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.75))) {
