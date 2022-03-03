@@ -36,18 +36,18 @@ import {withSize} from "react-sizeme";
 import objSharedProps from "../shared_props_defaults.js";
 import "react-dat-gui/dist/index.css";
 
-window.onload = function () {
-    var span = document.createElement('span');
+// window.onload = function () {
+//     var span = document.createElement('span');
   
-    // span.className = 'fas';
-    span.className = 'fas';
-    span.style.display = 'none';
-    document.body.insertBefore(span, document.body.firstChild);
+//     // span.className = 'fas';
+//     span.className = 'fas';
+//     span.style.display = 'none';
+//     document.body.insertBefore(span, document.body.firstChild);
     
-    alert(window.getComputedStyle(span, null).getPropertyValue('font-family'));
+//     alert(window.getComputedStyle(span, null).getPropertyValue('font-family'));
       
-    document.body.removeChild(span);
-};
+//     document.body.removeChild(span);
+// };
 
 /* eslint-enable sort-imports */
 
