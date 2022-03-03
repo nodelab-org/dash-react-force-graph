@@ -210,8 +210,9 @@ function Graph2D (props) {
         useRef(null)
     ];
 
-    // [
+    [
         // "https://kit.fontawesome.com/a6e0eeba63.js",
+        "https://kit.fontawesome.com/1b79b43068.js",
         // '../../../assets/scripts/solid.js',
         // '../../../assets/scripts/brands.js',
         // '../../../assets/scripts/fontawesome.js'
@@ -220,7 +221,7 @@ function Graph2D (props) {
     //     // We recommend referencing the fontawesome.js loader last.
     //     // https://fontawesome.com/docs/web/setup/host-yourself/svg-js
     //     // '../../../node_modules/@fortawesome/fontawesome-free/js/fontawesome.js'
-    // ].map((script) => importScript(script));
+    ].map((script) => importScript(script));
 
     /* eslint-enable one-var */
     // Import scripts https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
@@ -2276,7 +2277,7 @@ function Graph2D (props) {
             // icon
             if (node[props.nodeIcon]) {
                 // const nodeIcon_obj = node[props.nodeIcon];
-                ctx.font = `${iconSize}px ${"Font Awesome 6 Free"}`;
+                ctx.font = `${iconSize}px ${"FontAwesome"}`;
                 // ctx.font = `${iconSize}px FontAwesome`;
                 // ctx.font = `10px FontAwesome`;
                 ctx.fillStyle = color;
