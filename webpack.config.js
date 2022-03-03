@@ -90,20 +90,20 @@ module.exports = (env, argv) => {
                 }, 
                 {
                     test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: 'fonts/[name][ext]'
-                    }
-                    // use: [
-                    //     {
-                    //         loader: 'file-loader',
-                    //         options: {
-                    //         name: '[name].[ext]',
-                    //         publicPath: 'assets/fontawesome/webfonts/',
-                    //         outputPath: 'fonts/'
-                    //         }
-                    //     }
-                    // ]
+                    // type: 'asset/resource',
+                    // generator: {
+                    //     filename: 'fonts/[name][ext]'
+                    // }
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                            name: '[name].[ext]',
+                            // publicPath: 'assets/fontawesome/webfonts/',
+                            outputPath: 'fonts/'
+                            }
+                        }
+                    ]
                 }
             ],
         },
