@@ -17,7 +17,7 @@ import DatGui, {
 import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import validateColor from "validate-color";
-import importScript from "../customHooks/importScript.js";
+// import importScript from "../customHooks/importScript.js";
 
 // const script = document.createElement('script');
 // script.src = "https://kit.fontawesome.com/a6e0eeba63.js";
