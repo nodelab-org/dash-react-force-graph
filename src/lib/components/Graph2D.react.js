@@ -1143,7 +1143,7 @@ function Graph2D (props) {
                     const targetSeenIds = new Set();
 
                     let targetX = nodesByIdNew[nodeZoomId].fx + marX;
-                    let targetSourceX = nodesByIdNew[nodeZoomId].fx + marX + marX * Object.keys(targetNodeObjs).length;
+                    let targetSourceX = nodesByIdNew[nodeZoomId].fx + marX + 0.5 * marX * Object.keys(targetNodeObjs).length; 
 
                     for (const linkLabel of Object.keys(targetNodeObjs)) {
 
@@ -1182,7 +1182,13 @@ function Graph2D (props) {
                                     
                                 }
                                 
-                                targetSourceLabelX += marX * 0.5;
+                                if (targetSourceNode[props.nodeId] === targetSourceNode.__thingType) {
+                                    // only space out nodes in schema view
+
+                                    targetSourceLabelX += marX * 0.5;
+
+                                }
+                                
 
                             }
     
@@ -1208,8 +1214,12 @@ function Graph2D (props) {
     
                         }
 
-                        targetX += marX;
-                        targetSourceX += marX;
+                        if (targetNode[props.nodeId] === targetNode.__thingType) {
+
+                            targetX += marX * 0.5;
+                            targetSourceX += marX * 0.5;
+
+                        }
 
                     }
 
