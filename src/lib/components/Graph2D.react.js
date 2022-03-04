@@ -1161,9 +1161,9 @@ function Graph2D (props) {
     
                             let rpYSum = 0;
                             
-                            for (const label1 in targetSourceNodes) { 
+                            let targetSourceLabelX = targetSourceX;
 
-                                let targetSourceLabelX = targetSourceX;
+                            for (const label1 in targetSourceNodes) {                                 
 
                                 for (const targetSourceNode of targetSourceNodes[label1]) {
     
@@ -1179,9 +1179,10 @@ function Graph2D (props) {
     
                                     }
 
-                                    targetSourceLabelX += marX;
-        
+                                    
                                 }
+                                
+                                targetSourceLabelX += marX * 0.5;
 
                             }
     
