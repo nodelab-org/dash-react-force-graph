@@ -896,8 +896,8 @@ function Graph2D (props) {
                         cloneDeep(nodesById),
                         80,
                         25,
-                        [],
-                        []
+                        {},
+                        {}
                     ];
 
                     console.log("this is nodeZoom");
@@ -920,9 +920,15 @@ function Graph2D (props) {
 
                         // for (const [role, obj] of Object.entries(nodeZoom.__source)) {
                         for (const [
-                            _linkLabel,
+                            linkLabel,
                             obj
                         ] of Object.entries(nodesByIdNew[nodeZoomId].__source)) {
+
+                            if (!(linkLabel in targetNodeObjs)) {
+
+                                targetNodeObjs[linkLabel] = [];
+
+                            }
 
                             for (const [
                                 linkId,
@@ -930,7 +936,7 @@ function Graph2D (props) {
                             ] of Object.entries(obj)) {
 
                                 const targetNode = nodesByIdNew[targetId];
-                                targetNodeObjs.push({
+                                targetNodeObjs[linkLabel].push({
                                     "targetNode": targetNode,
                                     "targetSourceNodes": []
                                 });
@@ -943,12 +949,12 @@ function Graph2D (props) {
                                     ) {
 
                                     for (const [
-                                        _linkLabel1,
+                                        linkLabel1,
                                         obj1
                                     ] of Object.entries(targetNode.__target)) {
 
                                         if (nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId].__thingType ||
-                                            ["relates", "plays"].includes(_linkLabel1)) {       
+                                            ["relates", "plays"].includes(linkLabel1)) {       
 
                                             for (const [
                                                 linkId1,
@@ -958,7 +964,7 @@ function Graph2D (props) {
                                                 if (!nodeIdsVisibleNew.includes(targetSourceId)) {
 
                                                     // only allow role players to be placed once
-                                                    targetNodeObjs[targetNodeObjs.length - 1]
+                                                    targetNodeObjs[linkLabel][targetNodeObjs[linkLabel].length - 1]
                                                         .targetSourceNodes.push(nodesByIdNew[targetSourceId]);
                                                     nodeIdsVisibleNew.push(targetSourceId);
 
@@ -984,10 +990,16 @@ function Graph2D (props) {
                     if (Object.values(nodesByIdNew[nodeZoomId].__target).length) {
 
                         for (const [
-                            _linkLabel,
+                            linkLabel,
                             obj
 
                         ] of Object.entries(nodesByIdNew[nodeZoomId].__target)) {
+                            
+                            if (!(linkLabel in sourceNodes)) {
+
+                                sourceNodes[linkLabel] = []
+
+                            }
 
                             for (const [
                                 linkId,
@@ -997,7 +1009,7 @@ function Graph2D (props) {
                                 linkIdsVisibleNew.push(linkId);
                                 if (!nodeIdsVisibleNew.includes(sourceId)) {
 
-                                    sourceNodes.push(nodesByIdNew[sourceId]);
+                                    sourceNodes[linkLabel].push(nodesByIdNew[sourceId]);
                                     nodeIdsVisibleNew.push(sourceId);
 
                                 }
@@ -1018,28 +1030,28 @@ function Graph2D (props) {
                     // place node relative to node zoom node
                     console.log("computing nodeZoom layout");
                     /* eslint-disable one-var */
+                    const sum = (array) => array.reduce(
+                        (elA, elB) => elA + elB,
+                        0
+                    )
+                    
+                    // data: number of relations, other roleplayers, and roleplayers (if clicked node is relation)
+                    // schema: different
                     const [
-                        // number of relations
                         nTarget,
-                        // sum function
-                        sum
-                    ] = [
-                        targetNodeObjs.length,
-                        (array) => array.reduce(
-                            (elA, elB) => elA + elB,
-                            0
-                        )
-                    ];
-
-                    const [
-                        // total number of sourceNodes + targetNodeObjs/2 - 0.5
                         nTargetSource,
                         nSource
                     ] = [
-                        targetNodeObjs.length
-                            ? sum(targetNodeObjs.map((tnode) => tnode.targetSourceNodes.length))// + targetNodeObjs.length / 2 - 0.5
+                        Object.keys(targetNodeObjs).length
+                            ? sum(Object.values(targetNodeObjs).map((arr) => arr.length))
                             : 0,
-                        sourceNodes.length
+                        //targetNodeObjs.length
+                        Object.keys(targetNodeObjs).length
+                            ? sum(Object.keys(targetNodeObjs).map((key) => sum(targetNodeObjs[key].map((tnode) => tnode.targetSourceNodes.length))))// + targetNodeObjs.length / 2 - 0.5
+                            : 0,
+                        Object.keys(sourceNodes).length
+                            ? sum(Object.values(sourceNodes).map((arr) => arr.length))
+                            : 0
 
                     ];
 
@@ -1049,8 +1061,8 @@ function Graph2D (props) {
                             nTargetSource,
                             nSource,
                             2
-                        ) - 1) * marYMin; //+ targetNodeObjs.length/2;
-                    // const yMin = nodeZoom.y - height / 2;
+                        ) - 1) * marYMin;
+
                     const yMin = nodesByIdNew[nodeZoomId].fy - height / 2;
 
                     // compute y margins (spacing) for each column of nodes
@@ -1081,74 +1093,76 @@ function Graph2D (props) {
                     ];
                     
                     // Sources can target the same target more than once. Avoid setting coordinates for a target more than once.
-                    
                     const targetSeenIds = new Set();
 
-                    for (let i = 0; i < targetNodeObjs.length; i++) {
+                    let targetX = nodesByIdNew[nodeZoomId].fx + marX;
+                    let targetSourceX = targetX + marX * Object.keys(targetNodeObjs).length;
 
-                        const targetNodeObj = targetNodeObjs[i];
+                    for (const linkLabel of Object.keys(targetNodeObjs)) {
 
-                        const [
-                            targetNode,
-                            targetSourceNodes
-                        ] = [
-                            targetNodeObj.targetNode,
-                            targetNodeObj.targetSourceNodes
-                        ];
-
-                        // nodesByIdNew[relNode[props.nodeId]].fx = nodeZoom.x + marX
-                        // relNode.fx = nodeZoom.x + marX 
-                        // relNode.fy = yMin + kRel * marYRel;
-                        let rpYSum = 0;
-
-                        for (const targetSourceNode of targetSourceNodes) {
-
-                            // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
-                            nodesByIdNew[targetSourceNode[props.nodeId]].fx = nodesByIdNew[nodeZoomId].fx + marX * 2;
-                            nodesByIdNew[targetSourceNode[props.nodeId]].fy = yMin + offsetYTargetSource + kRelRp * marYMin;
-
-                            // roleplayer.fx = nodeZoom.x + marX * 3;
-                            // roleplayer.fy = yMin + kRelRp * marYRelRp;
-                            // if too close to nodeZoom and relation is below nodeZoom in height, shift rp down another notch
-                            // if (roleplayer.fy - nodeZoom.y < marYMin && (yMin + kRel * marYRel > nodeZoom.y)) {
-
-                            // if (nodesByIdNew[targetSourceNode[props.nodeId]]
-                            //     .fy - nodesByIdNew[nodeZoomId].y < marYMin &&
-                            //     (yMin + kRel * marYRel > nodesByIdNew[nodeZoomId].y)) {
-                            //     nodesByIdNew[targetSourceNode[props.nodeId]]
-                            //     .fy += marYRelRp;
-                            //     kRelRp += 1;
-
-                            // }
-                            kRelRp += 1;
-                            rpYSum += nodesByIdNew[targetSourceNode[props.nodeId]].fy;
-
+                        for (let i = 0; i < targetNodeObjs[linkLabel].length; i++) {
+    
+                            const targetNodeObj = targetNodeObjs[linkLabel][i];
+    
+                            const [
+                                targetNode,
+                                targetSourceNodes
+                            ] = [
+                                targetNodeObj.targetNode,
+                                targetNodeObj.targetSourceNodes
+                            ];
+    
+                            let rpYSum = 0;
+    
+                            for (const targetSourceNode of targetSourceNodes) {
+    
+                                // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
+                                nodesByIdNew[targetSourceNode[props.nodeId]].fx = targetSourceX;
+                                nodesByIdNew[targetSourceNode[props.nodeId]].fy = yMin + offsetYTargetSource + kRelRp * marYMin;
+    
+                                kRelRp += 1;
+                                rpYSum += nodesByIdNew[targetSourceNode[props.nodeId]].fy;
+    
+                            }
+    
+                            if (!targetSeenIds.has(targetNode[props.nodeId])) {
+    
+                                nodesByIdNew[targetNode[props.nodeId]].fx = targetX;
+                                const yCoord = targetSourceNodes.length
+                                    ? rpYSum / targetSourceNodes.length
+                                    : i > 0
+                                        ? nodesByIdNew[targetNodeObjs[linkLabel][i - 1].targetNode[props.nodeId]].fy + marYMin
+                                        : yMin + offsetYTarget;//marYRelRp//  yMin + kRel * marYRel;
+                                nodesByIdNew[targetNode[props.nodeId]].fy = yCoord >= relYMax + marYMin
+                                    ? yCoord
+                                    : relYMax + marYMin;
+    
+                                targetSeenIds.add(targetNode[props.nodeId]);
+                                relYMax = nodesByIdNew[targetNode[props.nodeId]].fy;
+    
+                            }
+    
                         }
 
-                        if (!targetSeenIds.has(targetNode[props.nodeId])) {
-
-                            nodesByIdNew[targetNode[props.nodeId]].fx = nodesByIdNew[nodeZoomId].fx + marX;
-                            const yCoord = targetSourceNodes.length
-                                ? rpYSum / targetSourceNodes.length
-                                : i > 0
-                                    ? nodesByIdNew[targetNodeObjs[i - 1].targetNode[props.nodeId]].fy + marYMin
-                                    : yMin + offsetYTarget;//marYRelRp//  yMin + kRel * marYRel;
-                            nodesByIdNew[targetNode[props.nodeId]].fy = yCoord >= relYMax + marYMin
-                                ? yCoord
-                                : relYMax + marYMin;
-
-                            targetSeenIds.add(targetNode[props.nodeId]);
-                            relYMax = nodesByIdNew[targetNode[props.nodeId]].fy;
-
-                        }
+                        targetX += marX;
+                        targetSourceX += marX;
 
                     }
 
-                    sourceNodes.forEach((sNode) => {
+                    // group different source nodes in columns by link label
+                    let sourceX = nodesByIdNew[nodeZoomId].fx - (len(Object.keys(sourceNodes)) + marX);
 
-                        nodesByIdNew[sNode[props.nodeId]].fx = nodesByIdNew[nodeZoomId].fx - marX;
-                        nodesByIdNew[sNode[props.nodeId]].fy = yMin + offsetYSource + (kRp * marYMin);
-                        kRp += 1;
+                    Object.keys(sourceNodes).forEach((key) => {
+
+                        sourceNodes[key].forEach((sNode) => {
+
+                            nodesByIdNew[sNode[props.nodeId]].fx = sourceX;
+                            nodesByIdNew[sNode[props.nodeId]].fy = yMin + offsetYSource + (kRp * marYMin);
+                            kRp += 1;
+
+                        })
+
+                        sourceX += marX;
 
                     });
 
