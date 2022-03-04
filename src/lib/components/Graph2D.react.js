@@ -199,7 +199,7 @@ function Graph2D (props) {
         useState({
             "center": 0.52,
             "charge": -45,
-            "link": 65,
+            "link": 70,
             "linkCurvature": props.linkCurvature,
             "nodeLabelRelSize": props.nodeLabelRelSize,
             "nodeRelSize": props.nodeRelSize,
@@ -954,7 +954,7 @@ function Graph2D (props) {
                                     ] of Object.entries(targetNode.__target)) {
 
                                         if (nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId].__thingType ||
-                                            ["relates", "plays"].includes(linkLabel1)) {       
+                                            ["relates", "plays"].includes(linkLabel) && ["relates", "plays"].includes(linkLabel1)) {       
 
                                             for (const [
                                                 linkId1,
@@ -1096,7 +1096,7 @@ function Graph2D (props) {
                     const targetSeenIds = new Set();
 
                     let targetX = nodesByIdNew[nodeZoomId].fx + marX;
-                    let targetSourceX = nodesByIdNew[nodeZoomId].fx + marX + marX * Object.keys(targetNodeObjs).length;
+                    let targetSourceX = nodesByIdNew[nodeZoomId].fx + marX * Object.keys(targetNodeObjs).length;
 
                     for (const linkLabel of Object.keys(targetNodeObjs)) {
 
@@ -1115,24 +1115,32 @@ function Graph2D (props) {
                             let rpYSum = 0;
     
                             for (const targetSourceNode of targetSourceNodes) {
-    
-                                // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
-                                nodesByIdNew[targetSourceNode[props.nodeId]].fx = targetSourceX;
-                                nodesByIdNew[targetSourceNode[props.nodeId]].fy = yMin + offsetYTargetSource + kRelRp * marYMin;
-    
-                                kRelRp += 1;
-                                rpYSum += nodesByIdNew[targetSourceNode[props.nodeId]].fy;
+
+                                // if targetSourceNode isn't a target node, give it coordinates
+                                if (!Object.values(targetNodeObjs).some((arr) => arr.some((targNodeObj) => targNodeObj.targetNode[props.nodeId] === targetSourceNode[props.nodeId]))) {
+
+                                    // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
+                                    nodesByIdNew[targetSourceNode[props.nodeId]].fx = targetSourceX;
+                                    nodesByIdNew[targetSourceNode[props.nodeId]].fy = yMin + offsetYTargetSource + kRelRp * marYMin;
+
+                                    kRelRp += 1;
+                                    rpYSum += nodesByIdNew[targetSourceNode[props.nodeId]].fy;
+
+                                }
     
                             }
     
                             if (!targetSeenIds.has(targetNode[props.nodeId])) {
     
                                 nodesByIdNew[targetNode[props.nodeId]].fx = targetX;
+                                
+                                const noTargetSourceNodesYcoord = i > 0
+                                    ? nodesByIdNew[targetNodeObjs[linkLabel][i - 1].targetNode[props.nodeId]].fy + marYMin
+                                    : yMin + offsetYTarget;//marYRelRp//  yMin + kRel * marYRel;
+
                                 const yCoord = targetSourceNodes.length
                                     ? rpYSum / targetSourceNodes.length
-                                    : i > 0
-                                        ? nodesByIdNew[targetNodeObjs[linkLabel][i - 1].targetNode[props.nodeId]].fy + marYMin
-                                        : yMin + offsetYTarget;//marYRelRp//  yMin + kRel * marYRel;
+                                    : noTargetSourceNodesYcoord;
                                 nodesByIdNew[targetNode[props.nodeId]].fy = yCoord >= relYMax + marYMin
                                     ? yCoord
                                     : relYMax + marYMin;
@@ -2571,7 +2579,7 @@ function Graph2D (props) {
         setGuiSettings( (guiSettings) => ({...guiSettings, 
                     "charge": -45,
                     "center": 0.52,
-                    "link": 65,
+                    "link": 70,
                     "radial": 0.00
                 }
         ))
