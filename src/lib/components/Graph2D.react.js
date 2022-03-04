@@ -947,21 +947,26 @@ function Graph2D (props) {
                                         obj1
                                     ] of Object.entries(targetNode.__target)) {
 
-                                        for (const [
-                                            linkId1,
-                                            targetSourceId
-                                        ] of Object.entries(obj1)) {
+                                        if (nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId].__thingType ||
+                                            ["relates", "plays"].includes(_linkLabel1)) {       
 
-                                            if (!nodeIdsVisibleNew.includes(targetSourceId)) {
+                                            for (const [
+                                                linkId1,
+                                                targetSourceId
+                                            ] of Object.entries(obj1)) {
 
-                                                // only allow role players to be placed once
-                                                targetNodeObjs[targetNodeObjs.length - 1]
-                                                    .targetSourceNodes.push(nodesByIdNew[targetSourceId]);
-                                                nodeIdsVisibleNew.push(targetSourceId);
+                                                if (!nodeIdsVisibleNew.includes(targetSourceId)) {
+
+                                                    // only allow role players to be placed once
+                                                    targetNodeObjs[targetNodeObjs.length - 1]
+                                                        .targetSourceNodes.push(nodesByIdNew[targetSourceId]);
+                                                    nodeIdsVisibleNew.push(targetSourceId);
+
+                                                }
+                                                // .. but always make the link visible
+                                                linkIdsVisibleNew.push(linkId1);
 
                                             }
-                                            // .. but always make the link visible
-                                            linkIdsVisibleNew.push(linkId1);
 
                                         }
 
