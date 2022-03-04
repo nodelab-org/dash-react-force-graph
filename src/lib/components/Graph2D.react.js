@@ -1182,12 +1182,12 @@ function Graph2D (props) {
                                     
                                 }
                                 
-                                if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
-                                    // only space out nodes in schema view
+                                // if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
+                                //     // only space out nodes in schema view
 
-                                    targetSourceLabelX += marX * 0.5;
+                                //     targetSourceLabelX += marX * 0.5;
 
-                                }
+                                // }
                                 
 
                             }
@@ -1224,21 +1224,32 @@ function Graph2D (props) {
                     }
 
                     // group different source nodes in columns by link label
-                    let sourceX = nodesByIdNew[nodeZoomId].fx - (Object.keys(sourceNodes).length * marX);
+                    if (Object.keys(sourceNodes).length) {
 
-                    Object.keys(sourceNodes).forEach((key) => {
+                        let sourceX = nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType
+                            ? nodesByIdNew[nodeZoomId].fx - (marX + (Object.keys(sourceNodes).length - 1) * marX * 0.5)
+                            : nodesByIdNew[nodeZoomId].fx - marX;
 
-                        sourceNodes[key].forEach((sNode) => {
+                        Object.keys(sourceNodes).forEach((key) => {
+    
+                            sourceNodes[key].forEach((sNode) => {
+    
+                                nodesByIdNew[sNode[props.nodeId]].fx = sourceX;
+                                nodesByIdNew[sNode[props.nodeId]].fy = yMin + offsetYSource + (kRp * marYMin);
+                                kRp += 1;
+    
+                            })
+                            
+                            if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
 
-                            nodesByIdNew[sNode[props.nodeId]].fx = sourceX;
-                            nodesByIdNew[sNode[props.nodeId]].fy = yMin + offsetYSource + (kRp * marYMin);
-                            kRp += 1;
+                                sourceX += marX * 0.5;
 
-                        })
+                            }
+    
+                        });
 
-                        sourceX += marX;
+                    }
 
-                    });
 
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
