@@ -1150,7 +1150,7 @@ function Graph2D (props) {
                     }
 
                     // group different source nodes in columns by link label
-                    let sourceX = nodesByIdNew[nodeZoomId].fx - (len(Object.keys(sourceNodes)) + marX);
+                    let sourceX = nodesByIdNew[nodeZoomId].fx - (Object.keys(sourceNodes).length + marX);
 
                     Object.keys(sourceNodes).forEach((key) => {
 
