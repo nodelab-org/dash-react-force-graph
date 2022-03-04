@@ -894,8 +894,8 @@ function Graph2D (props) {
                         sourceNodes
                     ] = [
                         cloneDeep(nodesById),
-                        80,
-                        25,
+                        60,
+                        22,
                         {},
                         {}
                     ];
@@ -1096,7 +1096,7 @@ function Graph2D (props) {
                     const targetSeenIds = new Set();
 
                     let targetX = nodesByIdNew[nodeZoomId].fx + marX;
-                    let targetSourceX = targetX + marX * Object.keys(targetNodeObjs).length;
+                    let targetSourceX = nodesByIdNew[nodeZoomId].fx + marX + marX * Object.keys(targetNodeObjs).length;
 
                     for (const linkLabel of Object.keys(targetNodeObjs)) {
 
@@ -1150,7 +1150,7 @@ function Graph2D (props) {
                     }
 
                     // group different source nodes in columns by link label
-                    let sourceX = nodesByIdNew[nodeZoomId].fx - (Object.keys(sourceNodes).length + marX);
+                    let sourceX = nodesByIdNew[nodeZoomId].fx - (Object.keys(sourceNodes).length * marX);
 
                     Object.keys(sourceNodes).forEach((key) => {
 
