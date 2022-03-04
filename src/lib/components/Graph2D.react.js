@@ -1182,9 +1182,7 @@ function Graph2D (props) {
                                     
                                 }
                                 
-                                if (Object.keys(targetSourceNodes).length && 
-                                    targetSourceNodes[label1][0][props.nodeId] === targetSourceNodes[label1][0].__thingType
-                                    ) {
+                                if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
                                     // only space out nodes in schema view
 
                                     targetSourceLabelX += marX * 0.5;
@@ -1216,9 +1214,7 @@ function Graph2D (props) {
     
                         }
 
-                        if (Object.keys(targetNodeObjs).length && 
-                            targetNodeObjs[linkLabel][0].targetNode[props.nodeId] === targetNodeObjs[linkLabel][0].targetNode.__thingType
-                            ) {
+                        if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
 
                             targetX += marX * 0.5;
                             targetSourceX += marX * 0.5;
