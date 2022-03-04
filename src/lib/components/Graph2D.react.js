@@ -938,7 +938,7 @@ function Graph2D (props) {
                                 const targetNode = nodesByIdNew[targetId];
                                 targetNodeObjs[linkLabel].push({
                                     "targetNode": targetNode,
-                                    "targetSourceNodes": []
+                                    "targetSourceNodes": {}
                                 });
                                 linkIdsVisibleNew.push(linkId);
                                 nodeIdsVisibleNew.push(targetId);
@@ -956,6 +956,12 @@ function Graph2D (props) {
                                         if (nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId].__thingType ||
                                             ["relates", "plays"].includes(linkLabel) && ["relates", "plays"].includes(linkLabel1)) {       
 
+                                            if (!(linkLabel1 in targetNodeObjs[linkLabel][targetNodeObjs[linkLabel].length - 1].targetSourceNodes)) {
+
+                                                targetNodeObjs[linkLabel][targetNodeObjs[linkLabel].length - 1].targetSourceNodes[linkLabel1] = [];
+
+                                            }
+
                                             for (const [
                                                 linkId1,
                                                 targetSourceId
@@ -965,7 +971,7 @@ function Graph2D (props) {
 
                                                     // only allow role players to be placed once
                                                     targetNodeObjs[linkLabel][targetNodeObjs[linkLabel].length - 1]
-                                                        .targetSourceNodes.push(nodesByIdNew[targetSourceId]);
+                                                        .targetSourceNodes[linkLabel1].push(nodesByIdNew[targetSourceId]);
                                                     nodeIdsVisibleNew.push(targetSourceId);
 
                                                 }
@@ -1039,21 +1045,62 @@ function Graph2D (props) {
                     // schema: different
                     const [
                         nTarget,
-                        nTargetSource,
                         nSource
                     ] = [
                         Object.keys(targetNodeObjs).length
                             ? sum(Object.values(targetNodeObjs).map((arr) => arr.length))
                             : 0,
-                        //targetNodeObjs.length
-                        Object.keys(targetNodeObjs).length
-                            ? sum(Object.keys(targetNodeObjs).map((key) => sum(targetNodeObjs[key].map((tnode) => tnode.targetSourceNodes.length))))// + targetNodeObjs.length / 2 - 0.5
-                            : 0,
                         Object.keys(sourceNodes).length
                             ? sum(Object.values(sourceNodes).map((arr) => arr.length))
                             : 0
-
                     ];
+
+                    let nTargetSource = Object.keys(targetNodeObjs).length
+                        ? sum(Object.keys(targetNodeObjs)
+                            .map((key) => sum(targetNodeObjs[key]
+                                .map((targNodeObj) => sum(Object.values(targNodeObj.targetSourceNodes)
+                                    .map((arr) => arr.length)
+                                    )
+                                )
+                                )
+                            )
+                        )
+                        : 0
+                    
+                    // if any target source nodes are also targets, subtract from nTargetSource sum
+                    const targetNodeIds = []
+                    
+                    for (const arr of Object.values(targetNodeObjs)) {
+
+                        for (const targetNodeObj of arr) {
+
+                            targetNodeIds.push(targetNodeObj.targetNode[props.nodeId])
+
+                        }
+
+                    }
+
+                    for (const label in targetNodeObjs) {
+
+                        for (const targetNodeObj of targetNodeObjs[label]) {
+
+                            for (const label1 in targetNodeObj.targetSourceNodes) {
+
+                                for (const targetSourceNode of targetNodeObj.targetSourceNodes[label1]) {
+
+                                    if (targetNodeIds.includes(targetSourceNode[props.nodeId])) {
+
+                                        nTargetSource -= 1;
+
+                                    }
+
+                                }
+
+                            }
+
+                        }
+
+                    }
 
                     // compute min y value (top)
                     const height = (Math.max(
@@ -1113,21 +1160,29 @@ function Graph2D (props) {
                             ];
     
                             let rpYSum = 0;
+                            
+                            for (const label1 in targetSourceNodes) { 
+
+                                let targetSourceLabelX = targetSourceX;
+
+                                for (const targetSourceNode of targetSourceNodes[label1]) {
     
-                            for (const targetSourceNode of targetSourceNodes) {
+                                    // if targetSourceNode isn't a target node, give it coordinates
+                                    if (!Object.values(targetNodeObjs).some((arr) => arr.some((targNodeObj) => targNodeObj.targetNode[props.nodeId] === targetSourceNode[props.nodeId]))) {
+    
+                                        // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
+                                        nodesByIdNew[targetSourceNode[props.nodeId]].fx = targetSourceLabelX;
+                                        nodesByIdNew[targetSourceNode[props.nodeId]].fy = yMin + offsetYTargetSource + kRelRp * marYMin;
+    
+                                        kRelRp += 1;
+                                        rpYSum += nodesByIdNew[targetSourceNode[props.nodeId]].fy;
+    
+                                    }
 
-                                // if targetSourceNode isn't a target node, give it coordinates
-                                if (!Object.values(targetNodeObjs).some((arr) => arr.some((targNodeObj) => targNodeObj.targetNode[props.nodeId] === targetSourceNode[props.nodeId]))) {
-
-                                    // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
-                                    nodesByIdNew[targetSourceNode[props.nodeId]].fx = targetSourceX;
-                                    nodesByIdNew[targetSourceNode[props.nodeId]].fy = yMin + offsetYTargetSource + kRelRp * marYMin;
-
-                                    kRelRp += 1;
-                                    rpYSum += nodesByIdNew[targetSourceNode[props.nodeId]].fy;
-
+                                    targetSourceLabelX += marX;
+        
                                 }
-    
+
                             }
     
                             if (!targetSeenIds.has(targetNode[props.nodeId])) {
@@ -1138,8 +1193,8 @@ function Graph2D (props) {
                                     ? nodesByIdNew[targetNodeObjs[linkLabel][i - 1].targetNode[props.nodeId]].fy + marYMin
                                     : yMin + offsetYTarget;//marYRelRp//  yMin + kRel * marYRel;
 
-                                const yCoord = targetSourceNodes.length
-                                    ? rpYSum / targetSourceNodes.length
+                                const yCoord = Object.keys(targetSourceNodes).length
+                                    ? rpYSum / sum(Object.values(targetSourceNodes).map((arr) => arr.length))
                                     : noTargetSourceNodesYcoord;
                                 nodesByIdNew[targetNode[props.nodeId]].fy = yCoord >= relYMax + marYMin
                                     ? yCoord
