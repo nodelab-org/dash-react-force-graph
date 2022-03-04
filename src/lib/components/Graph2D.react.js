@@ -1214,7 +1214,7 @@ function Graph2D (props) {
     
                         }
 
-                        if (targetNode[props.nodeId] === targetNode.__thingType) {
+                        if (targetNodeObjs[linkLabel][0].targetNode[props.nodeId] === targetNodeObjs[linkLabel][0].targetNode.__thingType) {
 
                             targetX += marX * 0.5;
                             targetSourceX += marX * 0.5;
