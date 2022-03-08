@@ -243,7 +243,7 @@ function Graph2D (props) {
             if (fgRef &&
                 fgRef.current) {
 
-                console.log("useEffect: add radial force");
+                // console.log("useEffect: add radial force");
 
                 fgRef.current.d3Force(
                     "radial",
@@ -287,7 +287,7 @@ function Graph2D (props) {
             if (nodeRelSize !== null &&
                 guiSettings.nodeRelSize !== nodeRelSize) {
 
-                console.log("useEffect: nodeRelSize");
+                // console.log("useEffect: nodeRelSize");
 
                 setNodeRelSize((_nrz) => guiSettings.nodeRelSize);
                 setNodeIconRelSize((_nirz) => guiSettings.nodeRelSize * 2);
@@ -306,7 +306,7 @@ function Graph2D (props) {
             if (nodeLabelRelSize !== null &&
                 guiSettings.nodeLabelRelSize !== nodeLabelRelSize) {
 
-                console.log("useEffect: nodeLabelRelSize");
+                // console.log("useEffect: nodeLabelRelSize");
 
                 setNodeLabelRelSize((_nlrz) => guiSettings.nodeLabelRelSize);
 
@@ -322,7 +322,7 @@ function Graph2D (props) {
 
             if (linkCurvature !== null && guiSettings.linkCurvature !== linkCurvature) {
 
-                console.log("useEffect: linkCurvature");
+                // console.log("useEffect: linkCurvature");
 
                 setLinkCurvature((_lcur) => guiSettings.linkCurvature);
 
@@ -338,7 +338,7 @@ function Graph2D (props) {
 
             if (guiSettings.useNodeIcon !== useNodeIcon) {
 
-                console.log("useEffect: useNodeIcon");
+                // console.log("useEffect: useNodeIcon");
 
                 setUseNodeIcon((_nIcon) => guiSettings.useNodeIcon);
 
@@ -354,7 +354,7 @@ function Graph2D (props) {
 
             if (guiSettings.useNodeImg !== useNodeImg) {
 
-                console.log("useEffect: useNodeImg");
+                // console.log("useEffect: useNodeImg");
 
                 setUseNodeImg((_nImg) => guiSettings.useNodeImg);
 
@@ -374,7 +374,7 @@ function Graph2D (props) {
                 !props.useCoordinates &&
                 props.forceEngine === "d3") {
 
-                console.log("useEffect: adjust graph layout forces");
+                // console.log("useEffect: adjust graph layout forces");
 
                 if (props.fixNodes &&
                     graphDataNodes &&
@@ -447,7 +447,7 @@ function Graph2D (props) {
     // attempt to detect whether component focused, didn't get it to work
     // useEffect(() => {
     //     //if (document.activeElement === currentRef) {
-    //     console.log("document.activeElement")
+        // console.log("document.activeElement")
     //     console.log(document.activeElement)
     //     console.log("fgRef.current")
     //     console.log(fgRef.current)
@@ -460,7 +460,7 @@ function Graph2D (props) {
     /* eslint-disable one-var */
     const reheatFunction = () => {
 
-        console.log("reheatFunction fired");
+        // console.log("reheatFunction fired");
 
         if (nodeZoomId) {
 
@@ -591,7 +591,7 @@ function Graph2D (props) {
                     props.forceRefresh > forceRefreshCount
                 ) {
 
-                    console.log("useEffect: new nodes added or forceRefresh incremented");
+                    // console.log("useEffect: new nodes added or forceRefresh incremented");
 
                     setGraphDataIdsAll((_gDataIdsAll) => ({
                         "links": linkIdsAllNew,
@@ -786,7 +786,7 @@ function Graph2D (props) {
 
                         if (props.nodeZoomId === nodeZoomId) {
 
-                            console.log("incrementing refreshNodeZoom");
+                            // console.log("incrementing refreshNodeZoom");
 
                             setRefreshNodeZoom((rnz) => rnz + 1);
 
@@ -866,7 +866,7 @@ function Graph2D (props) {
             // checkpoint 1: should the nodeZoom effect run at all?
             if (props.graphData && props.graphData.nodes.length > 1) {
 
-                console.log("useEffect: nodeZoomId");
+                // console.log("useEffect: nodeZoomId");
 
                 const [
                     nodeIdsVisibleNew,
@@ -882,7 +882,7 @@ function Graph2D (props) {
                     nodeZoomId in nodesById &&
                     "__source" in nodesById[nodeZoomId]) {
 
-                    console.log("nodeZoomId useEffect: block 1");
+                    // console.log("nodeZoomId useEffect: block 1");
 
                     nodeIdsVisibleNew.push(nodeZoomId);
 
@@ -900,8 +900,8 @@ function Graph2D (props) {
                         {}
                     ];
 
-                    console.log("this is nodeZoom");
-                    console.log(cloneDeep(nodesByIdNew[nodeZoomId]));
+                    // console.log("this is nodeZoom");
+                    // console.log(cloneDeep(nodesByIdNew[nodeZoomId]));
 
                     nodesByIdNew[nodeZoomId].fx = "x" in nodesByIdNew[nodeZoomId]
                         ? nodesByIdNew[nodeZoomId].x
@@ -1034,7 +1034,6 @@ function Graph2D (props) {
 
                     // LAYOUT
                     // place node relative to node zoom node
-                    console.log("computing nodeZoom layout");
                     /* eslint-disable one-var */
                     const sum = (array) => array.reduce(
                         (elA, elB) => elA + elB,
@@ -1337,7 +1336,7 @@ function Graph2D (props) {
 
                     // no nodeCoordinates, restore fixed coordinates
 
-                    console.log("nodeZoomId useEffect: block 3. Revert to nodePreviousFCoordinatesById");
+                    // console.log("nodeZoomId useEffect: block 3. Revert to nodePreviousFCoordinatesById");
 
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
@@ -1366,7 +1365,7 @@ function Graph2D (props) {
                     // neither nodeCoordinates nor have nodes settled in fixed coordinates automatically
                     // set nodes free and reheat simulation
 
-                    console.log("nodeZoomId useEffect: block 4. Free nodes and reheat.")
+                    // console.log("nodeZoomId useEffect: block 4. Free nodes and reheat.")
 
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
@@ -1403,7 +1402,7 @@ function Graph2D (props) {
                     : []);
 
                 if (nodeZoomId !== props.nodeZoomId) {
-                    // console.log("setProps: nodeZoomId (line 1140)");
+
                     props.setProps({"nodeZoomId": nodeZoomId});
 
                 }
@@ -1411,8 +1410,6 @@ function Graph2D (props) {
                 if (nodeZoomId &&
                     (!props.nodeClicked ||
                     props.nodeClicked.__nodeId !== nodeZoomId)) {
-
-                    console.log("set nodeClicked to nodeZoom (line 1149)");
 
                     props.setProps({"nodeClicked": nodesById[nodeZoomId]});
 
@@ -1732,7 +1729,7 @@ function Graph2D (props) {
 
     // https://github.com/vasturiano/force-graph/blob/master/example/multi-selection/index.html
     const handleNodeClick = (node, event) => {
-        console.log("handleNodeClick");
+        // console.log("handleNodeClick");
 
         /**
          * Node left click callback
@@ -1817,7 +1814,7 @@ function Graph2D (props) {
                     // Clicking already selected node with no key -> node zoom
                     if (nodeZoomId !== node[props.nodeId]) {
 
-                        console.log("setting nodeZoomId")
+                        // console.log("setting nodeZoomId")
 
                         setNodeZoomId(nz => node[props.nodeId]);
 
@@ -1846,7 +1843,7 @@ function Graph2D (props) {
 
     const handleNodeRightClick = (node, _event) => {
 
-        console.log("handleNodeRightClick");
+        // console.log("handleNodeRightClick");
 
         if (node) {
 
@@ -1872,7 +1869,7 @@ function Graph2D (props) {
 
     const handleLinkRightClick = (link, event) => {
 
-        console.log("handleLinkRightClick");
+        // console.log("handleLinkRightClick");
 
         if (link) {
 
@@ -1911,7 +1908,7 @@ function Graph2D (props) {
 
     const handleNodeDrag = (node, _translate) => {
 
-        console.log("handleNodeDrag");
+        // console.log("handleNodeDrag");
 
         if (props.linkRightClicked ||
             props.linkRightClickedViewpointCoordinates || 
@@ -2065,7 +2062,7 @@ function Graph2D (props) {
     // fix dragged nodes in place
     const handleNodeDragEnd = (node, _translate) => {
 
-        console.log("handleNodeDragEnd");
+        // console.log("handleNodeDragEnd");
         if (nodeIdsDrag.length) {
 
             setNodeIdsDrag((_nids) => []);
@@ -2140,7 +2137,7 @@ function Graph2D (props) {
 
     const handleBackgroundClick = (_event) => {
 
-        console.log("handleBackgroundClick");
+        // console.log("handleBackgroundClick");
 
         if (props.linkRightClicked ||
             props.linkRightClickedViewpointCoordinates ||
@@ -2173,7 +2170,7 @@ function Graph2D (props) {
 
     const handleBackgroundRightClick = (_event) => {
 
-        console.log("handleBackgroundRightClick");
+        // console.log("handleBackgroundRightClick");
 
         if (props.linkRightClicked ||
             props.linkRightClickedViewpointCoordinates ||
@@ -2248,7 +2245,7 @@ function Graph2D (props) {
     useEffect(
         () => {
 
-            console.log("useEffect: setNodeIdsHighlight");
+            // console.log("useEffect: setNodeIdsHighlight");
             setNodeIdsHighlight((_nih) => props.nodeIdsHighlightUser
                 ? props.nodeIdsHighlightUser
                 : []);
@@ -2261,7 +2258,7 @@ function Graph2D (props) {
     useEffect(
         () => {
 
-            console.log("useEffect: setLinkIdsHighlight");
+            // console.log("useEffect: setLinkIdsHighlight");
 
             setLinkIdsHighlight(lih => props.linkIdsHighlightUser
             ? props.linkIdsHighlightUser
@@ -2588,7 +2585,7 @@ function Graph2D (props) {
             nodeZoomId === null
             ) {
 
-            console.log("onEngineStopFunction");
+            // console.log("onEngineStopFunction");
             
             // if any nodes have settled into coordinates that differ from the fixed coordinates
             if (graphDataNodes.some((node) => node.x !== node.fx || node.y !== node.fy)) { 
@@ -2652,8 +2649,8 @@ function Graph2D (props) {
 
     const restoreDefaultForcesFunction = () => {
 
-        console.log("restoreDefaultForcesFunction");
-        setGuiSettings( (guiSettings) => ({...guiSettings, 
+        // console.log("restoreDefaultForcesFunction");
+        setGuiSettings( (gs) => ({...gs, 
                     "charge": -45,
                     "center": 0.52,
                     "link": 70,
@@ -2682,7 +2679,7 @@ function Graph2D (props) {
             fgRef.current &&
             props.emitParticle) {
 
-            console.log("useEffect: emitParticle");
+            // console.log("useEffect: emitParticle");
             fgRef.current.emitParticle(props.emitParticle);
 
         }
@@ -2698,7 +2695,7 @@ function Graph2D (props) {
                 "current" in fgRef &&
                 fgRef.current) {
 
-                console.log("useEffect: pauseAnimation");
+                // console.log("useEffect: pauseAnimation");
 
                 props.pauseAnimation
                     ? fgRef.current.pauseAnimation()
@@ -2785,7 +2782,7 @@ function Graph2D (props) {
             "current" in fgRef &&
             fgRef.current){
 
-            console.log("useEffect: set grappBbox props");
+            // console.log("useEffect: set grappBbox props");
             props.setProps({"graphBbox":fgRef.current.getGraphBbox()});
 
         }
@@ -2800,7 +2797,7 @@ function Graph2D (props) {
             "current" in fgRef &&
             fgRef.current && props.zoom) {
 
-            console.log("useEffect: zoom");
+            // console.log("useEffect: zoom");
 
             fgRef.current.zoom(...props.zoom);
 
@@ -2811,7 +2808,7 @@ function Graph2D (props) {
 
     const zoomToFitFunction = () => {
 
-        console.log("zoomToFitFunction");
+        // console.log("zoomToFitFunction");
         if (fgRef.current) {
             fgRef.current.zoomToFit(
                 250,
@@ -2830,7 +2827,7 @@ function Graph2D (props) {
             fgRef.current &&
             props.zoomToFit){
             
-            console.log("useEffect: zoomToFit");
+            // console.log("useEffect: zoomToFit");
             fgRef.current.zoomToFit(...props.zoomToFit);
         }
 
@@ -2847,7 +2844,7 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        console.log("useEffect: set nodeIdsInvisibleAuto prop");
+        // console.log("useEffect: set nodeIdsInvisibleAuto prop");
         props.setProps({"nodeIdsInvisibleAuto":nodeIdsInvisibleAuto});
 
     },[nodeIdsInvisibleAuto]);
@@ -2855,7 +2852,7 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        console.log("useEffect: set linkIdsInvisibleAuto prop");
+        // console.log("useEffect: set linkIdsInvisibleAuto prop");
         props.setProps({"linkIdsInvisibleAuto":linkIdsInvisibleAuto});
 
     },[linkIdsInvisibleAuto]);
@@ -2869,7 +2866,7 @@ function Graph2D (props) {
             fgRef.current &&
             props.centerAtZoom) {
 
-            console.log("useEffect: centerAtZoom");
+            // console.log("useEffect: centerAtZoom");
             // fgRef.current.centerAt((initZoomPan.x-props.centerAtZoom.x)/props.centerAtZoom.k, (initZoomPan.y-props.centerAtZoom.y)/props.centerAtZoom.k)
             if (props.centerAtZoom.k) {
 
@@ -2899,7 +2896,7 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        console.log("useEffect: setNodeIdsInvisibleAuto");
+        // console.log("useEffect: setNodeIdsInvisibleAuto");
 
         const [
             nodeIdsInvisibleAutoAdded,
@@ -2945,7 +2942,7 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        console.log("useEffect: setLinkIdsInvisibleAuto");
+        // console.log("useEffect: setLinkIdsInvisibleAuto");
 
         const [
             linkIdsInvisibleAutoAdded,
@@ -3107,7 +3104,7 @@ function Graph2D (props) {
                                 props.nodeRightClickedViewpointCoordinates
                             )
                         ) {
-                            console.log("onZoom: reset linkRightClicked, linkRightClickedViewPointCoordinates, nodeRightClicked, nodeRightClickedViewpointCoordinates");
+                            // console.log("onZoom: reset linkRightClicked, linkRightClickedViewPointCoordinates, nodeRightClicked, nodeRightClickedViewpointCoordinates");
                             props.setProps({
                                 // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
                                 "linkRightClicked": null,
@@ -3122,11 +3119,7 @@ function Graph2D (props) {
                     }}
                     onZoomEnd={(args) => {
                         // keep track of currentZoomPan
-                        console.log("onZoomEnd")
-                        console.log("args")
-                        console.log(args)
-                        console.log("props.currentZoomPan")
-                        console.log(props.currentZoomPan)
+                        // console.log("onZoomEnd")
                         if (
                             args && 
                             ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
@@ -3136,7 +3129,6 @@ function Graph2D (props) {
                                     props.currentZoomPan.x != args.x ||
                                     props.currentZoomPan.y != args.y
                         ))) {
-                            console.log("set currentZoomPan prop")
 
                             props.setProps({
                                 "currentZoomPan":args
