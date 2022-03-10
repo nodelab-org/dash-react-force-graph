@@ -2389,7 +2389,7 @@ function Graph2D (props) {
                 ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
             }
         }
-        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.6))) {
+        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
             ctx.fontWeight = fontWeightText
             // draw text background rectangle
             ctx.font = `${fontSize}px Sans-Serif`;
@@ -2523,7 +2523,7 @@ function Graph2D (props) {
 
         if (linkCurvature || link.__curvature) return;
 
-        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.6))) {
+        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
         
             const color = linkColorFunction(link);
 
