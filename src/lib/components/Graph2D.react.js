@@ -2389,7 +2389,7 @@ function Graph2D (props) {
                 ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
             }
         }
-        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.75))) {
+        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.6))) {
             ctx.fontWeight = fontWeightText
             // draw text background rectangle
             ctx.font = `${fontSize}px Sans-Serif`;
@@ -2523,54 +2523,58 @@ function Graph2D (props) {
 
         if (linkCurvature || link.__curvature) return;
 
-        const color = linkColorFunction(link);
+        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.6))) {
+        
+            const color = linkColorFunction(link);
 
-        const MAX_FONT_SIZE = 4;
-        const LABEL_NODE_MARGIN = nodeRelSize * 1.5;
+            const MAX_FONT_SIZE = 4;
+            const LABEL_NODE_MARGIN = nodeRelSize * 1.5;
 
-        const start = link[props.linkSource];
-        const end = link[props.linkTarget];
+            const start = link[props.linkSource];
+            const end = link[props.linkTarget];
 
-        // ignore unbound links
-        if (typeof start !== "object" || typeof end !== "object") return;
+            // ignore unbound links
+            if (typeof start !== "object" || typeof end !== "object") return;
 
-        // calculate label positioning
-        const textPos = Object.assign(...["x", "y"].map((c) => ({
-            [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-        })));
+            // calculate label positioning
+            const textPos = Object.assign(...["x", "y"].map((c) => ({
+                [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
+            })));
 
-        const relLink = { x: end.x - start.x, y: end.y - start.y };
+            const relLink = { x: end.x - start.x, y: end.y - start.y };
 
-        const maxTextLength = Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) - LABEL_NODE_MARGIN * 2;
+            const maxTextLength = Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) - LABEL_NODE_MARGIN * 2;
 
-        let textAngle = Math.atan2(relLink.y, relLink.x);
-        // maintain label vertical orientation for legibility
-        if (textAngle > Math.PI / 2) textAngle = -(Math.PI - textAngle);
-        if (textAngle < -Math.PI / 2) textAngle = -(-Math.PI - textAngle);
+            let textAngle = Math.atan2(relLink.y, relLink.x);
+            // maintain label vertical orientation for legibility
+            if (textAngle > Math.PI / 2) textAngle = -(Math.PI - textAngle);
+            if (textAngle < -Math.PI / 2) textAngle = -(-Math.PI - textAngle);
 
-        const label = `${link[props.linkLabel]}`;
+            const label = `${link[props.linkLabel]}`;
 
-        // estimate fontSize to fit in link length
-        ctx.font = "1px Sans-Serif";
-        const fontSize = Math.min(MAX_FONT_SIZE, maxTextLength / ctx.measureText(label).width);
-        ctx.font = `${fontSize}px Sans-Serif`;
+            // estimate fontSize to fit in link length
+            ctx.font = "1px Sans-Serif";
+            const fontSize = Math.min(MAX_FONT_SIZE, maxTextLength / ctx.measureText(label).width);
+            ctx.font = `${fontSize}px Sans-Serif`;
 
-        const textWidth = ctx.measureText(label).width;
-        const bckgDimensions = [textWidth, fontSize].map((n) => n + fontSize * 0.2); // some padding
+            const textWidth = ctx.measureText(label).width;
+            const bckgDimensions = [textWidth, fontSize].map((n) => n + fontSize * 0.2); // some padding
 
-        // draw text label (with background rect)
-        ctx.save();
-        ctx.translate(textPos.x, textPos.y);
-        ctx.rotate(textAngle);
+            // draw text label (with background rect)
+            ctx.save();
+            ctx.translate(textPos.x, textPos.y);
+            ctx.rotate(textAngle);
 
-        ctx.fillStyle = props.backgroundColor;
-        ctx.fillRect(- bckgDimensions[0] / 2, - bckgDimensions[1] / 2, ...bckgDimensions);
+            ctx.fillStyle = props.backgroundColor;
+            ctx.fillRect(- bckgDimensions[0] / 2, - bckgDimensions[1] / 2, ...bckgDimensions);
 
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillStyle = color;// invert(backgroundColor);
-        ctx.fillText(label, 0, 0);
-        ctx.restore();
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = color;// invert(backgroundColor);
+            ctx.fillText(label, 0, 0);
+            ctx.restore();
+
+        }
 
     };
 
