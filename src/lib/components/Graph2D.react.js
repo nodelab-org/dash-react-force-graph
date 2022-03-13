@@ -2872,13 +2872,13 @@ function Graph2D (props) {
 
             // console.log("useEffect: centerAtZoom");
             // fgRef.current.centerAt((initZoomPan.x-props.centerAtZoom.x)/props.centerAtZoom.k, (initZoomPan.y-props.centerAtZoom.y)/props.centerAtZoom.k)
-            if (props.centerAtZoom.k) {
+            if ("k" in props.centerAtZoom) {
 
                 fgRef.current.zoom(props.centerAtZoom.k)
 
             }
 
-            if (props.centerAtZoom.x && props.centerAtZoom.y) {
+            if ("x" in props.centerAtZoom && "y" in props.centerAtZoom) {
 
                 const centerAtZoom = props.centerAtZoom
 
