@@ -607,7 +607,8 @@ function Graph2D (props) {
                         linkIdsRemovedNew.size ||
                         props.forceRefresh > forceRefreshCount) &&
                         props.updateNeighbours &&
-                        props.graphData.nodes.length) {
+                        props.graphData.nodes.length
+                        ) {
 
                         /**
                          * Add neighbours to each node
@@ -678,9 +679,11 @@ function Graph2D (props) {
 
                     }
 
-                    // set coordinates
-
-                    if (nodesClone.length && props.graphData.nodes.length) {
+                    // set coordinates. Only necessary when not forcing refresh.
+                    if (nodesClone.length && 
+                        props.graphData.nodes.length && 
+                        (nodeIdsAddedNew.size || nodeIdsRemovedNew.size)
+                        ) {
 
                         if (props.useCoordinates &&
                             props.nodeCoordinates) {
