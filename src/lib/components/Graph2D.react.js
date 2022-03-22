@@ -96,6 +96,10 @@ function Graph2D (props) {
             setForceRefreshCount
         ],
         [
+            zoomToFitCount,
+            setZoomToFitCount
+        ],
+        [
             nodeRelSize,
             setNodeRelSize
         ],
@@ -2587,50 +2591,61 @@ function Graph2D (props) {
         // 1. fix coordinates when nodes settle 
         // 2. update graphData props with node fx fy positions
         if (graphDataNodes &&
-            graphDataNodes.length &&
-            props.fixNodes &&
+            graphDataNodes.length && 
             nodeZoomId === null
-            ) {
+        ) {
 
-            // console.log("onEngineStopFunction");
-            
-            // if any nodes have settled into coordinates that differ from the fixed coordinates
-            if (graphDataNodes.some((node) => node.x !== node.fx || node.y !== node.fy)) { 
-
-                // set the new coordinates as the fixed coordinates
-                setGraphDataNodes((gDataNodes) => gDataNodes.map((node)=> {
+            if (
+                props.fixNodes
+                ) {
     
-                        if ("x" in node && "y" in node) {
-    
-                            node.fx = node.x;
-                            node.fy = node.y;
-    
-                        }
-                        return node;
-    
-                    }));
+                // console.log("onEngineStopFunction");
                 
-                // update nodePreviousFCoordinatesById too (used to 'recover' from nodeZoom view) 
-                setNodePreviousFCoordinatesById((_np) => Object.fromEntries(graphDataNodes
-                    .map((node) => [
-                        node[props.nodeId],
-                        [
-                            node.x,
-                            node.y
-                        ]
-                    ])));
-
-                // finally, update graphdata props.
-                // this is needed to avoid resetting coordinates whenever Dash modifies the graphdata.
-                props.setProps(
-                    {
-                        "graphData": {
-                            "links": props.graphData.links,
-                            "nodes": graphDataNodes
-                        }
-                        // "updateNeighbours":false // not necessary since no change in nodes or links 
-                });
+                // if any nodes have settled into coordinates that differ from the fixed coordinates
+                if (graphDataNodes.some((node) => node.x !== node.fx || node.y !== node.fy)) { 
+    
+                    // set the new coordinates as the fixed coordinates
+                    setGraphDataNodes((gDataNodes) => gDataNodes.map((node)=> {
+        
+                            if ("x" in node && "y" in node) {
+        
+                                node.fx = node.x;
+                                node.fy = node.y;
+        
+                            }
+                            return node;
+        
+                        }));
+                    
+                    // update nodePreviousFCoordinatesById too (used to 'recover' from nodeZoom view) 
+                    setNodePreviousFCoordinatesById((_np) => Object.fromEntries(graphDataNodes
+                        .map((node) => [
+                            node[props.nodeId],
+                            [
+                                node.x,
+                                node.y
+                            ]
+                        ])));
+    
+                    // finally, update graphdata props.
+                    // this is needed to avoid resetting coordinates whenever Dash modifies the graphdata.
+                    props.setProps(
+                        {
+                            "graphData": {
+                                "links": props.graphData.links,
+                                "nodes": graphDataNodes
+                            }
+                            // "updateNeighbours":false // not necessary since no change in nodes or links 
+                    });
+                }
+    
             }
+
+        }
+            
+        if (props.zoomToFit > zoomToFitCount) {
+
+            setZoomToFitCount((_ztfcnt) => props.zoomToFit);
 
         }
 
@@ -2832,7 +2847,8 @@ function Graph2D (props) {
             fgRef &&
             "current" in fgRef &&
             fgRef.current &&
-            props.zoomToFit){
+            props.zoomToFit
+            ){
             
             // console.log("useEffect: zoomToFit");
             fgRef.current.zoomToFit(...props.zoomToFit);
@@ -4294,6 +4310,8 @@ const graphSharedProptypes = {
     "updateNeighbours": PropTypes.bool,
     
     "forceRefresh": PropTypes.number,
+
+    "zoomToFit": PropTypes.number,
     
     "n_nodeRightClicks": PropTypes.number,
     "n_linkRightClicks": PropTypes.number,

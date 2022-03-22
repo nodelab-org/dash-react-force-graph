@@ -406,7 +406,7 @@ Keyword arguments:
 - zoom (list of numbers; optional):
     Calls zoom() method. ([number], [ms]).
 
-- zoomToFit (list of numbers; optional):
+- zoomToFit (number; optional):
     Automatically zooms/pans the canvas so that all of the nodes fit
     inside it. If no nodes are found no action is taken. It accepts
     two optional arguments: the first defines the duration of the

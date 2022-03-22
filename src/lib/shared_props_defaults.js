@@ -97,7 +97,7 @@ const objSharedProps = {
     // resumeAnimation: false, // to call the resumeAnimation method, pass True
     centerAt: null,// to call the centerAt method, pass a list or tuple ([x], [y], [ms]) (TODO)
     zoom: null, // to call the zoom method, pass a list or tuple ([number], [ms])
-    zoomToFit: null,// to call the zoomToFit method, pass a list or tuple ([ms], [px], [nodeFilterFn])
+    zoomToFit: null, // a number. Increment this to make the comonent zoom to fit on next onEngineStopFunction call
     backgroundRightClickScreenCoords:null,
     cameraPosition:	null, // 3D
     // scene: // TODO method
