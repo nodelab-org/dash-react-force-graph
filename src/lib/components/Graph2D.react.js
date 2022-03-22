@@ -2641,6 +2641,10 @@ function Graph2D (props) {
                 }
     
             }
+            console.log("props.zoomToFit")
+            console.log(props.zoomToFit)
+            console.log("zoomToFitCount")
+            console.log(zoomToFitCount)
 
             if (props.zoomToFit > zoomToFitCount) {
                 
