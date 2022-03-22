@@ -2644,7 +2644,11 @@ function Graph2D (props) {
 
             if (props.zoomToFit > zoomToFitCount) {
                 
-                zoomToFitFunction();
+                fgRef.current.zoomToFit(
+                    250,
+                    10,
+                    (node) => !props.nodeIdsInvisibleUser.includes(node[props.nodeId]) && !nodeIdsInvisibleAuto.includes(node[props.nodeId]) 
+                )
                 setZoomToFitCount((_ztfcnt) => props.zoomToFit);
 
             }
