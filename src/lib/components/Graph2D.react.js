@@ -2642,12 +2642,12 @@ function Graph2D (props) {
     
             }
 
-        }
-            
-        if (props.zoomToFit > zoomToFitCount) {
-            
-            zoomToFitFunction();
-            setZoomToFitCount((_ztfcnt) => props.zoomToFit);
+            if (props.zoomToFit > zoomToFitCount) {
+                
+                zoomToFitFunction();
+                setZoomToFitCount((_ztfcnt) => props.zoomToFit);
+
+            }
 
         }
 
