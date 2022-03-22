@@ -2841,20 +2841,20 @@ function Graph2D (props) {
     }
 
 
-    useEffect( () => {
+    // useEffect( () => {
 
-        if (props.graphData.nodes &&
-            fgRef &&
-            "current" in fgRef &&
-            fgRef.current &&
-            props.zoomToFit
-            ){
+    //     if (props.graphData.nodes &&
+    //         fgRef &&
+    //         "current" in fgRef &&
+    //         fgRef.current &&
+    //         props.zoomToFit
+    //         ) {
             
-            // console.log("useEffect: zoomToFit");
-            fgRef.current.zoomToFit(...props.zoomToFit);
-        }
+    //         // console.log("useEffect: zoomToFit");
+    //         fgRef.current.zoomToFit(...props.zoomToFit);
+    //     }
 
-    },[props.zoomToFit]);
+    // },[props.zoomToFit]);
     /*
     * Send selected state values to the parent component.
     * setProps is a prop that is automatically supplied
@@ -3721,7 +3721,7 @@ const graphSharedProptypes = {
     /**
     * Automatically zooms/pans the canvas so that all of the nodes fit inside it. If no nodes are found no action is taken. It accepts two optional arguments: the first defines the duration of the transition (in ms) to animate the canvas motion (default: 0ms). The second argument is the amount of padding (in px) between the edge of the canvas and the outermost node (default: 10px). The third argument specifies a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful for focusing on a portion of the graph. 2D, 3D
     */
-    "zoomToFit": PropTypes.arrayOf(PropTypes.number),
+    // "zoomToFit": PropTypes.arrayOf(PropTypes.number),
 
     /**
     * Re-position the camera, in terms of x, y, z coordinates. Each of the coordinates is optional, allowing for motion in just some dimensions. The optional second argument can be used to define the direction that the camera should aim at, in terms of an {x,y,z} point in the 3D space. The 3rd optional argument defines the duration of the transition (in ms) to animate the camera motion. A value of 0 (default) moves the camera immediately to the final position. By default the camera will face the center of the graph at a z distance proportional to the amount of nodes in the system. 3D

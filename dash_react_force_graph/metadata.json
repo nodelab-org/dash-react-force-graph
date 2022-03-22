@@ -442,13 +442,6 @@
         "required": false,
         "description": "calls centerAt, then zoom. Takes an object with keys \"k\", \"x\", \"y\""
       },
-      "zoomToFit": {
-        "type": {
-          "name": "number"
-        },
-        "required": false,
-        "description": "Automatically zooms/pans the canvas so that all of the nodes fit inside it. If no nodes are found no action is taken. It accepts two optional arguments: the first defines the duration of the transition (in ms) to animate the canvas motion (default: 0ms). The second argument is the amount of padding (in px) between the edge of the canvas and the outermost node (default: 10px). The third argument specifies a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful for focusing on a portion of the graph. 2D, 3D"
-      },
       "refresh": {
         "type": {
           "name": "bool"
@@ -900,6 +893,13 @@
         "description": ""
       },
       "forceRefresh": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "zoomToFit": {
         "type": {
           "name": "number"
         },

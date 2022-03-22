@@ -274,7 +274,7 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{zoom}{List of numerics. Calls zoom() method. ([number], [ms])}
 
-\item{zoomToFit}{Numeric. Automatically zooms/pans the canvas so that all of the nodes fit inside it. If no nodes are found no action is taken. It accepts two optional arguments: the first defines the duration of the transition (in ms) to animate the canvas motion (default: 0ms). The second argument is the amount of padding (in px) between the edge of the canvas and the outermost node (default: 10px). The third argument specifies a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful for focusing on a portion of the graph. 2D, 3D}
+\item{zoomToFit}{Numeric. }
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}
