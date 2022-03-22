@@ -179,6 +179,7 @@ function Graph2D (props) {
     ] = [
         useState([]),
         useState(0),
+        useState(0),
         useState(props.nodeRelSize),
         useState(props.nodeIconRelSize),
         useState(props.nodeImgRelSize),
