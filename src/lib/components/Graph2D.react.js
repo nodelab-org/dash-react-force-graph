@@ -2282,15 +2282,23 @@ function Graph2D (props) {
         // https://www.w3schools.com/tags/canvas_globalalpha.asp
         // initialize color
         // provide a sensible default
-        let backgroundColor_tmp = props.backgroundColor ? validateColor(props.backgroundColor) ? props.backgroundColor : "#000000" : "#000000";
-        let color = props.nodeColor in node ? validateColor(node[props.nodeColor]) ? node[props.nodeColor] : "#0000ff" : "#0000ff";
+        let backgroundColor_tmp = props.backgroundColor
+            ? validateColor(props.backgroundColor)
+                ? props.backgroundColor
+                : "#000000"
+            : "#000000";
+        let color = props.nodeColor in node 
+            ? validateColor(node[props.nodeColor])
+                ? node[props.nodeColor]
+                : "#0000ff"
+            : "#0000ff";
         let textColor = props.nodeTextColor && !props.nodeTextAutoColor ? props.nodeTextColor : invert(backgroundColor_tmp)
         let globalAlpha = 1
-        const label = props.nodeLabel in node ? node[props.nodeLabel] ? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId];
+        
         // const iconSize = nodeIconRelSize ? nodeIconRelSize : 12; // sensible default
-        const iconSize = props.nodeVal in node? node[props.nodeVal] * nodeIconRelSize : nodeIconRelSize
+        
         // const imgSize = nodeImgRelSize ? nodeImgRelSize : 12; // sensible default
-        const imgSize = props.nodeVal in node? node[props.nodeVal] * nodeImgRelSize : nodeImgRelSize
+
         // ctx.globalAlpha = 0.9;
         let fontWeightText = "normal";
         //let fontSize = Math.max(11 / globalScale,5);
@@ -2366,15 +2374,21 @@ function Graph2D (props) {
         ctx.globalAlpha = globalAlpha
 
         // set modified style parameters
+        let img = null;
         let img_src = null;
         if (props.nodeImg in node && useNodeImg) {
             if (node[props.nodeImg]) {
                 img_src = node[props.nodeImg];
                 if (typeof img_src === "string" && (img_src.includes("http") || img_src.includes("www"))) {
-                    const img = new Image();
+                    img = new Image();
                     img.src = img_src;
                     //ctx.fillStyle = color;
-                    ctx.drawImage(img, node.x - imgSize / 2, node.y - imgSize /0.8, imgSize, imgSize);
+                    if (img.complete) {
+
+                        const imgSize = props.nodeVal in node? node[props.nodeVal] * nodeImgRelSize : nodeImgRelSize
+                        ctx.drawImage(img, node.x - imgSize / 2, node.y - imgSize /0.8, imgSize, imgSize);
+
+                    }
                 }
             }
         }
@@ -2382,10 +2396,16 @@ function Graph2D (props) {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
-        if (img_src === null & props.nodeIcon in node & useNodeIcon) {
+        if (
+            (
+                !img || !img_src || !img.complete
+            ) &&
+            props.nodeIcon in node &&
+            useNodeIcon) {
             // icon
             if (node[props.nodeIcon]) {
                 // const nodeIcon_obj = node[props.nodeIcon];
+                const iconSize = props.nodeVal in node? node[props.nodeVal] * nodeIconRelSize : nodeIconRelSize
                 ctx.font = `${iconSize}px ${"FontAwesome"}`;
                 // ctx.font = `${iconSize}px FontAwesome`;
                 // ctx.font = `10px FontAwesome`;
@@ -2398,6 +2418,7 @@ function Graph2D (props) {
             }
         }
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
+            const label = props.nodeLabel in node ? node[props.nodeLabel] ? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId];
             ctx.fontWeight = fontWeightText
             // draw text background rectangle
             ctx.font = `${fontSize}px Sans-Serif`;
