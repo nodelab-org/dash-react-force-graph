@@ -7,7 +7,7 @@ import {ForceGraph2D} from "react-force-graph";
 import {cloneDeep} from "lodash";
 import {forceRadial} from "d3-force";
 import DatGui, {
-    DatBoolean,
+    // DatBoolean,
     DatButton,
     // DatColor,
     DatFolder,
@@ -99,34 +99,34 @@ function Graph2D (props) {
             zoomToFitCount,
             setZoomToFitCount
         ],
-        [
-            nodeRelSize,
-            setNodeRelSize
-        ],
-        [
-            nodeIconRelSize,
-            setNodeIconRelSize
-        ],
-        [
-            nodeImgRelSize,
-            setNodeImgRelSize
-        ],
-        [
-            nodeLabelRelSize,
-            setNodeLabelRelSize
-        ],
-        [
-            useNodeImg,
-            setUseNodeImg
-        ],
-        [
-            useNodeIcon,
-            setUseNodeIcon
-        ],
-        [
-            linkCurvature,
-            setLinkCurvature
-        ],
+        // [
+        //     nodeRelSize,
+        //     setNodeRelSize
+        // ],
+        // [
+        //     nodeIconRelSize,
+        //     setNodeIconRelSize
+        // ],
+        // [
+        //     nodeImgRelSize,
+        //     setNodeImgRelSize
+        // ],
+        // [
+        //     nodeLabelRelSize,
+        //     setNodeLabelRelSize
+        // ],
+        // [
+        //     useNodeImg,
+        //     setUseNodeImg
+        // ],
+        // [
+        //     useNodeIcon,
+        //     setUseNodeIcon
+        // ],
+        // [
+        //     linkCurvature,
+        //     setLinkCurvature
+        // ],
         [
             nodesById,
             setNodesById
@@ -180,13 +180,13 @@ function Graph2D (props) {
         useState([]),
         useState(0),
         useState(0),
-        useState(props.nodeRelSize),
-        useState(props.nodeIconRelSize),
-        useState(props.nodeImgRelSize),
-        useState(props.nodeLabelRelSize),
-        useState(props.useNodeImg),
-        useState(props.useNodeIcon),
-        useState(props.linkCurvature),
+        // useState(props.nodeRelSize),
+        // useState(props.nodeIconRelSize),
+        // useState(props.nodeImgRelSize),
+        // useState(props.nodeLabelRelSize),
+        // useState(props.useNodeImg),
+        // useState(props.useNodeIcon),
+        // useState(props.linkCurvature),
         useState(null),
         useState([]),
         useState([]),
@@ -205,12 +205,12 @@ function Graph2D (props) {
             "center": 0.52,
             "charge": -45,
             "link": 70,
-            "linkCurvature": props.linkCurvature,
-            "nodeLabelRelSize": props.nodeLabelRelSize,
-            "nodeRelSize": props.nodeRelSize,
+            // "linkCurvature": props.linkCurvature,
+            // "nodeLabelRelSize": props.nodeLabelRelSize,
+            // "nodeRelSize": props.nodeRelSize,
             "radial": 0.00,
-            "useNodeIcon": props.useNodeIcon,
-            "useNodeImg": props.useNodeImg
+            // "useNodeIcon": props.useNodeIcon,
+            // "useNodeImg": props.useNodeImg
         }),
         useRef(null)
     ];
@@ -286,88 +286,88 @@ function Graph2D (props) {
     /* eslint-enable one-var */
 
 
-    useEffect(
-        () => {
+    // useEffect(
+    //     () => {
 
-            if (nodeRelSize !== null &&
-                guiSettings.nodeRelSize !== nodeRelSize) {
+    //         if (nodeRelSize !== null &&
+    //             guiSettings.nodeRelSize !== nodeRelSize) {
 
-                // console.log("useEffect: nodeRelSize");
+    //             // console.log("useEffect: nodeRelSize");
 
-                setNodeRelSize((_nrz) => guiSettings.nodeRelSize);
-                setNodeIconRelSize((_nirz) => guiSettings.nodeRelSize * 2);
-                setNodeImgRelSize((_nirz) => guiSettings.nodeRelSize * 2);
+    //             setNodeRelSize((_nrz) => guiSettings.nodeRelSize);
+    //             setNodeIconRelSize((_nirz) => guiSettings.nodeRelSize * 2);
+    //             setNodeImgRelSize((_nirz) => guiSettings.nodeRelSize * 2);
 
-            }
+    //         }
 
-        },
-        [guiSettings.nodeRelSize]
-    );
-
-
-    useEffect(
-        () => {
-
-            if (nodeLabelRelSize !== null &&
-                guiSettings.nodeLabelRelSize !== nodeLabelRelSize) {
-
-                // console.log("useEffect: nodeLabelRelSize");
-
-                setNodeLabelRelSize((_nlrz) => guiSettings.nodeLabelRelSize);
-
-            }
-
-        },
-        [guiSettings.nodeLabelRelSize]
-    );
+    //     },
+    //     [guiSettings.nodeRelSize]
+    // );
 
 
-    useEffect(
-        () => {
+    // useEffect(
+    //     () => {
 
-            if (linkCurvature !== null && guiSettings.linkCurvature !== linkCurvature) {
+    //         if (nodeLabelRelSize !== null &&
+    //             guiSettings.nodeLabelRelSize !== nodeLabelRelSize) {
 
-                // console.log("useEffect: linkCurvature");
+    //             // console.log("useEffect: nodeLabelRelSize");
 
-                setLinkCurvature((_lcur) => guiSettings.linkCurvature);
+    //             setNodeLabelRelSize((_nlrz) => guiSettings.nodeLabelRelSize);
 
-            }
+    //         }
 
-        },
-        [guiSettings.linkCurvature]
-    );
-
-
-    useEffect(
-        () => {
-
-            if (guiSettings.useNodeIcon !== useNodeIcon) {
-
-                // console.log("useEffect: useNodeIcon");
-
-                setUseNodeIcon((_nIcon) => guiSettings.useNodeIcon);
-
-            }
-
-        },
-        [guiSettings.useNodeIcon]
-    );
+    //     },
+    //     [guiSettings.nodeLabelRelSize]
+    // );
 
 
-    useEffect(
-        () => {
+    // useEffect(
+    //     () => {
 
-            if (guiSettings.useNodeImg !== useNodeImg) {
+    //         if (linkCurvature !== null && guiSettings.linkCurvature !== linkCurvature) {
 
-                // console.log("useEffect: useNodeImg");
+    //             // console.log("useEffect: linkCurvature");
 
-                setUseNodeImg((_nImg) => guiSettings.useNodeImg);
+    //             setLinkCurvature((_lcur) => guiSettings.linkCurvature);
 
-            }
+    //         }
 
-        },
-        [guiSettings.useNodeImg]
-    );
+    //     },
+    //     [guiSettings.linkCurvature]
+    // );
+
+
+    // useEffect(
+    //     () => {
+
+    //         if (guiSettings.useNodeIcon !== useNodeIcon) {
+
+    //             // console.log("useEffect: useNodeIcon");
+
+    //             setUseNodeIcon((_nIcon) => guiSettings.useNodeIcon);
+
+    //         }
+
+    //     },
+    //     [guiSettings.useNodeIcon]
+    // );
+
+
+    // useEffect(
+    //     () => {
+
+    //         if (guiSettings.useNodeImg !== useNodeImg) {
+
+    //             // console.log("useEffect: useNodeImg");
+
+    //             setUseNodeImg((_nImg) => guiSettings.useNodeImg);
+
+    //         }
+
+    //     },
+    //     [guiSettings.useNodeImg]
+    // );
 
 
     useEffect(
@@ -2302,7 +2302,7 @@ function Graph2D (props) {
         // ctx.globalAlpha = 0.9;
         let fontWeightText = "normal";
         //let fontSize = Math.max(11 / globalScale,5);
-        let fontSize = nodeLabelRelSize;
+        let fontSize = props.nodeLabelRelSize;
 
         // modify style parameters if node is selected and/or highlighted
         
@@ -2376,7 +2376,8 @@ function Graph2D (props) {
         // set modified style parameters
         let img = null;
         let img_src = null;
-        if (props.nodeImg in node && useNodeImg) {
+        // if (props.nodeImg in node && useNodeImg) {
+        if (props.nodeImg in node) {
             if (node[props.nodeImg]) {
                 img_src = node[props.nodeImg];
                 if (typeof img_src === "string" && (img_src.includes("http") || img_src.includes("www"))) {
@@ -2385,7 +2386,7 @@ function Graph2D (props) {
                     //ctx.fillStyle = color;
                     if (img.complete) {
 
-                        const imgSize = props.nodeVal in node? node[props.nodeVal] * nodeImgRelSize : nodeImgRelSize
+                        const imgSize = props.nodeVal in node? node[props.nodeVal] * props.nodeImgRelSize : props.nodeImgRelSize
                         ctx.drawImage(img, node.x - imgSize / 2, node.y - imgSize /0.8, imgSize, imgSize);
 
                     }
@@ -2400,12 +2401,13 @@ function Graph2D (props) {
             (
                 !img || !img_src || !img.complete
             ) &&
-            props.nodeIcon in node &&
-            useNodeIcon) {
+            props.nodeIcon in node// &&
+            // useNodeIcon
+            ) {
             // icon
             if (node[props.nodeIcon]) {
                 // const nodeIcon_obj = node[props.nodeIcon];
-                const iconSize = props.nodeVal in node? node[props.nodeVal] * nodeIconRelSize : nodeIconRelSize
+                const iconSize = props.nodeVal in node? node[props.nodeVal] * props.nodeIconRelSize : props.nodeIconRelSize
                 ctx.font = `${iconSize}px ${"FontAwesome"}`;
                 // ctx.font = `${iconSize}px FontAwesome`;
                 // ctx.font = `10px FontAwesome`;
@@ -2442,8 +2444,8 @@ function Graph2D (props) {
     };
 
 
-    const nodeCanvasObjectModeFunction = (node) => useNodeImg && props.nodeImg in node && node[props.nodeImg] || useNodeIcon && props.nodeIcon in node && node[props.nodeIcon] ? "replace" : "after";
-
+    // const nodeCanvasObjectModeFunction = (node) => useNodeImg && props.nodeImg in node && node[props.nodeImg] || useNodeIcon && props.nodeIcon in node && node[props.nodeIcon] ? "replace" : "after";
+    const nodeCanvasObjectModeFunction = (node) => props.nodeImg in node && node[props.nodeImg] || props.nodeIcon in node && node[props.nodeIcon] ? "replace" : "after";
 
     const linkVisibilityFunction = (link) => props.linkIdsInvisibleUser === null
         ? !linkIdsInvisibleAuto.includes(link[props.linkId]) 
@@ -2503,8 +2505,13 @@ function Graph2D (props) {
 
     const linkCurvatureFunction = (link) => {
         
-        return "__curvature" in link? link.__curvature : linkCurvature
-
+        return typeof props.linkCurvature === "string"
+            ?  props.linkCurvature in link
+                ? link[props.linkCurvature] 
+                : 0
+            :  typeof props.linkCurvature === "number"
+                ? props.linkCurvature
+                : 0
     }
 
     // const linkDirectionalArrowColorFunction = (link) => link.color
@@ -2550,14 +2557,15 @@ function Graph2D (props) {
 
     const linkCanvasObjectFunction = (link, ctx) => {
 
-        if (linkCurvature || link.__curvature) return;
+        // if (linkCurvature || link.__curvature) return;
+        if (link.__curvature) return;
 
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
         
             const color = linkColorFunction(link);
 
             const MAX_FONT_SIZE = 4;
-            const LABEL_NODE_MARGIN = nodeRelSize * 1.5;
+            const LABEL_NODE_MARGIN = props.nodeRelSize * 1.5;
 
             const start = link[props.linkSource];
             const end = link[props.linkTarget];
@@ -3059,7 +3067,7 @@ function Graph2D (props) {
                     /**
                     * node styling
                     */
-                    nodeRelSize={nodeRelSize}
+                    nodeRelSize={props.nodeRelSize}
                     nodeVal={props.nodeVal}
                     nodeLabel={nodeLabelFunction}
                     // nodeDesc: "desc" // VR only
@@ -3208,13 +3216,13 @@ function Graph2D (props) {
                     data={guiSettings}
                     onUpdate={handleUpdate}
                     >
-                    <DatFolder title='graph settings' closed={true}>
+                    {/* <DatFolder title='graph settings' closed={true}> */}
                     
                         {/* <DatFolder title='Container layout' closed={true}> */}
                             {/* <DatColor path='backgroundColor' label='backgroundColor'/> */}
                             {/* <DatBoolean path='showNavInfo' label='showNavInfo'/> */}
                             {/* </DatFolder> */}
-                        <DatFolder title='d3 force layout' closed={true}>
+                        <DatFolder title='Graph layout' closed={true}>
                             <DatNumber path='link' label='link' min={0} max={100} step={1} />
                             <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
                             <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
@@ -3222,7 +3230,7 @@ function Graph2D (props) {
                             <DatButton label='restore default forces' onClick={restoreDefaultForcesFunction}/>
                             <DatButton label='reheat simulation' onClick={reheatFunction}/>
                             <DatButton label='zoom to fit' onClick={zoomToFitFunction}/>
-                            </DatFolder>
+                        </DatFolder>
                         {/* <DatFolder title='force engine' closed = {true}> */}
                             {/* <DatSelect path='forceEngine' label='forceEngine' options={["d3", "ngraph"]}/> */}
                             {/* <DatBoolean path='dagModeOn' label='dagModeOn'/> */}
@@ -3231,17 +3239,15 @@ function Graph2D (props) {
                             {/* <DatBoolean path='fixNodes' label='fix nodes'/> */}
                             
                             {/* </DatFolder> */}
-                        <DatFolder title='node and link style' closed={true}>
-                            <DatNumber path='nodeLabelRelSize' label='node label size' min={1} max={50} step={1}/>
-                            <DatNumber path='nodeRelSize' label='node size' min={1} max={50} step={1}/>
-                            {/* <DatNumber path='nodeIconRelSize' label='nodeIconRelSize' min={1} max={50} step={1}/> */}
-                            {/* <DatNumber path='nodeImgRelSize' label='nodeImgRelSize' min={1} max={50} step={1}/> */}
+                        {/* <DatFolder title='node and link style' closed={true}>
+                            <DatNumber path='nodeLabelRelSize' label='node label size' min={1} max={50} step={1}/> */}
+                            {/* <DatNumber path='nodeRelSize' label='node size' min={1} max={50} step={1}/> */}
                             {/* <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/> */}
-                            <DatBoolean path='useNodeIcon' label='use node icons'/>
-                            <DatBoolean path='useNodeImg' label='use node images'/>
-                            <DatNumber path='linkCurvature' label='link curvature' min={0} max={1} step={0.01}/>
+                            {/* <DatBoolean path='useNodeIcon' label='use node icons'/>
+                            <DatBoolean path='useNodeImg' label='use node images'/> */}
+                            {/* <DatNumber path='linkCurvature' label='link curvature' min={0} max={1} step={0.01}/> */}
                             {/* <DatBoolean path='nodeTextAutoColor' label='nodeTextAutoColor'/> */}
-                            </DatFolder>
+                            {/* </DatFolder> */}
                         {/* <DatFolder title='Link styling' closed={true}>
                             <DatBoolean path='linkAutoColor' label='linkAutoColor'/>
                             <DatColor path='linkColor' label='linkColor'/>
@@ -3255,7 +3261,7 @@ function Graph2D (props) {
                             {/* <DatBoolean path='enableNavigationControls' label='enableNavigationControls'/> */}
                             {/* <DatBoolean path='enablePointerInteraction' label='enablePointerInteraction'/> */}
                             {/* </DatFolder> */}
-                        </DatFolder>
+                        {/* </DatFolder> */}
                 </DatGui>
             </div>
         </div>
@@ -3370,14 +3376,14 @@ const graphSharedProptypes = {
      */
     "nodeImgRelSize": PropTypes.number,
     
-        /**
-         * Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
-         * 2D, 3D and VR
-         */
-        "nodeLabel":  PropTypes.oneOfType([
-            PropTypes.string,
-            //PropTypes.func
-        ]),
+    /**
+     * Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
+     * 2D, 3D and VR
+     */
+    "nodeLabel":  PropTypes.oneOfType([
+        PropTypes.string,
+        //PropTypes.func
+    ]),
 
     /**
      *  Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.
@@ -3563,14 +3569,14 @@ const graphSharedProptypes = {
      */
     "linkResolution": PropTypes.number,
 
-        /**
+    /**
      * Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.
      */
-    "linkCurvature": PropTypes.number,//oneOfType([
-    //     PropTypes.number,
-    //     PropTypes.string,
-    // //    PropTypes.func
-    // ]),
+    "linkCurvature": PropTypes.oneOfType([
+        PropTypes.number,
+        PropTypes.string,
+    //    PropTypes.func
+    ]),
 
     /**
      * Link object accessor function, attribute or a numeric constant for the rotation along the line axis to apply to the curve. Has no effect on straight lines. At 0 rotation, the curve is oriented in the direction of the intersection with the XY plane. The rotation angle (in radians) will rotate the curved line clockwise around the "start-to-end" axis from this reference orientation.
@@ -4094,7 +4100,7 @@ const graphSharedProptypes = {
     /**
     * Whether or not to use the nodeImg. Overrides nodeIcon
     */
-    "useNodeImg": PropTypes.bool,
+    // "useNodeImg": PropTypes.bool,
 
     /**
     * The node attribute containing url to image to display for each individual node
@@ -4104,7 +4110,7 @@ const graphSharedProptypes = {
     /**
     * Whether or not to use the nodeIcon
     */
-    "useNodeIcon": PropTypes.bool,
+    // "useNodeIcon": PropTypes.bool,
 
     /**
     * The node attribute containing object with icon to display for each individual node.

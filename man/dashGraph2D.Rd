@@ -55,8 +55,7 @@ sortRelsBy1=NULL, sortRelsBy2=NULL,
 sortRoleplayers1Descend=NULL, sortRoleplayers2Descend=NULL,
 sortRoleplayersBy1=NULL, sortRoleplayersBy2=NULL,
 updateNeighbours=NULL, useCoordinates=NULL,
-useNodeIcon=NULL, useNodeImg=NULL, warmupTicks=NULL,
-zoom=NULL, zoomToFit=NULL)
+warmupTicks=NULL, zoom=NULL, zoomToFit=NULL)
 }
 
 \arguments{
@@ -114,7 +113,7 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{linkColor}{Character. String giving link color}
 
-\item{linkCurvature}{Numeric. Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.}
+\item{linkCurvature}{Numeric | character. Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.}
 
 \item{linkDesc}{Character. For VR only. Link object accessor function or attribute for description (shown under label).}
 
@@ -265,10 +264,6 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 \item{updateNeighbours}{Logical. }
 
 \item{useCoordinates}{Logical. useCoordinates: whether to set nodeCoordinates for node coordinates}
-
-\item{useNodeIcon}{Logical. Whether or not to use the nodeIcon}
-
-\item{useNodeImg}{Logical. Whether or not to use the nodeImg. Overrides nodeIcon}
 
 \item{warmupTicks}{Numeric. Number of layout engine cycles to dry-run at ignition before starting to render.}
 
