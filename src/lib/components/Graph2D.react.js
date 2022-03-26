@@ -2475,7 +2475,7 @@ function Graph2D (props) {
             node.x - node.__bckgDimensions[0] / 2, 
             node.y - node.__bckgDimensions[1] * 1.2,
             node.__bckgDimensions[0],
-            node.__bckgDimensions[1] + props.nodeLabelRelSize // also center of text label
+            node.__bckgDimensions[1] + props.nodeLabelRelSize * 1.1 // also text label
         );
 
     }
