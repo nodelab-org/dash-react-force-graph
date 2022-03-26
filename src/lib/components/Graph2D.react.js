@@ -2294,6 +2294,7 @@ function Graph2D (props) {
             : "#0000ff";
         let textColor = props.nodeTextColor && !props.nodeTextAutoColor ? props.nodeTextColor : invert(backgroundColor_tmp)
         let globalAlpha = 1
+        node.__yNudgeFactor = 1
         
         // const iconSize = nodeIconRelSize ? nodeIconRelSize : 12; // sensible default
         
@@ -2395,9 +2396,11 @@ function Graph2D (props) {
                         ? node[props.nodeVal] * props.nodeRelSize * props.nodeImgSizeFactor 
                         : props.nodeRelSize * props.nodeImgSizeFactor;
                     const imgHeight = imgWidth * heightWidthRatio
-                    ctx.drawImage(img, node.x - imgWidth / 2, node.y - imgHeight/0.85, imgWidth, imgHeight);
+                    node.__yNudgeFactor = 1.2
+                    ctx.drawImage(img, node.x - imgWidth / 2, node.y - imgHeight * node.__yNudgeFactor, imgWidth, imgHeight);
                     
                     node.__bckgDimensions = [imgWidth, imgWidth * heightWidthRatio]
+                    node.__canvasObject = "img"
 
                 }
 
@@ -2432,7 +2435,8 @@ function Graph2D (props) {
             console.log("iconWidth")
             console.log(iconWidth)
             // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
-            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize*0.85, iconSize);
+            node.__yNudgeFactor = 0.8
+            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize * node.__yNudgeFactor, iconSize);
             
             node.__bckgDimensions = [iconWidth, iconSize]
 
@@ -2469,7 +2473,7 @@ function Graph2D (props) {
         ctx.fillStyle = color;
         node.__bckgDimensions && ctx.fillRect(
             node.x - node.__bckgDimensions[0] / 2, 
-            node.y - node.__bckgDimensions[1] / 0.85, 
+            node.y - node.__bckgDimensions[1] * 1.2,
             node.__bckgDimensions[0],
             node.__bckgDimensions[1] + props.nodeLabelRelSize // also center of text label
         );
