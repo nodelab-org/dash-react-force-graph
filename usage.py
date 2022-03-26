@@ -12,7 +12,9 @@ from fa5_cheatsheet import dict_fa5_cheatsheet
 import random
 
 
-app = dash.Dash(__name__
+app = dash.Dash(
+    __name__,
+    assets_folder="assets"
     #prevent_initial_callbacks=True,
 )
 def reset_link_source_target(links):

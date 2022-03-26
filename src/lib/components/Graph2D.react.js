@@ -2377,24 +2377,32 @@ function Graph2D (props) {
         let img = null;
         let img_src = null;
         // if (props.nodeImg in node && useNodeImg) {
-        if (props.nodeImg in node) {
-            if (node[props.nodeImg]) {
-                img_src = node[props.nodeImg];
-                if (typeof img_src === "string" && (img_src.includes("http") || img_src.includes("www"))) {
-                    img = new Image();
-                    img.src = img_src;
-                    //ctx.fillStyle = color;
-                    if (img.complete) {
+        if (props.nodeImg in node && node[props.nodeImg]) {
 
-                        const heightWidthRatio = img.height / img.width
-                        const imgSize = props.nodeVal in node
-                            ? node[props.nodeVal] * props.nodeRelSize * props.nodeImgSizeFactor 
-                            : props.nodeRelSize * props.nodeImgSizeFactor;
-                        ctx.drawImage(img, node.x - imgSize / 2, node.y - imgSize * heightWidthRatio /0.8, imgSize, imgSize * heightWidthRatio);
+            img_src = node[props.nodeImg];
+            if (
+                typeof img_src === "string" && 
+                (img_src.includes("http") || img_src.includes("www"))
+            ) {
 
-                    }
+                img = new Image();
+                img.src = img_src;
+
+                if (img.complete) {
+
+                    const heightWidthRatio = img.height / img.width
+                    const imgWidth = props.nodeVal in node
+                        ? node[props.nodeVal] * props.nodeRelSize * props.nodeImgSizeFactor 
+                        : props.nodeRelSize * props.nodeImgSizeFactor;
+                    const imgHeight = imgWidth * heightWidthRatio
+                    ctx.drawImage(img, node.x - imgWidth / 2, node.y - imgHeight/0.85, imgWidth, imgHeight);
+                    
+                    node.__bckgDimensions = [imgWidth, imgWidth * heightWidthRatio]
+
                 }
+
             }
+
         }
 
         ctx.textAlign = "center";
@@ -2404,26 +2412,38 @@ function Graph2D (props) {
             (
                 !img || !img_src || !img.complete
             ) &&
-            props.nodeIcon in node// &&
-            // useNodeIcon
+            props.nodeIcon in node &&
+            node[props.nodeIcon]
             ) {
+
             // icon
-            if (node[props.nodeIcon]) {
-                // const nodeIcon_obj = node[props.nodeIcon];
-                const iconSize = props.nodeVal in node? node[props.nodeVal] * props.nodeRelSize * props.nodeIconSizeFactor : props.nodeRelSize * props.nodeIconSizeFactor
-                ctx.font = `${iconSize}px ${"FontAwesome"}`;
-                // ctx.font = `${iconSize}px FontAwesome`;
-                // ctx.font = `10px FontAwesome`;
-                ctx.fillStyle = color;
-                ctx.fontWeight = 900;
-                // const icon = String.fromCharCode(parseInt(node[props.nodeIcon], 16));
-                // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize / 1.5, iconSize);
-                // ctx.fillText(String.fromCharCode(61449), node.x, node.y - 10 / 1.5, iconSize);
-                ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
-            }
+            const iconSize = props.nodeVal in node? node[props.nodeVal] * props.nodeRelSize * props.nodeIconSizeFactor : props.nodeRelSize * props.nodeIconSizeFactor
+            ctx.font = `${iconSize}px ${"FontAwesome"}`;
+
+            ctx.fillStyle = color;
+            ctx.fontWeight = 900;
+            // const icon = String.fromCharCode(parseInt(node[props.nodeIcon], 16));
+            // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize / 1.5, iconSize);
+            // ctx.fillText(String.fromCharCode(61449), node.x, node.y - 10 / 1.5, iconSize);
+            const [
+                iconWidth, 
+                iconHeight
+            ] = [
+                ctx.measureText(node[props.nodeIcon]).width, 
+                ctx.measureText(node[props.nodeIcon]).height
+            ]
+            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
+            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconHeight/0.85, iconSize);
+            
+            node.__bckgDimensions = [iconWidth, iconHeight]
+
         }
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
-            const label = props.nodeLabel in node ? node[props.nodeLabel] ? node[props.nodeLabel] : node[props.nodeId] : node[props.nodeId];
+            const label = props.nodeLabel in node
+                ? node[props.nodeLabel]
+                    ? node[props.nodeLabel]
+                    : node[props.nodeId]
+                : node[props.nodeId];
             ctx.fontWeight = fontWeightText
             // draw text background rectangle
             ctx.font = `${fontSize}px Sans-Serif`;
@@ -2442,9 +2462,19 @@ function Graph2D (props) {
             ctx.fillText(label, node.x, node.y);
 
         }
-
         ctx.restore();
     };
+
+    const nodePointerAreaPaintFunction = (node, color, ctx, globalScale) => {
+
+        ctx.fillStyle = color;
+        node.__bckgDimensions && ctx.fillRect(
+            node.x - node.__bckgDimensions[0] / 2, 
+            node.y - node.__bckgDimensions[1] / 0.85, 
+            ...node.__bckgDimensions
+        );
+
+    }
 
 
     // const nodeCanvasObjectModeFunction = (node) => useNodeImg && props.nodeImg in node && node[props.nodeImg] || useNodeIcon && props.nodeIcon in node && node[props.nodeIcon] ? "replace" : "after";
@@ -3081,6 +3111,7 @@ function Graph2D (props) {
                     //nodeResolution={props.nodeResolution}
                     nodeCanvasObject={nodeCanvasObjectFunction}
                     nodeCanvasObjectMode={nodeCanvasObjectModeFunction}
+                    nodePointerAreaPaint={nodePointerAreaPaintFunction}
                     /**
                     * link styling
                     */
