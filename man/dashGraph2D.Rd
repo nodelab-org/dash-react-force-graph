@@ -39,12 +39,12 @@ maxDepth_neighbours_select=NULL, maxZoom=NULL, minZoom=NULL,
 n_linkRightClicks=NULL, n_nodeRightClicks=NULL,
 ngraphPhysics=NULL, nodeAutoColorBy=NULL, nodeClicked=NULL,
 nodeColor=NULL, nodeCoordinates=NULL, nodeDesc=NULL,
-nodeIcon=NULL, nodeIconRelSize=NULL, nodeId=NULL,
+nodeIcon=NULL, nodeIconSizeFactor=NULL, nodeId=NULL,
 nodeIdsHighlightUser=NULL, nodeIdsInvisibleAuto=NULL,
 nodeIdsInvisibleUser=NULL, nodeImg=NULL,
-nodeImgRelSize=NULL, nodeLabel=NULL, nodeLabelRelSize=NULL,
-nodeOpacity=NULL, nodeRelSize=NULL, nodeResolution=NULL,
-nodeRightClicked=NULL,
+nodeImgSizeFactor=NULL, nodeLabel=NULL,
+nodeLabelRelSize=NULL, nodeOpacity=NULL, nodeRelSize=NULL,
+nodeResolution=NULL, nodeRightClicked=NULL,
 nodeRightClickedViewpointCoordinates=NULL,
 nodeTextAutoColor=NULL, nodeTextColor=NULL, nodeVal=NULL,
 nodeZoomId=NULL, nodesSelected=NULL, numDimensions=NULL,
@@ -189,7 +189,7 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{nodeIcon}{Character. The node attribute containing object with icon to display for each individual node.}
 
-\item{nodeIconRelSize}{Numeric. controls nodeIcon size}
+\item{nodeIconSizeFactor}{Numeric. controls nodeIcon size, relative to nodeRelSize}
 
 \item{nodeId}{Character. Node object accessor attribute for unique node id (used in link objects source/target).}
 
@@ -201,7 +201,7 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{nodeImg}{Character. The node attribute containing url to image to display for each individual node}
 
-\item{nodeImgRelSize}{Numeric. controls nodeImg size}
+\item{nodeImgSizeFactor}{Numeric. controls nodeImg size, reltive to nodeRelSize}
 
 \item{nodeLabel}{Character. Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
 2D, 3D and VR}

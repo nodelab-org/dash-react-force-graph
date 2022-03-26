@@ -67,12 +67,12 @@
         "required": false,
         "description": "Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit."
       },
-      "nodeIconRelSize": {
+      "nodeIconSizeFactor": {
         "type": {
           "name": "number"
         },
         "required": false,
-        "description": "controls nodeIcon size"
+        "description": "controls nodeIcon size, relative to nodeRelSize"
       },
       "nodeLabelRelSize": {
         "type": {
@@ -81,12 +81,12 @@
         "required": false,
         "description": "controls node label size"
       },
-      "nodeImgRelSize": {
+      "nodeImgSizeFactor": {
         "type": {
           "name": "number"
         },
         "required": false,
-        "description": "controls nodeImg size"
+        "description": "controls nodeImg size, reltive to nodeRelSize"
       },
       "nodeLabel": {
         "type": {

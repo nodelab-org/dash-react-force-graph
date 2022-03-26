@@ -33,8 +33,8 @@ const objSharedProps = {
     */
     // props
     nodeRelSize: 6,
-    nodeIconRelSize: 12,
-    nodeImgRelSize: 12,
+    nodeIconSizeFactor: 2,
+    nodeImgSizeFactor: 2,
     nodeLabelRelSize: 4,
     nodeVal:"__nodeVal",
     nodeLabel: "__nodeLabel",

@@ -2386,7 +2386,7 @@ function Graph2D (props) {
                     //ctx.fillStyle = color;
                     if (img.complete) {
 
-                        const imgSize = props.nodeVal in node? node[props.nodeVal] * props.nodeImgRelSize : props.nodeImgRelSize
+                        const imgSize = props.nodeVal in node? node[props.nodeVal] * props.nodeRelSize * props.nodeImgSizeFactor : props.nodeRelSize * props.nodeImgSizeFactor
                         ctx.drawImage(img, node.x - imgSize / 2, node.y - imgSize /0.8, imgSize, imgSize);
 
                     }
@@ -2407,7 +2407,7 @@ function Graph2D (props) {
             // icon
             if (node[props.nodeIcon]) {
                 // const nodeIcon_obj = node[props.nodeIcon];
-                const iconSize = props.nodeVal in node? node[props.nodeVal] * props.nodeIconRelSize : props.nodeIconRelSize
+                const iconSize = props.nodeVal in node? node[props.nodeVal] * props.nodeRelSize * props.nodeIconSizeFactor : props.nodeRelSize * props.nodeIconSizeFactor
                 ctx.font = `${iconSize}px ${"FontAwesome"}`;
                 // ctx.font = `${iconSize}px FontAwesome`;
                 // ctx.font = `10px FontAwesome`;
@@ -3363,18 +3363,18 @@ const graphSharedProptypes = {
     "nodeRelSize": PropTypes.number,
 
     /**
-     *  controls nodeIcon size
+     *  controls nodeIcon size, relative to nodeRelSize
      */
-    "nodeIconRelSize": PropTypes.number,
+    "nodeIconSizeFactor": PropTypes.number,
     
     /**
      *  controls node label size
      */
     "nodeLabelRelSize": PropTypes.number,
     /**
-     *  controls nodeImg size
+     *  controls nodeImg size, reltive to nodeRelSize
      */
-    "nodeImgRelSize": PropTypes.number,
+    "nodeImgSizeFactor": PropTypes.number,
     
     /**
      * Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
