@@ -2386,8 +2386,11 @@ function Graph2D (props) {
                     //ctx.fillStyle = color;
                     if (img.complete) {
 
-                        const imgSize = props.nodeVal in node? node[props.nodeVal] * props.nodeRelSize * props.nodeImgSizeFactor : props.nodeRelSize * props.nodeImgSizeFactor
-                        ctx.drawImage(img, node.x - imgSize / 2, node.y - imgSize /0.8, imgSize, imgSize);
+                        const heightWidthRatio = img.height / img.width
+                        const imgSize = props.nodeVal in node
+                            ? node[props.nodeVal] * props.nodeRelSize * props.nodeImgSizeFactor 
+                            : props.nodeRelSize * props.nodeImgSizeFactor;
+                        ctx.drawImage(img, node.x - imgSize / 2, node.y - imgSize * heightWidthRatio /0.8, imgSize, imgSize * heightWidthRatio);
 
                     }
                 }
