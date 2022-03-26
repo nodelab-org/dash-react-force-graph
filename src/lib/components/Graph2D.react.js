@@ -2417,7 +2417,9 @@ function Graph2D (props) {
             ) {
 
             // icon
-            const iconSize = props.nodeVal in node? node[props.nodeVal] * props.nodeRelSize * props.nodeIconSizeFactor : props.nodeRelSize * props.nodeIconSizeFactor
+            const iconSize = props.nodeVal in node
+                ? node[props.nodeVal] * props.nodeRelSize * props.nodeIconSizeFactor
+                : props.nodeRelSize * props.nodeIconSizeFactor;
             ctx.font = `${iconSize}px ${"FontAwesome"}`;
 
             ctx.fillStyle = color;
@@ -2425,17 +2427,14 @@ function Graph2D (props) {
             // const icon = String.fromCharCode(parseInt(node[props.nodeIcon], 16));
             // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize / 1.5, iconSize);
             // ctx.fillText(String.fromCharCode(61449), node.x, node.y - 10 / 1.5, iconSize);
-            const [
-                iconWidth, 
-                iconHeight
-            ] = [
-                ctx.measureText(node[props.nodeIcon]).width, 
-                ctx.measureText(node[props.nodeIcon]).height
-            ]
-            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
-            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconHeight/0.85, iconSize);
+            const iconWidth = ctx.measureText(node[props.nodeIcon]).width
+
+            console.log("iconWidth")
+            console.log(iconWidth)
+            // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
+            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize*0.85, iconSize);
             
-            node.__bckgDimensions = [iconWidth, iconHeight]
+            node.__bckgDimensions = [iconWidth, iconSize]
 
         }
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
@@ -2471,7 +2470,8 @@ function Graph2D (props) {
         node.__bckgDimensions && ctx.fillRect(
             node.x - node.__bckgDimensions[0] / 2, 
             node.y - node.__bckgDimensions[1] / 0.85, 
-            ...node.__bckgDimensions
+            node.__bckgDimensions[0],
+            node.__bckgDimensions[1] + props.nodeLabelRelSize // also center of text label
         );
 
     }
@@ -2703,10 +2703,10 @@ function Graph2D (props) {
                 }
     
             }
-            console.log("props.zoomToFit")
-            console.log(props.zoomToFit)
-            console.log("zoomToFitCount")
-            console.log(zoomToFitCount)
+            // console.log("props.zoomToFit")
+            // console.log(props.zoomToFit)
+            // console.log("zoomToFitCount")
+            // console.log(zoomToFitCount)
 
             if (props.zoomToFit > zoomToFitCount) {
                 
