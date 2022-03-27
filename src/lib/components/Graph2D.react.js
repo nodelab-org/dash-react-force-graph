@@ -2294,7 +2294,6 @@ function Graph2D (props) {
             : "#0000ff";
         let textColor = props.nodeTextColor && !props.nodeTextAutoColor ? props.nodeTextColor : invert(backgroundColor_tmp)
         let globalAlpha = 1
-        node.__yNudgeFactor = 1
         
         // const iconSize = nodeIconRelSize ? nodeIconRelSize : 12; // sensible default
         
@@ -2361,6 +2360,9 @@ function Graph2D (props) {
             }
         }
 
+        node.__yNudge = 0
+        node.__yNudgePaint = 0
+
         // paint node text background rectangle
         // is this necessary??
         // ctx.fillStyle = color
@@ -2371,6 +2373,7 @@ function Graph2D (props) {
         // ctx.fillRect(node.x-rectsize/2, node.y -rectsize, rectsize, rectsize);
         
         // From https://stackoverflow.com/questions/2359537/how-to-change-the-opacity-alpha-transparency-of-an-element-in-a-canvas-elemen
+        
         ctx.save();
         ctx.globalAlpha = globalAlpha
 
@@ -2396,11 +2399,12 @@ function Graph2D (props) {
                         ? node[props.nodeVal] * props.nodeRelSize * props.nodeImgSizeFactor 
                         : props.nodeRelSize * props.nodeImgSizeFactor;
                     const imgHeight = imgWidth * heightWidthRatio
-                    node.__yNudgeFactor = 1.2
-                    ctx.drawImage(img, node.x - imgWidth / 2, node.y - imgHeight * node.__yNudgeFactor, imgWidth, imgHeight);
+                    node.__bckgDimensions = [imgWidth, imgHeight]
+                    node.__yNudge = fontSize * 1.1
+                    node.__yNudgePaint = node.__yNudge
+                    ctx.drawImage(img, node.x - imgWidth / 2, node.y - (node.__bckgDimensions[1] + node.__yNudge), imgWidth, imgHeight);
                     
-                    node.__bckgDimensions = [imgWidth, imgWidth * heightWidthRatio]
-                    node.__canvasObject = "img"
+                    // save for nodePointerAreaPaintFunction
 
                 }
 
@@ -2432,13 +2436,13 @@ function Graph2D (props) {
             // ctx.fillText(String.fromCharCode(61449), node.x, node.y - 10 / 1.5, iconSize);
             const iconWidth = ctx.measureText(node[props.nodeIcon]).width
 
-            console.log("iconWidth")
-            console.log(iconWidth)
-            // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
-            node.__yNudgeFactor = 0.8
-            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - iconSize * node.__yNudgeFactor, iconSize);
-            
             node.__bckgDimensions = [iconWidth, iconSize]
+            node.__yNudge = -iconSize * 0.2
+            node.__yNudgePaint = iconSize * 0.4
+            // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
+            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - (node.__bckgDimensions[1] + node.__yNudge), iconSize);
+    
+            // save for nodePointerAreaPaintFunction
 
         }
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
@@ -2469,14 +2473,30 @@ function Graph2D (props) {
     };
 
     const nodePointerAreaPaintFunction = (node, color, ctx, globalScale) => {
-
+        // examples
+        // https://github.com/vasturiano/react-force-graph/blob/master/example/text-nodes/index-2d.html
+        // https://github.com/vasturiano/react-force-graph/blob/e67177b3522e2ffd212f807cbb6b74ed04a39ab6/example/custom-node-shape/index-canvas.html
         ctx.fillStyle = color;
-        node.__bckgDimensions && ctx.fillRect(
-            node.x - node.__bckgDimensions[0] / 2, 
-            node.y - node.__bckgDimensions[1] * 1.2,
-            node.__bckgDimensions[0],
-            node.__bckgDimensions[1] + props.nodeLabelRelSize * 1.1 // also text label
-        );
+        
+        if (node.__bckgDimensions) {
+            // __bckgDimensions is only present when using icon or img
+            ctx.fillRect(
+                node.x - node.__bckgDimensions[0] / 2, 
+                node.y - (node.__bckgDimensions[1] + node.__yNudgePaint),
+                node.__bckgDimensions[0],
+                node.__bckgDimensions[1] + node.__yNudgePaint // include text label area
+            );
+        } else {
+            // draw circle
+            const radius = props.nodeRelSize + (
+                node[props.nodeVal] 
+                    ? node[props.nodeVal]
+                    : 0 
+                )
+            ctx.beginPath(); 
+            ctx.arc(node.x, node.y, radius, 0, 2 * Math.PI, false); 
+            ctx.fill();
+        }
 
     }
 
