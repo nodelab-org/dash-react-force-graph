@@ -1174,7 +1174,7 @@ function Graph2D (props) {
 
                                 for (const targetSourceNode of targetSourceNodes[label1]) {
     
-                                    // if targetSourceNode isn't a target node, give it coordinates
+                                    // if targetSourceNode isn't also a target node, give it coordinates
                                     if (!Object.values(targetNodeObjs).some((arr) => arr.some((targNodeObj) => targNodeObj.targetNode[props.nodeId] === targetSourceNode[props.nodeId]))) {
     
                                         // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
@@ -1186,7 +1186,6 @@ function Graph2D (props) {
     
                                     }
 
-                                    
                                 }
                                 
                                 // if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
@@ -1210,17 +1209,34 @@ function Graph2D (props) {
                                 const yCoord = Object.keys(targetSourceNodes).length
                                     ? rpYSum / sum(Object.values(targetSourceNodes).map((arr) => arr.length))
                                     : noTargetSourceNodesYcoord;
-                                nodesByIdNew[targetNode[props.nodeId]].fy = yCoord >= relYMax + marYMin
+
+                                nodesByIdNew[targetNode[props.nodeId]].fy = yCoord >= (relYMax + marYMin)
                                     ? yCoord
                                     : relYMax + marYMin;
     
                                 targetSeenIds.add(targetNode[props.nodeId]);
                                 relYMax = nodesByIdNew[targetNode[props.nodeId]].fy;
+
+                                if (linkLabel === "sub") {
+                                    console.log("targetNode[props.nodeId]")
+                                    console.log(targetNode[props.nodeId])
+                                    console.log("yCoord")
+                                    console.log(yCoord)
+                                    console.log("relYMax + marYMin")
+                                    console.log(relYMax + marYMin)
+                                    console.log("noTargetSourceNodesYcoord")
+                                    console.log(noTargetSourceNodesYcoord)
+                                    console.log(deepCopy("nodesByIdNew[targetNode[props.nodeId]].fy"))
+                                    console.log(deepCopy(nodesByIdNew[targetNode[props.nodeId]].fy))
+                                    
+
+                                }
     
                             }
     
                         }
-
+                        
+                        // if schema, add some horizontal margin
                         if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
 
                             targetX += marX * 0.5;
@@ -1229,6 +1245,88 @@ function Graph2D (props) {
                         }
 
                     }
+
+                    // for (const linkLabel of Object.keys(targetNodeObjs)) {
+
+                    //     for (let i = 0; i < targetNodeObjs[linkLabel].length; i++) {
+    
+                    //         const targetNodeObj = targetNodeObjs[linkLabel][i];
+    
+                    //         const [
+                    //             targetNode,
+                    //             targetSourceNodes
+                    //         ] = [
+                    //             targetNodeObj.targetNode,
+                    //             targetNodeObj.targetSourceNodes
+                    //         ];
+    
+                    //         let rpYSum = 0;
+
+                    //         let targetSourceLabelX = targetSourceX;
+
+                    //         for (const label1 in targetSourceNodes) {                                 
+
+                    //             for (const targetSourceNode of targetSourceNodes[label1]) {
+    
+                    //                 // if targetSourceNode isn't also a target node, give it coordinates
+                    //                 if (!Object.values(targetNodeObjs).some((arr) => arr.some((targNodeObj) => targNodeObj.targetNode[props.nodeId] === targetSourceNode[props.nodeId]))) {
+    
+                    //                     // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
+                    //                     nodesByIdNew[targetSourceNode[props.nodeId]].fx = targetSourceLabelX;
+                    //                     nodesByIdNew[targetSourceNode[props.nodeId]].fy = yMin + offsetYTargetSource + kRelRp * marYMin;
+    
+                    //                     kRelRp += 1;
+                    //                     rpYSum += nodesByIdNew[targetSourceNode[props.nodeId]].fy;
+    
+                    //                 }
+
+                    //             }
+                                
+                    //             // if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
+                    //             //     // only space out nodes in schema view
+
+                    //             //     targetSourceLabelX += marX * 0.5;
+
+                    //             // }
+                                
+
+                    //         }
+    
+                    //         if (!targetSeenIds.has(targetNode[props.nodeId])) {
+    
+                    //             nodesByIdNew[targetNode[props.nodeId]].fx = targetX;
+                                
+                    //             const noTargetSourceNodesYcoord = i > 0
+                    //                 ? nodesByIdNew[targetNodeObjs[linkLabel][i - 1].targetNode[props.nodeId]].fy + marYMin
+                    //                 : yMin + offsetYTarget;//marYRelRp//  yMin + kRel * marYRel;
+
+                    //             const yCoord = Object.keys(targetSourceNodes).length
+                    //                 ? rpYSum / sum(Object.values(targetSourceNodes).map((arr) => arr.length))
+                    //                 : noTargetSourceNodesYcoord;
+
+                    //             nodesByIdNew[targetNode[props.nodeId]].fy = yCoord >= relYMax + marYMin
+                    //                 ? yCoord
+                    //                 : relYMax + marYMin;
+    
+                    //             targetSeenIds.add(targetNode[props.nodeId]);
+                    //             relYMax = nodesByIdNew[targetNode[props.nodeId]].fy;
+    
+                    //         }
+    
+                    //     }
+                        
+                    //     // if schema, add some horizontal margin
+                    //     if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
+
+                    //         targetX += marX * 0.5;
+                    //         targetSourceX += marX * 0.5;
+
+                    //     }
+
+                    // }
+
+
+
 
                     // group different source nodes in columns by link label
                     if (Object.keys(sourceNodes).length) {
@@ -2438,7 +2536,7 @@ function Graph2D (props) {
 
             node.__bckgDimensions = [iconWidth, iconSize]
             node.__yNudge = -iconSize * 0.2
-            node.__yNudgePaint = iconSize * 0.4
+            node.__yNudgePaint = iconSize * 0.3
             // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
             ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - (node.__bckgDimensions[1] + node.__yNudge), iconSize);
     
