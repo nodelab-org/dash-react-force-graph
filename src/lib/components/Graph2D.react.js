@@ -1148,6 +1148,7 @@ function Graph2D (props) {
                     
                     // Sources can target the same target more than once. Avoid setting coordinates for a target more than once.
                     const targetSeenIds = new Set();
+                    const targetSourceSeenIds = new Set();
 
                     let targetX = nodesByIdNew[nodeZoomId].fx + marX;
                     let targetSourceX = nodesByIdNew[nodeZoomId].fx + marX + 0.5 * marX * Object.keys(targetNodeObjs).length; 
@@ -1175,7 +1176,8 @@ function Graph2D (props) {
                                 for (const targetSourceNode of targetSourceNodes[label1]) {
     
                                     // if targetSourceNode isn't also a target node, give it coordinates
-                                    if (!Object.values(targetNodeObjs).some((arr) => arr.some((targNodeObj) => targNodeObj.targetNode[props.nodeId] === targetSourceNode[props.nodeId]))) {
+                                    if (!Object.values(targetNodeObjs).some((arr) => arr.some((targNodeObj) => targNodeObj.targetNode[props.nodeId] === targetSourceNode[props.nodeId])) &&
+                                        !targetSourceSeenIds.has(targetSourceNode[props.nodeId])) {
     
                                         // nodesByIdNew[roleplayer[props.nodeId]].fx = nodeZoom.x + marX * 3;
                                         nodesByIdNew[targetSourceNode[props.nodeId]].fx = targetSourceLabelX;
@@ -1183,6 +1185,7 @@ function Graph2D (props) {
     
                                         kRelRp += 1;
                                         rpYSum += nodesByIdNew[targetSourceNode[props.nodeId]].fy;
+                                        targetSourceSeenIds.add(targetSourceNode[props.nodeId])
     
                                     }
 
