@@ -19,8 +19,9 @@ enableZoomPanInteraction=NULL, externalobjectInput=NULL,
 externalobject_source=NULL, fixNodes=NULL, forceEngine=NULL,
 forceRefresh=NULL, getGraphBbox=NULL, graphData=NULL,
 heightRatio=NULL, key=NULL, linkAutoColor=NULL,
-linkAutoColorBy=NULL, linkColor=NULL, linkCurvature=NULL,
-linkDesc=NULL, linkDirectionalArrowColor=NULL,
+linkAutoColorBy=NULL, linkClicked=NULL, linkColor=NULL,
+linkCurvature=NULL, linkDesc=NULL,
+linkDirectionalArrowColor=NULL,
 linkDirectionalArrowLength=NULL,
 linkDirectionalArrowRelPos=NULL,
 linkDirectionalArrowResolution=NULL,
@@ -110,6 +111,8 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 \item{linkAutoColor}{Logical. Automatically color link with inverse of background color}
 
 \item{linkAutoColorBy}{Character. Link object accessor function or attribute to automatically group colors by. Only affects links without a color attribute.}
+
+\item{linkClicked}{Named list. clicked link}
 
 \item{linkColor}{Character. String giving link color}
 

@@ -1848,6 +1848,7 @@ function Graph2D (props) {
 
         // let nodeZoomIdTmp = null;
         const nodesSelectedNew = cloneDeep(props.nodesSelected);
+        const linksSelectedNew = cloneDeep(props.linksSelected);
 
         // Get index of clicked node in nodesSelected
         const nodeIndex = nodesSelectedNew
@@ -1934,17 +1935,22 @@ function Graph2D (props) {
             }
             /* eslint-enable no-lonely-if */
 
+            linksSelectedNew.splice(0, linksSelectedNew.length)
+
         }
 
         props.setProps({
+            "linkClicked": null,
             "linkRightClicked": null,
             "linkRightClickedViewpointCoordinates": null,
+            "linksSelected": linksSelectedNew,
             "nodeClicked": node,// event.shiftKey
                 // ? null
                 // : node,
             "nodeRightClicked": null,
             "nodeRightClickedViewpointCoordinates": null,
             "nodesSelected": nodesSelectedNew
+
         });
 
     };
@@ -1952,17 +1958,18 @@ function Graph2D (props) {
 
     const handleNodeRightClick = (node, _event) => {
 
-        // console.log("handleNodeRightClick");
-
         if (node) {
 
             props.setProps({
+                "linkClicked": null,
                 "linkRightClicked": null,
                 "linkRightClickedViewpointCoordinates": null,
+                "linksSelected": [],
                 "n_nodeRightClicks": props.n_nodeRightClicks
                     ? props.n_nodeRightClicks + 1
                     : 1,
                 "nodeRightClicked": node,
+                "nodeClicked": null,
                 "nodeRightClickedViewpointCoordinates": fgRef.current
                     ? fgRef.current.graph2ScreenCoords(
                         node.x,
@@ -1971,14 +1978,24 @@ function Graph2D (props) {
                     : null
             });
 
+            // if there are selected nodes but they do not include the right clicked node, clear them
+            if (props.nodesSelected && 
+                !props.nodesSelected.map((nsel) => nsel.__nodeId)
+                    .includes(node.__nodeId)
+            ) {
+
+                props.setProps({
+                    "nodesSelected":[]
+                })
+
+            }
+
         }
 
     };
 
 
     const handleLinkRightClick = (link, event) => {
-
-        // console.log("handleLinkRightClick");
 
         if (link) {
 
@@ -2004,11 +2021,25 @@ function Graph2D (props) {
                     // )
                     : null,
                 "nodeRightClicked":null,
+                "nodesSelected": [],
+                "nodeClicked": null,
+                "linkClicked": null,
                 "nodeRightClickedViewpointCoordinates": null,
                 "n_linkRightClicks": props.n_linkRightClicks
                     ? props.n_linkRightClicks + 1
                     : 1,
             });
+
+            if (props.linksSelected && 
+                !props.linksSelected.map((lsel) => lsel.id)
+                    .includes(link.id)
+            ) {
+
+                props.setProps({
+                    "linksSelected":[]
+                })
+
+            }
 
         }
 
@@ -2257,6 +2288,7 @@ function Graph2D (props) {
             (props.nodesSelected && props.nodesSelected.length)) {
 
             props.setProps({
+                "linkClicked": null,
                 "linkRightClicked": null,
                 "linkRightClickedViewpointCoordinates": null,
                 "linksSelected": [],
@@ -2315,6 +2347,7 @@ function Graph2D (props) {
         if (link) {
 
             const linksSelectedNew = cloneDeep(props.linksSelected);
+            const nodesSelectedNew = cloneDeep(props.nodesSelected);
 
             const linkIndex = linksSelectedNew.map((linkSel) => linkSel[props.linkId]).indexOf(link[props.linkId]);
 
@@ -2329,14 +2362,26 @@ function Graph2D (props) {
                     linksSelectedNew.splice(linkIndex,1);
 
                 }
+
             } else {
 
                 linksSelectedNew.splice(0, linksSelectedNew.length);
                 linksSelectedNew.push(link);
+                nodesSelectedNew.splice(0, nodesSelectedNew.length);
 
             }
 
-            props.setProps({"linksSelected": linksSelectedNew});
+            props.setProps(
+                {
+                    "linksSelected": linksSelectedNew,
+                    "linkRightClicked": null,
+                    "linkRightClickedViewPointCoordinates":null,
+                    "nodeClicked": null,
+                    "nodeRightClicked": null,
+                    "nodeRightClickedViewpointCoordinates": null,
+                    "nodesSelected": nodesSelectedNew
+                }
+            );
 
         }
 
@@ -4384,7 +4429,7 @@ const graphSharedProptypes = {
     /**
     * clicked link
     */
-    // "linkClicked": PropTypes.object,
+    "linkClicked": PropTypes.object,
 
     /**
     * right-clicked link

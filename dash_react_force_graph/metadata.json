@@ -722,6 +722,13 @@
         "required": false,
         "description": ""
       },
+      "linkClicked": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "clicked link"
+      },
       "linkRightClicked": {
         "type": {
           "name": "object"
