@@ -1584,7 +1584,7 @@ function Graph2D (props) {
 
             identityRows = `${identityRows}
                 <tr>
-                    <td><span style="font-weight:bold">is_inferred</span></td>
+                    <td><span style="font-weight:bold">inferred</span></td>
                     <td>&nbsp;${node.__is_inferred}</td>
                 </tr>`;
 
@@ -1620,44 +1620,6 @@ function Graph2D (props) {
 
         }
 
-        // const keyPredicate = (key) => !props.invisibleProps.includes(key) &&
-        //     !(key.substring(
-        //         0,
-        //         2
-        //     ) === "__");
-
-        // const nodeTypedbAttributes = filterObject(
-        //     node,
-        //     keyPredicate
-        // );
-
-        // let attributeRows = null;
-
-        // if (Object.keys(nodeTypedbAttributes).length) {
-
-        //     attributeRows = Object.keys(nodeTypedbAttributes).map((key) => {
-
-        //         let stringTrunc = String(node[key]).substring(0,
-        //             40
-        //         );
-
-        //         if (String(node[key]).length > 40) {
-
-        //             stringTrunc = stringTrunc.concat("..");
-
-        //         }
-
-        //         return (
-        //             `<tr>
-        //                 <td><span style="font-weight:bold">${key}</span></td>
-        //                 <td>&nbsp;${stringTrunc}</td>
-        //             </tr>`
-        //         );
-
-        //     });
-
-        // }
-        
         // give text same color as links
         const color = props.linkAutoColor
             ? invert(props.backgroundColor)
@@ -1669,10 +1631,62 @@ function Graph2D (props) {
         //     ? `<table style=background-color:${props.backgroundColor}>${identityRows}${attributeRows}</table>`
         //     : `<table style=background-color:${props.backgroundColor}>${identityRows}</table>`;
 
+        return tableOut;
+
+    };
+
+
+     // this function prepares the tooltip shown on node hover
+     const linkLabelFunction = (link) => {
+
+        let identityRows = `<tr>
+                <td><span style="font-weight:bold">link</span></td>
+                <td>&nbsp;${link.label}</td>
+            </tr>
+            `;
+
+        if ("type" in link) {
+
+            identityRows = `${identityRows}
+                <tr>
+                    <td><span style="font-weight:bold">type</span></td>
+                    <td>&nbsp;${link.type}</td>
+                </tr>`;
+
+        }
+
+        if ("is_inherited" in link) {
+
+            identityRows = `${identityRows}
+                <tr>
+                    <td><span style="font-weight:bold">inherited</span></td>
+                    <td>&nbsp;${link.is_inherited}</td>
+                </tr>`;
+
+        }
+
+        if ("is_inferred" in link) {
+
+            identityRows = `${identityRows}
+                <tr>
+                    <td><span style="font-weight:bold">inferred</span></td>
+                    <td>&nbsp;${link.is_inferred}</td>
+                </tr>`;
+
+        }
+
+        // give text same color as links
+        const color = props.linkAutoColor
+            ? invert(props.backgroundColor)
+            : validateColor(props.linkColor)
+                ? props.linkColor
+                : invert(props.backgroundColor);
+        const tableOut = `<table style=background-color:${props.backgroundColor};color:${color}>${identityRows}</table>`;
 
         return tableOut;
 
     };
+
 
 
     const nodeVisibilityFunction = (node) => props.nodeIdsInvisibleUser === null
@@ -3285,7 +3299,8 @@ function Graph2D (props) {
                     /**
                     * link styling
                     */
-                    linkLabel={props.linkLabel}
+                    // linkLabel={props.linkLabel}
+                    linkLabel={linkLabelFunction}
                     // linkDesc: "desc", // VR only,
                     linkVisibility={linkVisibilityFunction}
                     linkColor={linkColorFunction}
