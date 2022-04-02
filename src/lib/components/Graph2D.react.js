@@ -2375,7 +2375,7 @@ function Graph2D (props) {
                 {
                     "linksSelected": linksSelectedNew,
                     "linkRightClicked": null,
-                    "linkRightClickedViewPointCoordinates":null,
+                    "linkRightClickedViewpointCoordinates":null,
                     "nodeClicked": null,
                     "nodeRightClicked": null,
                     "nodeRightClickedViewpointCoordinates": null,
@@ -3379,11 +3379,11 @@ function Graph2D (props) {
                                 props.nodeRightClickedViewpointCoordinates
                             )
                         ) {
-                            console.log("onZoom: reset linkRightClicked, linkRightClickedViewPointCoordinates, nodeRightClicked, nodeRightClickedViewpointCoordinates");
+                            console.log("onZoom: reset linkRightClicked, linkRightClickedViewpointCoordinates, nodeRightClicked, nodeRightClickedViewpointCoordinates");
                             props.setProps({
                                 // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
                                 "linkRightClicked": null,
-                                "linkRightClickedViewPointCoordinates":null,
+                                "linkRightClickedViewpointCoordinates":null,
                                 "nodeRightClicked": null,
                                 "nodeRightClickedViewpointCoordinates": null
                                 // "n_nodeRightClicks": null
