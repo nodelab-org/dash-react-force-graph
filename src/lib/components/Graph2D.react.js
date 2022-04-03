@@ -2775,9 +2775,9 @@ function Graph2D (props) {
 
     const linkLineDashFunction = (link) => {
 
-        return "is_inherited" in link
-            ? link.is_inherited
-                ? [5,15]
+        return "is_inherited" in link || "is_inferred" in link
+            ? link.is_inherited || link.is_inherited
+                ? [5,3]
                 : null
             : null;
 

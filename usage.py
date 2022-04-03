@@ -102,8 +102,8 @@ graphData = {
 
         ],
     "links":[
-        {"id":"1", "label":"employee", "source":"1", "target":"10"},
-        {"id":"2", "label":"employee", "source":"2", "target":"10"},
+        {"id":"1", "label":"employee", "source":"1", "target":"10", "is_inherited": True},
+        {"id":"2", "label":"employee", "source":"2", "target":"10", "is_inherited": True},
         {"id":"3", "label":"employer", "source":"5", "target":"10"},
         {"id":"4", "label":"employee", "source":"3", "target":"11"},
         {"id":"5", "label":"neighbour", "source":"4", "target":"13"},
