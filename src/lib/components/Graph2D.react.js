@@ -2769,6 +2769,15 @@ function Graph2D (props) {
             }
 
         }
+
+        if ("is_inherited" in link) {
+
+            width *= link.is_inherited
+                ? 0.9
+                : 1.2;
+
+        }
+
         return width;
     };
 
