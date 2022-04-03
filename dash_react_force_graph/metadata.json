@@ -254,21 +254,6 @@
         "required": false,
         "description": "Line opacity of links, between [0,1]. 3D, VR, AR"
       },
-      "linkLineDash": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "number"
-            },
-            {
-              "name": "string"
-            }
-          ]
-        },
-        "required": false,
-        "description": "Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing."
-      },
       "linkWidth": {
         "type": {
           "name": "union",

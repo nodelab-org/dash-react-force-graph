@@ -2770,16 +2770,18 @@ function Graph2D (props) {
 
         }
 
-        if ("is_inherited" in link) {
-
-            width *= link.is_inherited
-                ? 0.9
-                : 1.2;
-
-        }
-
         return width;
     };
+
+    const linkLineDashFunction = (link) => {
+
+        return "is_inherited" in link
+            ? link.is_inherited
+                ? [5,15]
+                : null
+            : null;
+
+    }
 
     const linkCanvasObjectFunction = (link, ctx) => {
 
@@ -3315,7 +3317,7 @@ function Graph2D (props) {
                     linkColor={linkColorFunction}
                     linkAutoColorBy={props.linkAutoColorBy}
                     linkOpacity={props.linkOpacity}
-                    linkLineDash={props.linkLineDash}
+                    linkLineDash={linkLineDashFunction}
                     linkWidth={linkWidthFunction}
                     linkResolution={props.linkResolution}
                     linkCurvature={linkCurvatureFunction}
@@ -3786,11 +3788,11 @@ const graphSharedProptypes = {
     /**
      * Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing.
      */
-    "linkLineDash": PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string,
-    //     PropTypes.func,
-    ]),
+    // "linkLineDash": PropTypes.oneOfType([
+    //     PropTypes.number,
+    //     PropTypes.string,
+    // //     PropTypes.func,
+    // ]),
 
     /**
      * Link object accessor function, attribute or a numeric constant for the link line width.

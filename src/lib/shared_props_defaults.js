@@ -62,7 +62,7 @@ const objSharedProps = {
     linkColor: "color",
     linkAutoColorBy:"label",
     linkOpacity:0.2,
-    linkLineDash: null, // falsy value disables dashing
+    // linkLineDash: null, // falsy value disables dashing
     linkWidth:1,
     linkResolution: 6,
     linkCurvature: 0.0,

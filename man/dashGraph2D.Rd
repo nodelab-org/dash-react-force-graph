@@ -32,8 +32,8 @@ linkDirectionalParticleWidth=NULL,
 linkDirectionalParticles=NULL, linkHoverPrecision=NULL,
 linkId=NULL, linkIdsHighlightUser=NULL,
 linkIdsInvisibleAuto=NULL, linkIdsInvisibleUser=NULL,
-linkLabel=NULL, linkLineDash=NULL, linkOpacity=NULL,
-linkResolution=NULL, linkRightClicked=NULL,
+linkLabel=NULL, linkOpacity=NULL, linkResolution=NULL,
+linkRightClicked=NULL,
 linkRightClickedViewpointCoordinates=NULL, linkSource=NULL,
 linkTarget=NULL, linkWidth=NULL, linksSelected=NULL,
 maxDepth_neighbours_select=NULL, maxZoom=NULL, minZoom=NULL,
@@ -149,8 +149,6 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 \item{linkIdsInvisibleUser}{List of characters. ids of visible links}
 
 \item{linkLabel}{Character. Link object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).}
-
-\item{linkLineDash}{Numeric | character. Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing.}
 
 \item{linkOpacity}{Numeric. Line opacity of links, between [0,1]. 3D, VR, AR}
 
