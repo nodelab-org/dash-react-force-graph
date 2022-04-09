@@ -289,42 +289,6 @@ function Graph2D (props) {
     // useEffect(
     //     () => {
 
-    //         if (nodeRelSize !== null &&
-    //             guiSettings.nodeRelSize !== nodeRelSize) {
-
-    //             // console.log("useEffect: nodeRelSize");
-
-    //             setNodeRelSize((_nrz) => guiSettings.nodeRelSize);
-    //             setNodeIconRelSize((_nirz) => guiSettings.nodeRelSize * 2);
-    //             setNodeImgRelSize((_nirz) => guiSettings.nodeRelSize * 2);
-
-    //         }
-
-    //     },
-    //     [guiSettings.nodeRelSize]
-    // );
-
-
-    // useEffect(
-    //     () => {
-
-    //         if (nodeLabelRelSize !== null &&
-    //             guiSettings.nodeLabelRelSize !== nodeLabelRelSize) {
-
-    //             // console.log("useEffect: nodeLabelRelSize");
-
-    //             setNodeLabelRelSize((_nlrz) => guiSettings.nodeLabelRelSize);
-
-    //         }
-
-    //     },
-    //     [guiSettings.nodeLabelRelSize]
-    // );
-
-
-    // useEffect(
-    //     () => {
-
     //         if (linkCurvature !== null && guiSettings.linkCurvature !== linkCurvature) {
 
     //             // console.log("useEffect: linkCurvature");
@@ -335,38 +299,6 @@ function Graph2D (props) {
 
     //     },
     //     [guiSettings.linkCurvature]
-    // );
-
-
-    // useEffect(
-    //     () => {
-
-    //         if (guiSettings.useNodeIcon !== useNodeIcon) {
-
-    //             // console.log("useEffect: useNodeIcon");
-
-    //             setUseNodeIcon((_nIcon) => guiSettings.useNodeIcon);
-
-    //         }
-
-    //     },
-    //     [guiSettings.useNodeIcon]
-    // );
-
-
-    // useEffect(
-    //     () => {
-
-    //         if (guiSettings.useNodeImg !== useNodeImg) {
-
-    //             // console.log("useEffect: useNodeImg");
-
-    //             setUseNodeImg((_nImg) => guiSettings.useNodeImg);
-
-    //         }
-
-    //     },
-    //     [guiSettings.useNodeImg]
     // );
 
 
@@ -603,14 +535,16 @@ function Graph2D (props) {
                         "nodes": nodeIdsAllNew
                     }));
 
-
                     const nodesClone = cloneDeep(props.graphData.nodes);
 
-                    if ((nodeIdsAddedNew.size ||
-                        nodeIdsRemovedNew.size ||
-                        linkIdsAddedNew.size ||
-                        linkIdsRemovedNew.size ||
-                        props.forceRefresh > forceRefreshCount) &&
+                    if (
+                        (
+                            nodeIdsAddedNew.size ||
+                            nodeIdsRemovedNew.size ||
+                            linkIdsAddedNew.size ||
+                            linkIdsRemovedNew.size ||
+                            props.forceRefresh > forceRefreshCount
+                        ) &&
                         props.updateNeighbours &&
                         props.graphData.nodes.length
                         ) {
@@ -686,45 +620,47 @@ function Graph2D (props) {
 
                     // set coordinates. Only necessary when not forcing refresh.
                     if (nodesClone.length && 
-                        props.graphData.nodes.length //&& 
+                        props.graphData.nodes.length && 
                         // (nodeIdsAddedNew.size || nodeIdsRemovedNew.size)
-                        ) {
+                        // ) {
 
-                        if (props.useCoordinates &&
-                            props.nodeCoordinates) {
+                        // if (
+                        props.useCoordinates &&
+                        props.nodeCoordinates
+                    ) {
 
-                            nodesClone.forEach((node) => {
+                        nodesClone.forEach((node) => {
 
-                                const [
-                                    coordX,
-                                    coordY
-                                ] = [
-                                    typeof props.nodeCoordinates === "string"
-                                        ? props.nodeCoordinates in node
-                                            ? node[props.nodeCoordinates].x
-                                            : null
-                                        : "x" in props.nodeCoordinates && props.nodeCoordinates.x in node
-                                            ? node[props.nodeCoordinates.x]
-                                            : null,
-                                    typeof props.nodeCoordinates === "string"
-                                        ? props.nodeCoordinates in node
-                                            ? node[props.nodeCoordinates].y
-                                            : null
-                                        : "y" in props.nodeCoordinates && props.nodeCoordinates.y in node
-                                            ? node[props.nodeCoordinates.y]
-                                            : null
-                                ];
+                            const [
+                                coordX,
+                                coordY
+                            ] = [
+                                typeof props.nodeCoordinates === "string"
+                                    ? props.nodeCoordinates in node
+                                        ? node[props.nodeCoordinates].x
+                                        : null
+                                    : "x" in props.nodeCoordinates && props.nodeCoordinates.x in node
+                                        ? node[props.nodeCoordinates.x]
+                                        : null,
+                                typeof props.nodeCoordinates === "string"
+                                    ? props.nodeCoordinates in node
+                                        ? node[props.nodeCoordinates].y
+                                        : null
+                                    : "y" in props.nodeCoordinates && props.nodeCoordinates.y in node
+                                        ? node[props.nodeCoordinates.y]
+                                        : null
+                            ];
 
-                                if (coordX && coordY) {
+                            if (coordX && coordY) {
 
-                                    node.fx = coordX;
-                                    node.fy = coordY;
+                                node.fx = coordX;
+                                node.fy = coordY;
 
-                                }
+                            }
 
-                            });
+                        });
 
-                        } //else {
+                        // } //else {
 
                         //     nodesClone.forEach((node) => {
 
@@ -762,7 +698,9 @@ function Graph2D (props) {
                         props.linkRightClicked ||
                         props.linkRightClickedViewpointCoordinates ||
                         props.nodeRightClicked ||
-                        props.nodeRightClickedViewpointCoordinates
+                        props.nodeRightClickedViewpointCoordinates ||
+                        props.nodeClicked ||
+                        props.linkClicked
                         // ("nodesSelected" in props && props.nodesSelected.length)
                     ) {
 
@@ -770,7 +708,9 @@ function Graph2D (props) {
                             "linkRightClicked": null,
                             "linkRightClickedViewpointCoordinates": null,
                             "nodeRightClicked": null,
-                            "nodeRightClickedViewpointCoordinates": null
+                            "nodeRightClickedViewpointCoordinates": null,
+                            "nodeClicked":null,
+                            "linkClicked":null
                         });
 
                     }
@@ -3450,59 +3390,26 @@ function Graph2D (props) {
                         // );
                     }}
             />
-            <div className="dat-gui-div">
-                <DatGui
-                    data={guiSettings}
-                    onUpdate={handleUpdate}
-                    >
-                    {/* <DatFolder title='graph settings' closed={true}> */}
-                    
-                        {/* <DatFolder title='Container layout' closed={true}> */}
-                            {/* <DatColor path='backgroundColor' label='backgroundColor'/> */}
-                            {/* <DatBoolean path='showNavInfo' label='showNavInfo'/> */}
-                            {/* </DatFolder> */}
-                        <DatFolder title='Graph layout' closed={true}>
-                            <DatNumber path='link' label='link' min={0} max={100} step={1} />
-                            <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
-                            <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
-                            <DatNumber path='radial' label='radial' min={0} max={1} step={0.01} />
-                            <DatButton label='restore default forces' onClick={restoreDefaultForcesFunction}/>
-                            <DatButton label='reheat simulation' onClick={reheatFunction}/>
-                            <DatButton label='zoom to fit' onClick={zoomToFitFunction}/>
-                        </DatFolder>
-                        {/* <DatFolder title='force engine' closed = {true}> */}
-                            {/* <DatSelect path='forceEngine' label='forceEngine' options={["d3", "ngraph"]}/> */}
-                            {/* <DatBoolean path='dagModeOn' label='dagModeOn'/> */}
-                            {/* <DatSelect path='dagMode' label='dagMode' options={["td", "bu", "lr", "rl", "radialout", "radialin"]}/> */}
-                            {/* <DatNumber path='cooldownTime' label='cooldownTime' min={1000} max={15000} step={1000}/> */}
-                            {/* <DatBoolean path='fixNodes' label='fix nodes'/> */}
-                            
-                            {/* </DatFolder> */}
-                        {/* <DatFolder title='node and link style' closed={true}>
-                            <DatNumber path='nodeLabelRelSize' label='node label size' min={1} max={50} step={1}/> */}
-                            {/* <DatNumber path='nodeRelSize' label='node size' min={1} max={50} step={1}/> */}
-                            {/* <DatNumber path='nodeOpacity' label='nodeOpacity' min={0} max={1} step={0.1}/> */}
-                            {/* <DatBoolean path='useNodeIcon' label='use node icons'/>
-                            <DatBoolean path='useNodeImg' label='use node images'/> */}
-                            {/* <DatNumber path='linkCurvature' label='link curvature' min={0} max={1} step={0.01}/> */}
-                            {/* <DatBoolean path='nodeTextAutoColor' label='nodeTextAutoColor'/> */}
-                            {/* </DatFolder> */}
-                        {/* <DatFolder title='Link styling' closed={true}>
-                            <DatBoolean path='linkAutoColor' label='linkAutoColor'/>
-                            <DatColor path='linkColor' label='linkColor'/>
-                            <DatNumber path='linkWidth' label='linkWidth' min={0.1} max={5} step={0.1}/> */}
-                            {/* <DatNumber path='linkCurvature' label='linkCurvature' min={0} max={1} step={0.1}/> */}
-                            {/* </DatFolder> */}
-                        {/* <DatFolder title='Interaction' closed = {true}> */}
-                            {/* <DatSelect title='controlType' label='controlType' options={["trackball", "orbit", "fly"]}/> */}
-                            {/* <DatBoolean path='enableNodeDrag' label='enableNodeDrag'/> */}
-                            {/* <DatBoolean path='enableZoomPanInteraction' label='enableZoomPanInteraction'/> */}
-                            {/* <DatBoolean path='enableNavigationControls' label='enableNavigationControls'/> */}
-                            {/* <DatBoolean path='enablePointerInteraction' label='enablePointerInteraction'/> */}
-                            {/* </DatFolder> */}
-                        {/* </DatFolder> */}
-                </DatGui>
-            </div>
+            {
+                props.showGUI 
+                    ? <div className="dat-gui-div">
+                        <DatGui
+                            data={guiSettings}
+                            onUpdate={handleUpdate}
+                            >
+                            <DatFolder title='Graph layout' closed={true}>
+                                <DatNumber path='link' label='link' min={0} max={100} step={1} />
+                                <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
+                                <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
+                                <DatNumber path='radial' label='radial' min={0} max={1} step={0.01} />
+                                <DatButton label='restore default forces' onClick={restoreDefaultForcesFunction}/>
+                                <DatButton label='reheat simulation' onClick={reheatFunction}/>
+                                <DatButton label='zoom to fit' onClick={zoomToFitFunction}/>
+                            </DatFolder>
+                        </DatGui>
+                    </div>
+                    : null
+            }
         </div>
     );
 }
@@ -4592,7 +4499,9 @@ const graphSharedProptypes = {
     "n_nodeRightClicks": PropTypes.number,
     "n_linkRightClicks": PropTypes.number,
     // "redraw": PropTypes.number
-    "scripts":PropTypes.arrayOf(PropTypes.string)
+    "scripts":PropTypes.arrayOf(PropTypes.string),
+    // whether to show the GUI for controlling forces
+    "showGUI": PropTypes.bool
 
 };
 

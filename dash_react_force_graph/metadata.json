@@ -915,6 +915,13 @@
         },
         "required": false,
         "description": ""
+      },
+      "showGUI": {
+        "type": {
+          "name": "bool"
+        },
+        "required": false,
+        "description": ""
       }
     }
   },

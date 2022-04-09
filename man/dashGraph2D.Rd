@@ -51,8 +51,8 @@ nodeTextAutoColor=NULL, nodeTextColor=NULL, nodeVal=NULL,
 nodeZoomId=NULL, nodesSelected=NULL, numDimensions=NULL,
 pauseAnimation=NULL, pixelUnitRatio=NULL, refresh=NULL,
 rendererConfig=NULL, scripts=NULL, showCoordinates=NULL,
-size=NULL, sortRels1Descend=NULL, sortRels2Descend=NULL,
-sortRelsBy1=NULL, sortRelsBy2=NULL,
+showGUI=NULL, size=NULL, sortRels1Descend=NULL,
+sortRels2Descend=NULL, sortRelsBy1=NULL, sortRelsBy2=NULL,
 sortRoleplayers1Descend=NULL, sortRoleplayers2Descend=NULL,
 sortRoleplayersBy1=NULL, sortRoleplayersBy2=NULL,
 updateNeighbours=NULL, useCoordinates=NULL,
@@ -243,6 +243,8 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 \item{scripts}{List of characters. }
 
 \item{showCoordinates}{Logical. showCoordinates: whether or not to show pointer coordinates in hover tooltip (not yet used)}
+
+\item{showGUI}{Logical. }
 
 \item{size}{Named list. provided react-sizeme. Contains an object with "width" and "height" attributes}
 
