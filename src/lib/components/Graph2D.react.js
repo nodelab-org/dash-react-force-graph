@@ -2717,7 +2717,7 @@ function Graph2D (props) {
 
         return "is_inherited" in link || "is_inferred" in link
             ? link.is_inherited || link.is_inherited
-                ? [5,3]
+                ? [2,1]
                 : null
             : null;
 
