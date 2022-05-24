@@ -99,34 +99,6 @@ function Graph2D (props) {
             zoomToFitCount,
             setZoomToFitCount
         ],
-        // [
-        //     nodeRelSize,
-        //     setNodeRelSize
-        // ],
-        // [
-        //     nodeIconRelSize,
-        //     setNodeIconRelSize
-        // ],
-        // [
-        //     nodeImgRelSize,
-        //     setNodeImgRelSize
-        // ],
-        // [
-        //     nodeLabelRelSize,
-        //     setNodeLabelRelSize
-        // ],
-        // [
-        //     useNodeImg,
-        //     setUseNodeImg
-        // ],
-        // [
-        //     useNodeIcon,
-        //     setUseNodeIcon
-        // ],
-        // [
-        //     linkCurvature,
-        //     setLinkCurvature
-        // ],
         [
             nodesById,
             setNodesById
@@ -180,13 +152,6 @@ function Graph2D (props) {
         useState([]),
         useState(0),
         useState(0),
-        // useState(props.nodeRelSize),
-        // useState(props.nodeIconRelSize),
-        // useState(props.nodeImgRelSize),
-        // useState(props.nodeLabelRelSize),
-        // useState(props.useNodeImg),
-        // useState(props.useNodeIcon),
-        // useState(props.linkCurvature),
         useState(null),
         useState([]),
         useState([]),
@@ -205,12 +170,7 @@ function Graph2D (props) {
             "center": 0.52,
             "charge": -45,
             "link": 70,
-            // "linkCurvature": props.linkCurvature,
-            // "nodeLabelRelSize": props.nodeLabelRelSize,
-            // "nodeRelSize": props.nodeRelSize,
-            "radial": 0.00,
-            // "useNodeIcon": props.useNodeIcon,
-            // "useNodeImg": props.useNodeImg
+            "radial": 0.00
         }),
         useRef(null)
     ];
@@ -318,18 +278,7 @@ function Graph2D (props) {
                     graphDataNodes.length &&
                     graphDataNodes.every((node) => "fx" in node)) {
 
-                    // setGraphData((gData) => {
 
-                    //     gData.nodes.forEach((node) => {
-
-                    //         delete node.fx;
-                    //         delete node.fy;
-
-                    //     });
-
-                    //     return gData;
-
-                    // });
                     setGraphDataNodes((gDataNodes) => gDataNodes.map((node) => {
 
                         if ("fx" in node && "fy" in node) {
@@ -341,7 +290,9 @@ function Graph2D (props) {
 
                         return node;
 
-                    }));
+                        })
+
+                    );
 
                 }
 
@@ -481,9 +432,6 @@ function Graph2D (props) {
      * 4. Center camera at the centre
      * 5. update nodesById
      */
-
-    //if ((props.graphData && "nodes" in props.graphData) || (fgRef.current && fgRef.current.graphData && fgRef.current.graphData.nodes)) {
-
     useEffect(
         () => {
 
@@ -620,41 +568,41 @@ function Graph2D (props) {
 
                     // set coordinates. Only necessary when not forcing refresh.
                     if (nodesClone.length && 
-                        props.graphData.nodes.length && 
-                        // (nodeIdsAddedNew.size || nodeIdsRemovedNew.size)
-                        // ) {
-
-                        // if (
+                        props.graphData.nodes.length &&
                         props.useCoordinates &&
                         props.nodeCoordinates
                     ) {
 
                         nodesClone.forEach((node) => {
 
-                            const [
-                                coordX,
-                                coordY
-                            ] = [
-                                typeof props.nodeCoordinates === "string"
-                                    ? props.nodeCoordinates in node
-                                        ? node[props.nodeCoordinates].x
-                                        : null
-                                    : "x" in props.nodeCoordinates && props.nodeCoordinates.x in node
-                                        ? node[props.nodeCoordinates.x]
-                                        : null,
-                                typeof props.nodeCoordinates === "string"
-                                    ? props.nodeCoordinates in node
-                                        ? node[props.nodeCoordinates].y
-                                        : null
-                                    : "y" in props.nodeCoordinates && props.nodeCoordinates.y in node
-                                        ? node[props.nodeCoordinates.y]
-                                        : null
-                            ];
+                            if (!("fx" in node) || typeof node.fx === "undefined") {
 
-                            if (coordX && coordY) {
-
-                                node.fx = coordX;
-                                node.fy = coordY;
+                                const [
+                                    coordX,
+                                    coordY
+                                ] = [
+                                    typeof props.nodeCoordinates === "string"
+                                        ? props.nodeCoordinates in node
+                                            ? node[props.nodeCoordinates].x
+                                            : null
+                                        : "x" in props.nodeCoordinates && props.nodeCoordinates.x in node
+                                            ? node[props.nodeCoordinates.x]
+                                            : null,
+                                    typeof props.nodeCoordinates === "string"
+                                        ? props.nodeCoordinates in node
+                                            ? node[props.nodeCoordinates].y
+                                            : null
+                                        : "y" in props.nodeCoordinates && props.nodeCoordinates.y in node
+                                            ? node[props.nodeCoordinates.y]
+                                            : null
+                                ];
+    
+                                if (coordX && coordY) {
+    
+                                    node.fx = coordX;
+                                    node.fy = coordY;
+    
+                                }
 
                             }
 
