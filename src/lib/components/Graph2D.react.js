@@ -693,11 +693,12 @@ function Graph2D (props) {
 
                         }
 
-                    } else {
-
-                        fgRef.current.d3ReheatSimulation();
-
                     }
+                    // } else {
+
+                    //     fgRef.current.d3ReheatSimulation();
+
+                    // }
 
                 }
 
@@ -2771,25 +2772,24 @@ function Graph2D (props) {
                                 node.x,
                                 node.y
                             ]
-                        ])));
-    
-                    // finally, update graphdata props.
-                    // this is needed to avoid resetting coordinates whenever Dash modifies the graphdata.
-                    props.setProps(
-                        {
-                            "graphData": {
-                                "links": props.graphData.links,
-                                "nodes": graphDataNodes
-                            }
-                            // "updateNeighbours":false // not necessary since no change in nodes or links 
-                    });
+                        ])
+
+                    ));
+
                 }
-    
+
             }
-            // console.log("props.zoomToFit")
-            // console.log(props.zoomToFit)
-            // console.log("zoomToFitCount")
-            // console.log(zoomToFitCount)
+
+            // finally, update graphdata props.
+            // this is needed to avoid resetting coordinates whenever Dash modifies the graphdata.
+            props.setProps(
+                {
+                    "graphData": {
+                        "links": props.graphData.links,
+                        "nodes": graphDataNodes
+                    }
+                    // "updateNeighbours":false // not necessary since no change in nodes or links 
+            });
 
             if (props.zoomToFit > zoomToFitCount) {
                 
@@ -3268,15 +3268,6 @@ function Graph2D (props) {
                     onBackgroundClick={handleBackgroundClick}
                     onBackgroundRightClick={handleBackgroundRightClick}
                     onZoom={(args) => {
-                        console.log("onZoom fired")
-                        console.log("props.linkRightClicked")
-                        console.log(cloneDeep(props.linkRightClicked))
-                        console.log("props.linkRightClickedViewpointCoordinates")
-                        console.log(cloneDeep(props.linkRightClickedViewpointCoordinates))
-                        console.log("props.nodeRightClicked")
-                        console.log(cloneDeep(props.nodeRightClicked))
-                        console.log("props.nodeRightClickedViewpointCoordinates")
-                        console.log(cloneDeep(props.nodeRightClickedViewpointCoordinates))
 
                         if ( 
                             args && 
@@ -3293,7 +3284,7 @@ function Graph2D (props) {
                                 props.nodeRightClickedViewpointCoordinates
                             )
                         ) {
-                            console.log("onZoom: reset linkRightClicked, linkRightClickedViewpointCoordinates, nodeRightClicked, nodeRightClickedViewpointCoordinates");
+
                             props.setProps({
                                 // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
                                 "linkRightClicked": null,
@@ -3306,6 +3297,7 @@ function Graph2D (props) {
                         }
 
                     }}
+
                     onZoomEnd={(args) => {
                         // keep track of currentZoomPan
                         // console.log("onZoomEnd")
