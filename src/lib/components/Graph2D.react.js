@@ -3165,7 +3165,16 @@ function Graph2D (props) {
                     */
                     // props
                     autoPauseRedraw={true}
-                    graphData={{"nodes":graphDataNodes? graphDataNodes : [], "links": props.graphData.links? props.graphData.links : []}}                    
+                    graphData={
+                        {
+                            "nodes":graphDataNodes
+                                ? graphDataNodes
+                                : [],
+                            "links": props.graphData.links
+                                ? props.graphData.links
+                                : []
+                        }
+                    }                    
                     nodeId={props.nodeId}
                     linkSource={props.linkSource}
                     linkTarget={props.linkTarget}
@@ -3303,17 +3312,25 @@ function Graph2D (props) {
                         // console.log("onZoomEnd")
                         if (
                             args && 
-                            ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
+                            (
+                                (
+                                    props.currentZoomPan === null ||
+                                    typeof props.currentZoomPan === "undefined"
+                                ) ||
                                 "k" in props.currentZoomPan &&
                                 (
                                     props.currentZoomPan.k != args.k || 
                                     props.currentZoomPan.x != args.x ||
                                     props.currentZoomPan.y != args.y
-                        ))) {
+                                )
+                            // try to disactivate, to avoid re-heating layout on zoom/pan before nodes fixed
+                            ) && graphDataNodes && graphDataNodes.length && !graphDataNodes[0].vx
+                        ) {
 
                             props.setProps({
                                 "currentZoomPan":args
                                 })
+
                         }
                         }}
                     linkHoverPrecision={props.linkHoverPrecision}
