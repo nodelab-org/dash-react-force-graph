@@ -3038,7 +3038,7 @@ function Graph2D (props) {
     
     useEffect( () => {
 
-        if (props.graphData.nodes &&
+        if (//props.graphData.nodes && // this can create a race condition
             fgRef &&
             "current" in fgRef &&
             fgRef.current &&
