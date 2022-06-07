@@ -106,10 +106,13 @@ Keyword arguments:
     Link object accessor function or attribute to automatically group
     colors by. Only affects links without a color attribute.
 
+- linkClicked (dict; optional):
+    clicked link.
+
 - linkColor (string; optional):
     String giving link color.
 
-- linkCurvature (number; optional):
+- linkCurvature (number | string; optional):
     Link object accessor function, attribute or a numeric constant for
     the curvature radius of the link line. A value of 0 renders a
     straight line. 1 indicates a radius equal to half of the line
@@ -189,13 +192,6 @@ Keyword arguments:
     Link object accessor function or attribute for name (shown in
     label). Supports plain text or HTML content (except in VR).
 
-- linkLineDash (number | string; optional):
-    Link object accessor function, attribute or number array (e.g. [5,
-    15]) to determine if a line dash should be applied to this
-    rendered link. Refer to the HTML canvas setLineDash API for
-    example values. Either a falsy value or an empty array will
-    disable dashing.
-
 - linkOpacity (number; optional):
     Line opacity of links, between [0,1]. 3D, VR, AR.
 
@@ -263,8 +259,8 @@ Keyword arguments:
     The node attribute containing object with icon to display for each
     individual node.
 
-- nodeIconRelSize (number; optional):
-    controls nodeIcon size.
+- nodeIconSizeFactor (number; optional):
+    controls nodeIcon size, relative to nodeRelSize.
 
 - nodeId (string; optional):
     Node object accessor attribute for unique node id (used in link
@@ -284,8 +280,8 @@ Keyword arguments:
     The node attribute containing url to image to display for each
     individual node.
 
-- nodeImgRelSize (number; optional):
-    controls nodeImg size.
+- nodeImgSizeFactor (number; optional):
+    controls nodeImg size, reltive to nodeRelSize.
 
 - nodeLabel (string; optional):
     Node object accessor function or attribute for name (shown in
@@ -357,6 +353,8 @@ Keyword arguments:
     showCoordinates: whether or not to show pointer coordinates in
     hover tooltip (not yet used).
 
+- showGUI (boolean; optional)
+
 - size (dict; optional):
     provided react-sizeme. Contains an object with \"width\" and
     \"height\" attributes.
@@ -393,12 +391,6 @@ Keyword arguments:
     useCoordinates: whether to set nodeCoordinates for node
     coordinates.
 
-- useNodeIcon (boolean; optional):
-    Whether or not to use the nodeIcon.
-
-- useNodeImg (boolean; optional):
-    Whether or not to use the nodeImg. Overrides nodeIcon.
-
 - warmupTicks (number; optional):
     Number of layout engine cycles to dry-run at ignition before
     starting to render.
@@ -406,23 +398,14 @@ Keyword arguments:
 - zoom (list of numbers; optional):
     Calls zoom() method. ([number], [ms]).
 
-- zoomToFit (list of numbers; optional):
-    Automatically zooms/pans the canvas so that all of the nodes fit
-    inside it. If no nodes are found no action is taken. It accepts
-    two optional arguments: the first defines the duration of the
-    transition (in ms) to animate the canvas motion (default: 0ms).
-    The second argument is the amount of padding (in px) between the
-    edge of the canvas and the outermost node (default: 10px). The
-    third argument specifies a custom node filter: node => <boolean>,
-    which should return a truthy value if the node is to be included.
-    This can be useful for focusing on a portion of the graph. 2D, 3D."""
+- zoomToFit (number; optional)"""
     @_explicitize_args
-    def __init__(self, id=Component.REQUIRED, key=Component.UNDEFINED, graphData=Component.REQUIRED, nodeId=Component.UNDEFINED, linkSource=Component.UNDEFINED, linkTarget=Component.UNDEFINED, backgroundColor=Component.UNDEFINED, nodeRelSize=Component.UNDEFINED, nodeIconRelSize=Component.UNDEFINED, nodeLabelRelSize=Component.UNDEFINED, nodeImgRelSize=Component.UNDEFINED, nodeLabel=Component.UNDEFINED, nodeVal=Component.UNDEFINED, nodeCoordinates=Component.UNDEFINED, nodeDesc=Component.UNDEFINED, nodeColor=Component.UNDEFINED, nodeAutoColorBy=Component.UNDEFINED, nodeTextColor=Component.UNDEFINED, nodeTextAutoColor=Component.UNDEFINED, nodeOpacity=Component.UNDEFINED, nodeResolution=Component.UNDEFINED, linkLabel=Component.UNDEFINED, linkDesc=Component.UNDEFINED, linkColor=Component.UNDEFINED, linkAutoColor=Component.UNDEFINED, linkAutoColorBy=Component.UNDEFINED, linkOpacity=Component.UNDEFINED, linkLineDash=Component.UNDEFINED, linkWidth=Component.UNDEFINED, linkResolution=Component.UNDEFINED, linkCurvature=Component.UNDEFINED, linkDirectionalArrowLength=Component.UNDEFINED, linkDirectionalArrowColor=Component.UNDEFINED, linkDirectionalArrowRelPos=Component.UNDEFINED, linkDirectionalArrowResolution=Component.UNDEFINED, linkDirectionalParticles=Component.UNDEFINED, linkDirectionalParticleSpeed=Component.UNDEFINED, linkDirectionalParticleWidth=Component.UNDEFINED, linkDirectionalParticleColor=Component.UNDEFINED, linkDirectionalParticleResolution=Component.UNDEFINED, emitParticle=Component.UNDEFINED, rendererConfig=Component.UNDEFINED, pauseAnimation=Component.UNDEFINED, centerAtZoom=Component.UNDEFINED, zoomToFit=Component.UNDEFINED, refresh=Component.UNDEFINED, numDimensions=Component.UNDEFINED, forceEngine=Component.UNDEFINED, ngraphPhysics=Component.UNDEFINED, warmupTicks=Component.UNDEFINED, cooldownTicks=Component.UNDEFINED, cooldownTime=Component.UNDEFINED, fixNodes=Component.UNDEFINED, linkHoverPrecision=Component.UNDEFINED, zoom=Component.UNDEFINED, controlType=Component.UNDEFINED, enableZoomPanInteraction=Component.UNDEFINED, enableNavigationControls=Component.UNDEFINED, enablePointerInteraction=Component.UNDEFINED, enableNodeDrag=Component.UNDEFINED, getGraphBbox=Component.UNDEFINED, heightRatio=Component.UNDEFINED, size=Component.UNDEFINED, active=Component.UNDEFINED, useNodeImg=Component.UNDEFINED, nodeImg=Component.UNDEFINED, useNodeIcon=Component.UNDEFINED, nodeIcon=Component.UNDEFINED, linkId=Component.UNDEFINED, nodeZoomId=Component.UNDEFINED, sortRelsBy1=Component.UNDEFINED, sortRelsBy2=Component.UNDEFINED, sortRoleplayersBy1=Component.UNDEFINED, sortRoleplayersBy2=Component.UNDEFINED, sortRels1Descend=Component.UNDEFINED, sortRels2Descend=Component.UNDEFINED, sortRoleplayers1Descend=Component.UNDEFINED, sortRoleplayers2Descend=Component.UNDEFINED, nodesSelected=Component.UNDEFINED, nodeClicked=Component.UNDEFINED, nodeRightClicked=Component.UNDEFINED, nodeRightClickedViewpointCoordinates=Component.UNDEFINED, linkRightClickedViewpointCoordinates=Component.UNDEFINED, linkRightClicked=Component.UNDEFINED, linksSelected=Component.UNDEFINED, minZoom=Component.UNDEFINED, maxZoom=Component.UNDEFINED, nodeIdsHighlightUser=Component.UNDEFINED, nodeIdsInvisibleAuto=Component.UNDEFINED, nodeIdsInvisibleUser=Component.UNDEFINED, linkIdsHighlightUser=Component.UNDEFINED, linkIdsInvisibleAuto=Component.UNDEFINED, linkIdsInvisibleUser=Component.UNDEFINED, externalobject_source=Component.UNDEFINED, externalobjectInput=Component.UNDEFINED, useCoordinates=Component.UNDEFINED, pixelUnitRatio=Component.UNDEFINED, showCoordinates=Component.UNDEFINED, maxDepth_neighbours_select=Component.UNDEFINED, currentZoomPan=Component.UNDEFINED, updateNeighbours=Component.UNDEFINED, forceRefresh=Component.UNDEFINED, n_nodeRightClicks=Component.UNDEFINED, n_linkRightClicks=Component.UNDEFINED, scripts=Component.UNDEFINED, **kwargs):
-        self._prop_names = ['id', 'active', 'backgroundColor', 'centerAtZoom', 'controlType', 'cooldownTicks', 'cooldownTime', 'currentZoomPan', 'emitParticle', 'enableNavigationControls', 'enableNodeDrag', 'enablePointerInteraction', 'enableZoomPanInteraction', 'externalobjectInput', 'externalobject_source', 'fixNodes', 'forceEngine', 'forceRefresh', 'getGraphBbox', 'graphData', 'heightRatio', 'key', 'linkAutoColor', 'linkAutoColorBy', 'linkColor', 'linkCurvature', 'linkDesc', 'linkDirectionalArrowColor', 'linkDirectionalArrowLength', 'linkDirectionalArrowRelPos', 'linkDirectionalArrowResolution', 'linkDirectionalParticleColor', 'linkDirectionalParticleResolution', 'linkDirectionalParticleSpeed', 'linkDirectionalParticleWidth', 'linkDirectionalParticles', 'linkHoverPrecision', 'linkId', 'linkIdsHighlightUser', 'linkIdsInvisibleAuto', 'linkIdsInvisibleUser', 'linkLabel', 'linkLineDash', 'linkOpacity', 'linkResolution', 'linkRightClicked', 'linkRightClickedViewpointCoordinates', 'linkSource', 'linkTarget', 'linkWidth', 'linksSelected', 'maxDepth_neighbours_select', 'maxZoom', 'minZoom', 'n_linkRightClicks', 'n_nodeRightClicks', 'ngraphPhysics', 'nodeAutoColorBy', 'nodeClicked', 'nodeColor', 'nodeCoordinates', 'nodeDesc', 'nodeIcon', 'nodeIconRelSize', 'nodeId', 'nodeIdsHighlightUser', 'nodeIdsInvisibleAuto', 'nodeIdsInvisibleUser', 'nodeImg', 'nodeImgRelSize', 'nodeLabel', 'nodeLabelRelSize', 'nodeOpacity', 'nodeRelSize', 'nodeResolution', 'nodeRightClicked', 'nodeRightClickedViewpointCoordinates', 'nodeTextAutoColor', 'nodeTextColor', 'nodeVal', 'nodeZoomId', 'nodesSelected', 'numDimensions', 'pauseAnimation', 'pixelUnitRatio', 'refresh', 'rendererConfig', 'scripts', 'showCoordinates', 'size', 'sortRels1Descend', 'sortRels2Descend', 'sortRelsBy1', 'sortRelsBy2', 'sortRoleplayers1Descend', 'sortRoleplayers2Descend', 'sortRoleplayersBy1', 'sortRoleplayersBy2', 'updateNeighbours', 'useCoordinates', 'useNodeIcon', 'useNodeImg', 'warmupTicks', 'zoom', 'zoomToFit']
+    def __init__(self, id=Component.REQUIRED, key=Component.UNDEFINED, graphData=Component.REQUIRED, nodeId=Component.UNDEFINED, linkSource=Component.UNDEFINED, linkTarget=Component.UNDEFINED, backgroundColor=Component.UNDEFINED, nodeRelSize=Component.UNDEFINED, nodeIconSizeFactor=Component.UNDEFINED, nodeLabelRelSize=Component.UNDEFINED, nodeImgSizeFactor=Component.UNDEFINED, nodeLabel=Component.UNDEFINED, nodeVal=Component.UNDEFINED, nodeCoordinates=Component.UNDEFINED, nodeDesc=Component.UNDEFINED, nodeColor=Component.UNDEFINED, nodeAutoColorBy=Component.UNDEFINED, nodeTextColor=Component.UNDEFINED, nodeTextAutoColor=Component.UNDEFINED, nodeOpacity=Component.UNDEFINED, nodeResolution=Component.UNDEFINED, linkLabel=Component.UNDEFINED, linkDesc=Component.UNDEFINED, linkColor=Component.UNDEFINED, linkAutoColor=Component.UNDEFINED, linkAutoColorBy=Component.UNDEFINED, linkOpacity=Component.UNDEFINED, linkWidth=Component.UNDEFINED, linkResolution=Component.UNDEFINED, linkCurvature=Component.UNDEFINED, linkDirectionalArrowLength=Component.UNDEFINED, linkDirectionalArrowColor=Component.UNDEFINED, linkDirectionalArrowRelPos=Component.UNDEFINED, linkDirectionalArrowResolution=Component.UNDEFINED, linkDirectionalParticles=Component.UNDEFINED, linkDirectionalParticleSpeed=Component.UNDEFINED, linkDirectionalParticleWidth=Component.UNDEFINED, linkDirectionalParticleColor=Component.UNDEFINED, linkDirectionalParticleResolution=Component.UNDEFINED, emitParticle=Component.UNDEFINED, rendererConfig=Component.UNDEFINED, pauseAnimation=Component.UNDEFINED, centerAtZoom=Component.UNDEFINED, refresh=Component.UNDEFINED, numDimensions=Component.UNDEFINED, forceEngine=Component.UNDEFINED, ngraphPhysics=Component.UNDEFINED, warmupTicks=Component.UNDEFINED, cooldownTicks=Component.UNDEFINED, cooldownTime=Component.UNDEFINED, fixNodes=Component.UNDEFINED, linkHoverPrecision=Component.UNDEFINED, zoom=Component.UNDEFINED, controlType=Component.UNDEFINED, enableZoomPanInteraction=Component.UNDEFINED, enableNavigationControls=Component.UNDEFINED, enablePointerInteraction=Component.UNDEFINED, enableNodeDrag=Component.UNDEFINED, getGraphBbox=Component.UNDEFINED, heightRatio=Component.UNDEFINED, size=Component.UNDEFINED, active=Component.UNDEFINED, nodeImg=Component.UNDEFINED, nodeIcon=Component.UNDEFINED, linkId=Component.UNDEFINED, nodeZoomId=Component.UNDEFINED, sortRelsBy1=Component.UNDEFINED, sortRelsBy2=Component.UNDEFINED, sortRoleplayersBy1=Component.UNDEFINED, sortRoleplayersBy2=Component.UNDEFINED, sortRels1Descend=Component.UNDEFINED, sortRels2Descend=Component.UNDEFINED, sortRoleplayers1Descend=Component.UNDEFINED, sortRoleplayers2Descend=Component.UNDEFINED, nodesSelected=Component.UNDEFINED, nodeClicked=Component.UNDEFINED, nodeRightClicked=Component.UNDEFINED, nodeRightClickedViewpointCoordinates=Component.UNDEFINED, linkRightClickedViewpointCoordinates=Component.UNDEFINED, linkClicked=Component.UNDEFINED, linkRightClicked=Component.UNDEFINED, linksSelected=Component.UNDEFINED, minZoom=Component.UNDEFINED, maxZoom=Component.UNDEFINED, nodeIdsHighlightUser=Component.UNDEFINED, nodeIdsInvisibleAuto=Component.UNDEFINED, nodeIdsInvisibleUser=Component.UNDEFINED, linkIdsHighlightUser=Component.UNDEFINED, linkIdsInvisibleAuto=Component.UNDEFINED, linkIdsInvisibleUser=Component.UNDEFINED, externalobject_source=Component.UNDEFINED, externalobjectInput=Component.UNDEFINED, useCoordinates=Component.UNDEFINED, pixelUnitRatio=Component.UNDEFINED, showCoordinates=Component.UNDEFINED, maxDepth_neighbours_select=Component.UNDEFINED, currentZoomPan=Component.UNDEFINED, updateNeighbours=Component.UNDEFINED, forceRefresh=Component.UNDEFINED, zoomToFit=Component.UNDEFINED, n_nodeRightClicks=Component.UNDEFINED, n_linkRightClicks=Component.UNDEFINED, scripts=Component.UNDEFINED, showGUI=Component.UNDEFINED, **kwargs):
+        self._prop_names = ['id', 'active', 'backgroundColor', 'centerAtZoom', 'controlType', 'cooldownTicks', 'cooldownTime', 'currentZoomPan', 'emitParticle', 'enableNavigationControls', 'enableNodeDrag', 'enablePointerInteraction', 'enableZoomPanInteraction', 'externalobjectInput', 'externalobject_source', 'fixNodes', 'forceEngine', 'forceRefresh', 'getGraphBbox', 'graphData', 'heightRatio', 'key', 'linkAutoColor', 'linkAutoColorBy', 'linkClicked', 'linkColor', 'linkCurvature', 'linkDesc', 'linkDirectionalArrowColor', 'linkDirectionalArrowLength', 'linkDirectionalArrowRelPos', 'linkDirectionalArrowResolution', 'linkDirectionalParticleColor', 'linkDirectionalParticleResolution', 'linkDirectionalParticleSpeed', 'linkDirectionalParticleWidth', 'linkDirectionalParticles', 'linkHoverPrecision', 'linkId', 'linkIdsHighlightUser', 'linkIdsInvisibleAuto', 'linkIdsInvisibleUser', 'linkLabel', 'linkOpacity', 'linkResolution', 'linkRightClicked', 'linkRightClickedViewpointCoordinates', 'linkSource', 'linkTarget', 'linkWidth', 'linksSelected', 'maxDepth_neighbours_select', 'maxZoom', 'minZoom', 'n_linkRightClicks', 'n_nodeRightClicks', 'ngraphPhysics', 'nodeAutoColorBy', 'nodeClicked', 'nodeColor', 'nodeCoordinates', 'nodeDesc', 'nodeIcon', 'nodeIconSizeFactor', 'nodeId', 'nodeIdsHighlightUser', 'nodeIdsInvisibleAuto', 'nodeIdsInvisibleUser', 'nodeImg', 'nodeImgSizeFactor', 'nodeLabel', 'nodeLabelRelSize', 'nodeOpacity', 'nodeRelSize', 'nodeResolution', 'nodeRightClicked', 'nodeRightClickedViewpointCoordinates', 'nodeTextAutoColor', 'nodeTextColor', 'nodeVal', 'nodeZoomId', 'nodesSelected', 'numDimensions', 'pauseAnimation', 'pixelUnitRatio', 'refresh', 'rendererConfig', 'scripts', 'showCoordinates', 'showGUI', 'size', 'sortRels1Descend', 'sortRels2Descend', 'sortRelsBy1', 'sortRelsBy2', 'sortRoleplayers1Descend', 'sortRoleplayers2Descend', 'sortRoleplayersBy1', 'sortRoleplayersBy2', 'updateNeighbours', 'useCoordinates', 'warmupTicks', 'zoom', 'zoomToFit']
         self._type = 'Graph2D'
         self._namespace = 'dash_react_force_graph'
         self._valid_wildcard_attributes =            []
-        self.available_properties = ['id', 'active', 'backgroundColor', 'centerAtZoom', 'controlType', 'cooldownTicks', 'cooldownTime', 'currentZoomPan', 'emitParticle', 'enableNavigationControls', 'enableNodeDrag', 'enablePointerInteraction', 'enableZoomPanInteraction', 'externalobjectInput', 'externalobject_source', 'fixNodes', 'forceEngine', 'forceRefresh', 'getGraphBbox', 'graphData', 'heightRatio', 'key', 'linkAutoColor', 'linkAutoColorBy', 'linkColor', 'linkCurvature', 'linkDesc', 'linkDirectionalArrowColor', 'linkDirectionalArrowLength', 'linkDirectionalArrowRelPos', 'linkDirectionalArrowResolution', 'linkDirectionalParticleColor', 'linkDirectionalParticleResolution', 'linkDirectionalParticleSpeed', 'linkDirectionalParticleWidth', 'linkDirectionalParticles', 'linkHoverPrecision', 'linkId', 'linkIdsHighlightUser', 'linkIdsInvisibleAuto', 'linkIdsInvisibleUser', 'linkLabel', 'linkLineDash', 'linkOpacity', 'linkResolution', 'linkRightClicked', 'linkRightClickedViewpointCoordinates', 'linkSource', 'linkTarget', 'linkWidth', 'linksSelected', 'maxDepth_neighbours_select', 'maxZoom', 'minZoom', 'n_linkRightClicks', 'n_nodeRightClicks', 'ngraphPhysics', 'nodeAutoColorBy', 'nodeClicked', 'nodeColor', 'nodeCoordinates', 'nodeDesc', 'nodeIcon', 'nodeIconRelSize', 'nodeId', 'nodeIdsHighlightUser', 'nodeIdsInvisibleAuto', 'nodeIdsInvisibleUser', 'nodeImg', 'nodeImgRelSize', 'nodeLabel', 'nodeLabelRelSize', 'nodeOpacity', 'nodeRelSize', 'nodeResolution', 'nodeRightClicked', 'nodeRightClickedViewpointCoordinates', 'nodeTextAutoColor', 'nodeTextColor', 'nodeVal', 'nodeZoomId', 'nodesSelected', 'numDimensions', 'pauseAnimation', 'pixelUnitRatio', 'refresh', 'rendererConfig', 'scripts', 'showCoordinates', 'size', 'sortRels1Descend', 'sortRels2Descend', 'sortRelsBy1', 'sortRelsBy2', 'sortRoleplayers1Descend', 'sortRoleplayers2Descend', 'sortRoleplayersBy1', 'sortRoleplayersBy2', 'updateNeighbours', 'useCoordinates', 'useNodeIcon', 'useNodeImg', 'warmupTicks', 'zoom', 'zoomToFit']
+        self.available_properties = ['id', 'active', 'backgroundColor', 'centerAtZoom', 'controlType', 'cooldownTicks', 'cooldownTime', 'currentZoomPan', 'emitParticle', 'enableNavigationControls', 'enableNodeDrag', 'enablePointerInteraction', 'enableZoomPanInteraction', 'externalobjectInput', 'externalobject_source', 'fixNodes', 'forceEngine', 'forceRefresh', 'getGraphBbox', 'graphData', 'heightRatio', 'key', 'linkAutoColor', 'linkAutoColorBy', 'linkClicked', 'linkColor', 'linkCurvature', 'linkDesc', 'linkDirectionalArrowColor', 'linkDirectionalArrowLength', 'linkDirectionalArrowRelPos', 'linkDirectionalArrowResolution', 'linkDirectionalParticleColor', 'linkDirectionalParticleResolution', 'linkDirectionalParticleSpeed', 'linkDirectionalParticleWidth', 'linkDirectionalParticles', 'linkHoverPrecision', 'linkId', 'linkIdsHighlightUser', 'linkIdsInvisibleAuto', 'linkIdsInvisibleUser', 'linkLabel', 'linkOpacity', 'linkResolution', 'linkRightClicked', 'linkRightClickedViewpointCoordinates', 'linkSource', 'linkTarget', 'linkWidth', 'linksSelected', 'maxDepth_neighbours_select', 'maxZoom', 'minZoom', 'n_linkRightClicks', 'n_nodeRightClicks', 'ngraphPhysics', 'nodeAutoColorBy', 'nodeClicked', 'nodeColor', 'nodeCoordinates', 'nodeDesc', 'nodeIcon', 'nodeIconSizeFactor', 'nodeId', 'nodeIdsHighlightUser', 'nodeIdsInvisibleAuto', 'nodeIdsInvisibleUser', 'nodeImg', 'nodeImgSizeFactor', 'nodeLabel', 'nodeLabelRelSize', 'nodeOpacity', 'nodeRelSize', 'nodeResolution', 'nodeRightClicked', 'nodeRightClickedViewpointCoordinates', 'nodeTextAutoColor', 'nodeTextColor', 'nodeVal', 'nodeZoomId', 'nodesSelected', 'numDimensions', 'pauseAnimation', 'pixelUnitRatio', 'refresh', 'rendererConfig', 'scripts', 'showCoordinates', 'showGUI', 'size', 'sortRels1Descend', 'sortRels2Descend', 'sortRelsBy1', 'sortRelsBy2', 'sortRoleplayers1Descend', 'sortRoleplayers2Descend', 'sortRoleplayersBy1', 'sortRoleplayersBy2', 'updateNeighbours', 'useCoordinates', 'warmupTicks', 'zoom', 'zoomToFit']
         self.available_wildcard_properties =            []
         _explicit_args = kwargs.pop('_explicit_args')
         _locals = locals()

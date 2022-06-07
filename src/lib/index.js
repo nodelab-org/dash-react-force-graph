@@ -1,12 +1,12 @@
 /* eslint-disable import/prefer-default-export */
 import Graph2D from "./components/Graph2D.react";
-// import Graph3D from "./components/Graph3D.react";
-import "../../assets/scss/all.scss"
-// import '@fortawesome/fontawesome-free/webfonts';
-// import '@fortawesome/fontawesome-free/js/solid.js';
-// import '@fortawesome/fontawesome-free/js/brands.js';
+
+// import "../../assets/fontawesome/css/fontawesome.css"
+// import "../../assets/fontawesome/css/v4-font-face.css"
+// import "../../assets/fontawesome/css/v5-font-face.css"
+// import "../../assets/fontawesome/css/v4-shims.css"
 
 export {
-    Graph2D,
+    Graph2D
     // Graph3D
 };

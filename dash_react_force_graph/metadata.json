@@ -67,12 +67,12 @@
         "required": false,
         "description": "Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit."
       },
-      "nodeIconRelSize": {
+      "nodeIconSizeFactor": {
         "type": {
           "name": "number"
         },
         "required": false,
-        "description": "controls nodeIcon size"
+        "description": "controls nodeIcon size, relative to nodeRelSize"
       },
       "nodeLabelRelSize": {
         "type": {
@@ -81,12 +81,12 @@
         "required": false,
         "description": "controls node label size"
       },
-      "nodeImgRelSize": {
+      "nodeImgSizeFactor": {
         "type": {
           "name": "number"
         },
         "required": false,
-        "description": "controls nodeImg size"
+        "description": "controls nodeImg size, reltive to nodeRelSize"
       },
       "nodeLabel": {
         "type": {
@@ -254,21 +254,6 @@
         "required": false,
         "description": "Line opacity of links, between [0,1]. 3D, VR, AR"
       },
-      "linkLineDash": {
-        "type": {
-          "name": "union",
-          "value": [
-            {
-              "name": "number"
-            },
-            {
-              "name": "string"
-            }
-          ]
-        },
-        "required": false,
-        "description": "Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing."
-      },
       "linkWidth": {
         "type": {
           "name": "union",
@@ -293,7 +278,15 @@
       },
       "linkCurvature": {
         "type": {
-          "name": "number"
+          "name": "union",
+          "value": [
+            {
+              "name": "number"
+            },
+            {
+              "name": "string"
+            }
+          ]
         },
         "required": false,
         "description": "Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value."
@@ -442,16 +435,6 @@
         "required": false,
         "description": "calls centerAt, then zoom. Takes an object with keys \"k\", \"x\", \"y\""
       },
-      "zoomToFit": {
-        "type": {
-          "name": "arrayOf",
-          "value": {
-            "name": "number"
-          }
-        },
-        "required": false,
-        "description": "Automatically zooms/pans the canvas so that all of the nodes fit inside it. If no nodes are found no action is taken. It accepts two optional arguments: the first defines the duration of the transition (in ms) to animate the canvas motion (default: 0ms). The second argument is the amount of padding (in px) between the edge of the canvas and the outermost node (default: 10px). The third argument specifies a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful for focusing on a portion of the graph. 2D, 3D"
-      },
       "refresh": {
         "type": {
           "name": "bool"
@@ -596,26 +579,12 @@
         "required": false,
         "description": "whether or not session is active. Used to enable or disable warning browser dialog when closing"
       },
-      "useNodeImg": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "Whether or not to use the nodeImg. Overrides nodeIcon"
-      },
       "nodeImg": {
         "type": {
           "name": "string"
         },
         "required": false,
         "description": "The node attribute containing url to image to display for each individual node"
-      },
-      "useNodeIcon": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": "Whether or not to use the nodeIcon"
       },
       "nodeIcon": {
         "type": {
@@ -737,6 +706,13 @@
         },
         "required": false,
         "description": ""
+      },
+      "linkClicked": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "clicked link"
       },
       "linkRightClicked": {
         "type": {
@@ -909,6 +885,13 @@
         "required": false,
         "description": ""
       },
+      "zoomToFit": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
       "n_nodeRightClicks": {
         "type": {
           "name": "number"
@@ -929,6 +912,13 @@
           "value": {
             "name": "string"
           }
+        },
+        "required": false,
+        "description": ""
+      },
+      "showGUI": {
+        "type": {
+          "name": "bool"
         },
         "required": false,
         "description": ""

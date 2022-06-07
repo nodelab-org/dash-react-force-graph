@@ -19,8 +19,9 @@ enableZoomPanInteraction=NULL, externalobjectInput=NULL,
 externalobject_source=NULL, fixNodes=NULL, forceEngine=NULL,
 forceRefresh=NULL, getGraphBbox=NULL, graphData=NULL,
 heightRatio=NULL, key=NULL, linkAutoColor=NULL,
-linkAutoColorBy=NULL, linkColor=NULL, linkCurvature=NULL,
-linkDesc=NULL, linkDirectionalArrowColor=NULL,
+linkAutoColorBy=NULL, linkClicked=NULL, linkColor=NULL,
+linkCurvature=NULL, linkDesc=NULL,
+linkDirectionalArrowColor=NULL,
 linkDirectionalArrowLength=NULL,
 linkDirectionalArrowRelPos=NULL,
 linkDirectionalArrowResolution=NULL,
@@ -31,32 +32,31 @@ linkDirectionalParticleWidth=NULL,
 linkDirectionalParticles=NULL, linkHoverPrecision=NULL,
 linkId=NULL, linkIdsHighlightUser=NULL,
 linkIdsInvisibleAuto=NULL, linkIdsInvisibleUser=NULL,
-linkLabel=NULL, linkLineDash=NULL, linkOpacity=NULL,
-linkResolution=NULL, linkRightClicked=NULL,
+linkLabel=NULL, linkOpacity=NULL, linkResolution=NULL,
+linkRightClicked=NULL,
 linkRightClickedViewpointCoordinates=NULL, linkSource=NULL,
 linkTarget=NULL, linkWidth=NULL, linksSelected=NULL,
 maxDepth_neighbours_select=NULL, maxZoom=NULL, minZoom=NULL,
 n_linkRightClicks=NULL, n_nodeRightClicks=NULL,
 ngraphPhysics=NULL, nodeAutoColorBy=NULL, nodeClicked=NULL,
 nodeColor=NULL, nodeCoordinates=NULL, nodeDesc=NULL,
-nodeIcon=NULL, nodeIconRelSize=NULL, nodeId=NULL,
+nodeIcon=NULL, nodeIconSizeFactor=NULL, nodeId=NULL,
 nodeIdsHighlightUser=NULL, nodeIdsInvisibleAuto=NULL,
 nodeIdsInvisibleUser=NULL, nodeImg=NULL,
-nodeImgRelSize=NULL, nodeLabel=NULL, nodeLabelRelSize=NULL,
-nodeOpacity=NULL, nodeRelSize=NULL, nodeResolution=NULL,
-nodeRightClicked=NULL,
+nodeImgSizeFactor=NULL, nodeLabel=NULL,
+nodeLabelRelSize=NULL, nodeOpacity=NULL, nodeRelSize=NULL,
+nodeResolution=NULL, nodeRightClicked=NULL,
 nodeRightClickedViewpointCoordinates=NULL,
 nodeTextAutoColor=NULL, nodeTextColor=NULL, nodeVal=NULL,
 nodeZoomId=NULL, nodesSelected=NULL, numDimensions=NULL,
 pauseAnimation=NULL, pixelUnitRatio=NULL, refresh=NULL,
 rendererConfig=NULL, scripts=NULL, showCoordinates=NULL,
-size=NULL, sortRels1Descend=NULL, sortRels2Descend=NULL,
-sortRelsBy1=NULL, sortRelsBy2=NULL,
+showGUI=NULL, size=NULL, sortRels1Descend=NULL,
+sortRels2Descend=NULL, sortRelsBy1=NULL, sortRelsBy2=NULL,
 sortRoleplayers1Descend=NULL, sortRoleplayers2Descend=NULL,
 sortRoleplayersBy1=NULL, sortRoleplayersBy2=NULL,
 updateNeighbours=NULL, useCoordinates=NULL,
-useNodeIcon=NULL, useNodeImg=NULL, warmupTicks=NULL,
-zoom=NULL, zoomToFit=NULL)
+warmupTicks=NULL, zoom=NULL, zoomToFit=NULL)
 }
 
 \arguments{
@@ -112,9 +112,11 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{linkAutoColorBy}{Character. Link object accessor function or attribute to automatically group colors by. Only affects links without a color attribute.}
 
+\item{linkClicked}{Named list. clicked link}
+
 \item{linkColor}{Character. String giving link color}
 
-\item{linkCurvature}{Numeric. Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.}
+\item{linkCurvature}{Numeric | character. Link object accessor function, attribute or a numeric constant for the curvature radius of the link line. A value of 0 renders a straight line. 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle. For self-referencing links (source equal to target) the curve is represented as a loop around the node, with length proportional to the curvature value.}
 
 \item{linkDesc}{Character. For VR only. Link object accessor function or attribute for description (shown under label).}
 
@@ -147,8 +149,6 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 \item{linkIdsInvisibleUser}{List of characters. ids of visible links}
 
 \item{linkLabel}{Character. Link object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).}
-
-\item{linkLineDash}{Numeric | character. Link object accessor function, attribute or number array (e.g. [5, 15]) to determine if a line dash should be applied to this rendered link. Refer to the HTML canvas setLineDash API for example values. Either a falsy value or an empty array will disable dashing.}
 
 \item{linkOpacity}{Numeric. Line opacity of links, between [0,1]. 3D, VR, AR}
 
@@ -190,7 +190,7 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{nodeIcon}{Character. The node attribute containing object with icon to display for each individual node.}
 
-\item{nodeIconRelSize}{Numeric. controls nodeIcon size}
+\item{nodeIconSizeFactor}{Numeric. controls nodeIcon size, relative to nodeRelSize}
 
 \item{nodeId}{Character. Node object accessor attribute for unique node id (used in link objects source/target).}
 
@@ -202,7 +202,7 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{nodeImg}{Character. The node attribute containing url to image to display for each individual node}
 
-\item{nodeImgRelSize}{Numeric. controls nodeImg size}
+\item{nodeImgSizeFactor}{Numeric. controls nodeImg size, reltive to nodeRelSize}
 
 \item{nodeLabel}{Character. Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
 2D, 3D and VR}
@@ -244,6 +244,8 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{showCoordinates}{Logical. showCoordinates: whether or not to show pointer coordinates in hover tooltip (not yet used)}
 
+\item{showGUI}{Logical. }
+
 \item{size}{Named list. provided react-sizeme. Contains an object with "width" and "height" attributes}
 
 \item{sortRels1Descend}{Logical. sort in descending order?}
@@ -266,15 +268,11 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}}
 
 \item{useCoordinates}{Logical. useCoordinates: whether to set nodeCoordinates for node coordinates}
 
-\item{useNodeIcon}{Logical. Whether or not to use the nodeIcon}
-
-\item{useNodeImg}{Logical. Whether or not to use the nodeImg. Overrides nodeIcon}
-
 \item{warmupTicks}{Numeric. Number of layout engine cycles to dry-run at ignition before starting to render.}
 
 \item{zoom}{List of numerics. Calls zoom() method. ([number], [ms])}
 
-\item{zoomToFit}{List of numerics. Automatically zooms/pans the canvas so that all of the nodes fit inside it. If no nodes are found no action is taken. It accepts two optional arguments: the first defines the duration of the transition (in ms) to animate the canvas motion (default: 0ms). The second argument is the amount of padding (in px) between the edge of the canvas and the outermost node (default: 10px). The third argument specifies a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. This can be useful for focusing on a portion of the graph. 2D, 3D}
+\item{zoomToFit}{Numeric. }
 }
 
 \value{named list of JSON elements corresponding to React.js properties and their values}

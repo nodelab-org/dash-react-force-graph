@@ -33,8 +33,8 @@ const objSharedProps = {
     */
     // props
     nodeRelSize: 6,
-    nodeIconRelSize: 12,
-    nodeImgRelSize: 12,
+    nodeIconSizeFactor: 2,
+    nodeImgSizeFactor: 2,
     nodeLabelRelSize: 4,
     nodeVal:"__nodeVal",
     nodeLabel: "__nodeLabel",
@@ -62,7 +62,7 @@ const objSharedProps = {
     linkColor: "color",
     linkAutoColorBy:"label",
     linkOpacity:0.2,
-    linkLineDash: null, // falsy value disables dashing
+    // linkLineDash: null, // falsy value disables dashing
     linkWidth:1,
     linkResolution: 6,
     linkCurvature: 0.0,
@@ -97,7 +97,7 @@ const objSharedProps = {
     // resumeAnimation: false, // to call the resumeAnimation method, pass True
     centerAt: null,// to call the centerAt method, pass a list or tuple ([x], [y], [ms]) (TODO)
     zoom: null, // to call the zoom method, pass a list or tuple ([number], [ms])
-    zoomToFit: null,// to call the zoomToFit method, pass a list or tuple ([ms], [px], [nodeFilterFn])
+    zoomToFit: 0, // a number. Increment this to make the comonent zoom to fit on next onEngineStopFunction call
     backgroundRightClickScreenCoords:null,
     cameraPosition:	null, // 3D
     // scene: // TODO method
@@ -205,10 +205,11 @@ const objSharedProps = {
     // nodeClickedViewpointCoordinates:null,
     // nodeRightClicked: null,
     nodeRightClickedViewpointCoordinates:{},
+    linkRightClickedViewpointCoordinates:{},
     // nodeHovered: null,
     // nodeHoveredViewpointCoordinates:null,
-    // linkClicked:null,
-    // linkRightClicked:null,
+    linkClicked:null,
+    linkRightClicked:null,
     // linksSelected: [],
     // linkIdsNodesDrag: [],
     nodeIdsHighlightUser: [],
@@ -239,6 +240,7 @@ const objSharedProps = {
     "forceRefresh": 0,
     "n_rightClicks": 0,
     "maxDepth_neighbours_select": 4,
+    showGUI: true
     
 };
 
