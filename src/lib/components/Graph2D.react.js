@@ -34,7 +34,7 @@ import validateColor from "validate-color";
 import {invert, lighten, saturate, transparentize} from "polished";
 import {withSize} from "react-sizeme";
 import objSharedProps from "../shared_props_defaults.js";
-// import "react-dat-gui/dist/index.css";
+import "../../../node_modules/react-dat-gui/dist/index.css";
 
 // window.onload = function () {
 //     var span = document.createElement('span');
@@ -3047,8 +3047,6 @@ function Graph2D (props) {
 
         ) {
 
-            const centerAtZoom = cloneDeep(props.centerAtZoom)
-
             console.log("useEffect: centerAtZoom");
             const centerAtZoom = cloneDeep(props.centerAtZoom)
             // fgRef.current.centerAt((initZoomPan.x-props.centerAtZoom.x)/props.centerAtZoom.k, (initZoomPan.y-props.centerAtZoom.y)/props.centerAtZoom.k)
@@ -3061,6 +3059,8 @@ function Graph2D (props) {
                 centerAtZoom.k = "k" in props.currentZoomPan
                     ? props.currentZoomPan.k
                     : null;
+            
+                }
 
 
             if (
