@@ -2734,23 +2734,32 @@ function Graph2D (props) {
     
     useEffect( () => {
 
-        if (props.graphData.nodes &&
-            fgRef &&
+        if (fgRef &&
             "current" in fgRef &&
             fgRef.current &&
-            props.centerAtZoom) {
+            props.centerAtZoom
+            ) {
 
             console.log("useEffect: centerAtZoom");
+            const centerAtZoom = cloneDeep(props.centerAtZoom)
             // fgRef.current.centerAt((initZoomPan.x-props.centerAtZoom.x)/props.centerAtZoom.k, (initZoomPan.y-props.centerAtZoom.y)/props.centerAtZoom.k)
-            if (props.centerAtZoom.k) {
+            if ("k" in centerAtZoom && centerAtZoom.k !== null) {
 
-                fgRef.current.zoom(props.centerAtZoom.k)
+                fgRef.current.zoom(centerAtZoom.k)
+
+            } else {
+
+                centerAtZoom.k = "k" in props.currentZoomPan
+                    ? props.currentZoomPan.k
+                    : null;
 
             }
 
-            if (props.centerAtZoom.x && props.centerAtZoom.y) {
+            if (
+                "x" in centerAtZoom && centerAtZoom.x !== null && 
+                "y" in centerAtZoom && centerAtZoom.y !== null
+                ) {
 
-                const centerAtZoom = props.centerAtZoom
 
                 if (!("ms" in centerAtZoom)) {
 
@@ -2761,6 +2770,10 @@ function Graph2D (props) {
                 fgRef.current.centerAt(centerAtZoom.x, centerAtZoom.y, centerAtZoom.ms)
                 
             }
+
+            props.setProps({
+                "currentZoomPan":centerAtZoom
+            })
 
         }
     }, 
@@ -2850,7 +2863,7 @@ function Graph2D (props) {
     [props.linkIdsInvisibleAuto]
     )
 
-
+    
     return (
         <div id={props.id}>
                 <ForceGraph2D
