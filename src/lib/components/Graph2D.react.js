@@ -34,7 +34,7 @@ import validateColor from "validate-color";
 import {invert, lighten, saturate, transparentize} from "polished";
 import {withSize} from "react-sizeme";
 import objSharedProps from "../shared_props_defaults.js";
-import "react-dat-gui/dist/index.css";
+// import "react-dat-gui/dist/index.css";
 
 // window.onload = function () {
 //     var span = document.createElement('span');
@@ -3044,7 +3044,10 @@ function Graph2D (props) {
             "current" in fgRef &&
             fgRef.current &&
             props.centerAtZoom
-            ) {
+
+        ) {
+
+            const centerAtZoom = cloneDeep(props.centerAtZoom)
 
             console.log("useEffect: centerAtZoom");
             const centerAtZoom = cloneDeep(props.centerAtZoom)
@@ -3059,12 +3062,14 @@ function Graph2D (props) {
                     ? props.currentZoomPan.k
                     : null;
 
-            }
 
             if (
-                "x" in centerAtZoom && centerAtZoom.x !== null && 
-                "y" in centerAtZoom && centerAtZoom.y !== null
+                "x" in centerAtZoom && 
+                centerAtZoom.x !== null && 
+                "y" in centerAtZoom &&
+                centerAtZoom.y !== null
                 ) {
+
 
                 if (!("ms" in centerAtZoom)) {
 
@@ -3075,6 +3080,7 @@ function Graph2D (props) {
                 fgRef.current.centerAt(centerAtZoom.x, centerAtZoom.y, centerAtZoom.ms)
                 
             }
+
 
             props.setProps({
                 "currentZoomPan":centerAtZoom
@@ -3338,7 +3344,7 @@ function Graph2D (props) {
                                     props.currentZoomPan.y != args.y
                                 )
                             // try to disactivate, to avoid re-heating layout on zoom/pan before nodes fixed
-                            ) && graphDataNodes && graphDataNodes.length && !graphDataNodes[0].vx
+                            ) && graphDataNodes && graphDataNodes.length && (!graphDataNodes[0].vx || props.useCoordinates)
                         ) {
 
                             props.setProps({
@@ -3346,7 +3352,7 @@ function Graph2D (props) {
                                 })
 
                         }
-                        }}
+                    }}
                     linkHoverPrecision={props.linkHoverPrecision}
                     // controlType={controlType}
                     enableNodeDrag={props.enableNodeDrag}
