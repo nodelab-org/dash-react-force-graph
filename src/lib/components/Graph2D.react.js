@@ -524,10 +524,10 @@ function Graph2D (props) {
 
                             linksClone.forEach((link) => {
 
-                                if (typeof link.source !== "string") {
+                                if (typeof link[props.linkSource] !== "string") {
 
-                                    link.source = link.source[props.nodeId];
-                                    link.target = link.target[props.nodeId];
+                                    link[props.linkSource] = link[props.linkSource][props.nodeId];
+                                    link[props.linkSource] = link[props.linkSource][props.nodeId];
 
                                 }
 
