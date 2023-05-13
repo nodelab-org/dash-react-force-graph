@@ -3399,7 +3399,10 @@ const graphSharedProptypes = {
     /**
      * The ID used to identify this component in Dash callbacks.
      */
-    "id": PropTypes.string.isRequired,
+    "id": PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.object
+    ]).isRequired, 
 
     /**
     * The key used to identify this component in React
