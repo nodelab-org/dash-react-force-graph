@@ -6,6 +6,9 @@
 import {ForceGraph2D} from "react-force-graph";
 import {cloneDeep} from "lodash";
 import {forceRadial} from "d3-force";
+import PieMenu, { Slice } from 'react-pie-menu';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import DatGui, {
     // DatBoolean,
     DatButton,
@@ -81,6 +84,211 @@ const withSizeHOC = withSize({
 
 const MAX_COOLDOWNTIME_MS = 3000
 
+
+import { 
+    // fix node (data)
+    faAnchor,
+    // two-way arrow. Add link or relation
+    faArrowsAltH,
+    // arrow. Add link
+    faLongArrowAltRight,
+    faLongArrowAltLeft,
+    // expand neighbours
+    faArrowsAlt,
+    faBezierCurve,
+    // bookmark
+    faBookmark, 
+    // role
+    faBriefcase,
+    // node
+    faCircle,
+    // subtyping
+    faCodeBranch,
+    // settings
+    faCog,
+    // collapse neighbours
+    faCompressArrowsAlt,
+    // similar to material UI storage
+    faDatabase,
+    // possible sizew
+    faDotCircle,
+    // download
+    faDownload,
+    // edit
+    faEdit,
+    // hide
+    faEyeSlash, 
+    // increase size
+    faExpandAlt,
+    // url value/attribute
+    faExternalLinkAlt, 
+    // color
+    faFillDrip,
+    // filtering
+    faFilter,
+    // label
+    faFont,
+    // ownership
+    faHandHolding,
+    // relation
+    faHandshake,
+    faHandshakeSlash,
+    // role
+    faHardHat,
+    // highlight
+    faHighlighter,
+    // icons
+    faIcons,
+    // images
+    faImages,
+    // key
+    faKey,
+    // chain link: relation 
+    faLink, 
+    // magic wand, possibly for special node actions
+    faMagic,
+    // inheritance, hierarchy, ownership?
+    faNetworkWired,
+    // color
+    faPaintBrush,
+    // color
+    faPalette, 
+    // atttachment value/attribute
+    faPaperclip, 
+    // connect two people
+    faPeopleArrows,
+    // query or activate node
+    faPlay,
+    faPlayCircle,
+    // add
+    faPlus,
+    faPlusCircle,
+    // plays or relates
+    faProjectDiagram,
+    // find path between two nodes
+    faRoute,
+    // node val (size)
+    faRuler,
+    // save
+    faSave,
+    // server - similar to material UI dns
+    faServer,
+    // subtype / schema
+    faSitemap,
+    // parameters / settings
+    faSlidersH,
+    // sort text 
+    faSortAlphaDown,
+    faSortAlphaDownAlt,
+    faSortAlphaUp,
+    faSortAlphaUpAlt,
+    // sort amount
+    faSortAmountDown,
+    faSortAmountDownAlt,
+    faSortAmountUp,
+    faSortAmountUpAlt,
+    // sort number
+    faSortNumericDown,
+    faSortNumericDownAlt,
+    faSortNumericUp,
+    faSortNumericUpAlt,
+    // attribute(s)
+    faTag, 
+    faTags,
+    // possibly query
+    faTerminal,
+    // settings / tools
+    faTools,
+    // delete
+    faTrash,
+    faTrashAlt,
+    // delete relation
+    faUnlink,
+    // label or attribute
+    faUserTag,
+    // Role
+    faIdBadge,
+    // Role? Guy in suit
+    faUserTie,
+    // settings
+    faWrench
+} from '@fortawesome/free-solid-svg-icons'
+
+const icons = {
+    "faAnchor":faAnchor,
+    "faArrowAltH":faArrowsAltH,
+    // arrow. Add link
+    "faLongArrowAltRight":faLongArrowAltRight, // import fails
+    "faArrowAltLeft":faLongArrowAltLeft, // import fails 
+    "faArrowsAlt":faArrowsAlt, 
+    "faBezierCurve":faBezierCurve,
+    "faBookmark":faBookmark, 
+    "faBriefcase":faBriefcase,
+    "faCircle":faCircle,
+    "faCog":faCog,
+    "faCodeBranch":faCodeBranch,
+    "faCompressArrowsAlt":faCompressArrowsAlt,
+    "faDatabase":faDatabase,
+    "faDownload":faDownload,
+    "faDotCircle":faDotCircle,
+    "faEdit":faEdit,
+    "faEyeSlash":faEyeSlash, 
+    "faExpandAlt":faExpandAlt,
+    "faExternalLinkAlt":faExternalLinkAlt, 
+    "faFillDrip":faFillDrip,
+    "faFilter":faFilter,
+    "faFont":faFont,
+    "faHandHolding":faHandHolding,
+    "faHandshake":faHandshake,
+    "faHandshakeSlash":faHandshakeSlash,
+    "faHardHat": faHardHat,
+    "faHighlighter":faHighlighter,
+    "faIcons":faIcons,
+    "faImages":faImages,
+    "faKey":faKey,
+    "faLink":faLink, 
+    "faMagic":faMagic,
+    "faNetworkWired":faNetworkWired,
+    "faPaintBrush":faPaintBrush,
+    "faPalette":faPalette, 
+    "faPaperclip":faPaperclip, 
+    "faPeopleArrows":faPeopleArrows,
+    "faPlay":faPlay,
+    "faPlayCircle":faPlayCircle,
+    "faPlus":faPlus,
+    "faPlusCircle":faPlusCircle,
+    "faProjectDiagram":faProjectDiagram,
+    "faRoute":faRoute,
+    "faRuler":faRuler,
+    "faSave":faSave,
+    "faServer":faServer,
+    "faSitemap":faSitemap,
+    "faSlidersH":faSlidersH,
+    "faSortAlphaDown":faSortAlphaDown,
+    "faSortAlphaDownAlt":faSortAlphaDownAlt,
+    "faSortAlphaUp":faSortAlphaUp,
+    "faSortAlphaUpAlt":faSortAlphaUpAlt,
+    "faSortAmountDown":faSortAmountDown,
+    "faSortAmountDownAlt":faSortAmountDownAlt,
+    "faSortAmountUp":faSortAmountUp,
+    "faSortAmountUpAlt":faSortAmountUpAlt,
+    "faSortNumericDown":faSortNumericDown,
+    "faSortNumericDownAlt":faSortNumericDownAlt,
+    "faSortNumericUp":faSortNumericUp,
+    "faSortNumericUpAlt":faSortNumericUpAlt,
+    "faTag":faTag, 
+    "faTags":faTags, 
+    "faTerminal":faTerminal,
+    "faTools":faTools,
+    "faTrash":faTrash,
+    "faTrashAlt":faTrashAlt,
+    "faUnlink":faUnlink,
+    "faIdBadge":faIdBadge,
+    "faUserTag":faUserTag,
+    "faUserTie":faUserTie,
+    "faWrench":faWrench
+}
+
 /* eslint-disable complexity */
 function Graph2D (props) {
 
@@ -147,6 +355,18 @@ function Graph2D (props) {
             guiSettings,
             setGuiSettings
         ],
+        [
+            pieMenuX,
+            setPieMenuX
+        ],
+        [
+            pieMenuY,
+            setPieMenuY
+        ],
+        [
+            pieMenuVisible,
+            setPieMenuVisible
+        ],
         fgRef
     ] = [
         useState([]),
@@ -172,30 +392,21 @@ function Graph2D (props) {
             "link": 70,
             "radial": 0.00
         }),
+        useState("0"),
+        useState("0"),
+        useState(false),
         useRef(null)
     ];
 
-    // [
-        // "https://kit.fontawesome.com/a6e0eeba63.js",
-        // "https://kit.fontawesome.com/1b79b43068.js",
-        // '../../../assets/scripts/solid.js',
-        // '../../../assets/scripts/brands.js',
-        // '../../../assets/scripts/fontawesome.js'
-    //     // '../../../node_modules/@fortawesome/fontawesome-free/js/solid.js',
-    //     // '../../../node_modules/@fortawesome/fontawesome-free/js/brands.js',
-    //     // We recommend referencing the fontawesome.js loader last.
-    //     // https://fontawesome.com/docs/web/setup/host-yourself/svg-js
-    //     // '../../../node_modules/@fortawesome/fontawesome-free/js/fontawesome.js'
-    // ].map((script) => importScript(script));
-
-    /* eslint-enable one-var */
-    // Import scripts https://fontawesome.com/kits/a6e0eeba63/use?welcome=yes
-    // if (props.scripts) {
-
-    //     props.scripts.map((script) => importScript(script));
-
-    // }
-    // importScript("https://fontawesome.com/kits/a6e0eeba63")
+    const showPieMenu = (node) => {
+        const coords = fgRef.current.graph2ScreenCoords(
+            node.x,
+            node.y    
+        );
+        setPieMenuX((x) => String(coords.x) + "px");
+        setPieMenuY((y) => String(coords.y) + "px");
+        setPieMenuVisible((_visible) => true);
+    };
 
     useEffect(
         () => {
@@ -644,9 +855,7 @@ function Graph2D (props) {
 
                     if (//("linksSelected" in props && props.linksSelected.length) ||
                         props.linkRightClicked ||
-                        props.linkRightClickedViewpointCoordinates ||
                         props.nodeRightClicked ||
-                        props.nodeRightClickedViewpointCoordinates ||
                         props.nodeClicked ||
                         props.linkClicked
                         // ("nodesSelected" in props && props.nodesSelected.length)
@@ -654,9 +863,7 @@ function Graph2D (props) {
 
                         props.setProps({
                             "linkRightClicked": null,
-                            "linkRightClickedViewpointCoordinates": null,
                             "nodeRightClicked": null,
-                            "nodeRightClickedViewpointCoordinates": null,
                             "nodeClicked":null,
                             "linkClicked":null
                         });
@@ -1845,13 +2052,11 @@ function Graph2D (props) {
         props.setProps({
             "linkClicked": null,
             "linkRightClicked": null,
-            "linkRightClickedViewpointCoordinates": null,
             "linksSelected": linksSelectedNew,
             "nodeClicked": node,// event.shiftKey
                 // ? null
                 // : node,
             "nodeRightClicked": null,
-            "nodeRightClickedViewpointCoordinates": null,
             "nodesSelected": nodesSelectedNew
 
         });
@@ -1866,20 +2071,15 @@ function Graph2D (props) {
             props.setProps({
                 "linkClicked": null,
                 "linkRightClicked": null,
-                "linkRightClickedViewpointCoordinates": null,
                 "linksSelected": [],
                 "n_nodeRightClicks": props.n_nodeRightClicks
                     ? props.n_nodeRightClicks + 1
                     : 1,
                 "nodeRightClicked": node,
-                "nodeClicked": null,
-                "nodeRightClickedViewpointCoordinates": fgRef.current
-                    ? fgRef.current.graph2ScreenCoords(
-                        node.x,
-                        node.y
-                    )
-                    : null
+                "nodeClicked": null
             });
+
+            showPieMenu(node);
 
             // if there are selected nodes but they do not include the right clicked node, clear them
             if (props.nodesSelected && 
@@ -1916,18 +2116,10 @@ function Graph2D (props) {
 
             props.setProps({
                 "linkRightClicked": link,
-                "linkRightClickedViewpointCoordinates": fgRef.current
-                    ? {"x": event.offsetX, "y": event.offsetY}
-                    // ? fgRef.current.graph2ScreenCoords(
-                    //     midPoint.x,
-                    //     midPoint.y 
-                    // )
-                    : null,
                 "nodeRightClicked":null,
                 "nodesSelected": [],
                 "nodeClicked": null,
                 "linkClicked": null,
-                "nodeRightClickedViewpointCoordinates": null,
                 "n_linkRightClicks": props.n_linkRightClicks
                     ? props.n_linkRightClicks + 1
                     : 1,
@@ -1954,17 +2146,14 @@ function Graph2D (props) {
         // console.log("handleNodeDrag");
 
         if (props.linkRightClicked ||
-            props.linkRightClickedViewpointCoordinates || 
             props.nodeClicked ||
-            props.nodeRightClicked ||
-            props.nodeRightClickedViewpointCoordinates) {
+            props.nodeRightClicked
+            ) {
 
             props.setProps({
                 "linkRightClicked": null,
-                "linkRightClickedViewpointCoordinates": null,
                 "nodeClicked": null,
-                "nodeRightClicked": null,
-                "nodeRightClickedViewpointCoordinates": null
+                "nodeRightClicked": null
             });
 
         }
@@ -2149,10 +2338,8 @@ function Graph2D (props) {
     // const handleNodeHover = node => {
     //     if (node) {
     //         setNodeHovered(node)
-    //         setNodeHoveredViewpointCoordinates(fgRef.current.graph2ScreenCoords(node.x,node.y))
     //     } else {
     //         setNodeHovered(null)
-    //         setNodeHoveredViewpointCoordinates(null)
     //     }
     // };
 
@@ -2183,25 +2370,23 @@ function Graph2D (props) {
         // console.log("handleBackgroundClick");
 
         if (props.linkRightClicked ||
-            props.linkRightClickedViewpointCoordinates ||
             (props.linksSelected && props.linksSelected.length) ||
             props.nodeClicked ||
             props.nodeRightClicked ||
-            props.nodeRightClickedViewpointCoordinates ||
             (props.nodesSelected && props.nodesSelected.length)) {
 
             props.setProps({
                 "linkClicked": null,
                 "linkRightClicked": null,
-                "linkRightClickedViewpointCoordinates": null,
                 "linksSelected": [],
                 "nodeClicked": null,
                 "nodeRightClicked": null,
-                "nodeRightClickedViewpointCoordinates": null,
                 "nodesSelected": []
             });
 
         }
+
+        setPieMenuVisible((_visible) => false);
 
         if (nodeZoomId) {
 
@@ -2217,24 +2402,22 @@ function Graph2D (props) {
         // console.log("handleBackgroundRightClick");
 
         if (props.linkRightClicked ||
-            props.linkRightClickedViewpointCoordinates ||
             (props.linksSelected && props.linksSelected.length) ||
             props.nodeClicked ||
             props.nodeRightClicked ||
-            props.nodeRightClickedViewpointCoordinates ||
             (props.nodesSelected && props.nodesSelected.length)) {
 
             props.setProps({
                 "linkRightClicked": null,
-                "linkRightClickedViewpointCoordinates": null,
                 "linksSelected": [],
                 "nodeClicked": null,
                 "nodeRightClicked": null,
-                "nodeRightClickedViewpointCoordinates": null,
                 "nodesSelected": []
             });
 
         }
+        
+        setPieMenuVisible((_visible) => false);
 
         if (nodeZoomId) {
 
@@ -2278,10 +2461,8 @@ function Graph2D (props) {
                 {
                     "linksSelected": linksSelectedNew,
                     "linkRightClicked": null,
-                    "linkRightClickedViewpointCoordinates":null,
                     "nodeClicked": null,
                     "nodeRightClicked": null,
-                    "nodeRightClickedViewpointCoordinates": null,
                     "nodesSelected": nodesSelectedNew
                 }
             );
@@ -3308,20 +3489,13 @@ function Graph2D (props) {
                                     props.currentZoomPan.y != args.y)
                                 ) && (
                                 props.linkRightClicked ||
-                                props.linkRightClickedViewpointCoordinates ||
-                                props.nodeRightClicked || 
-                                props.nodeRightClickedViewpointCoordinates
-                            )
+                                props.nodeRightClicked                            )
                         ) {
 
                             props.setProps({
-                                // we can use nodeRightClickedViewpointCoordinates to trigger menu close without losing nodeRightClicked
                                 "linkRightClicked": null,
-                                "linkRightClickedViewpointCoordinates":null,
-                                "nodeRightClicked": null,
-                                "nodeRightClickedViewpointCoordinates": null
-                                // "n_nodeRightClicks": null
-                            });
+                                "nodeRightClicked": null
+                                });
 
                         }
 
@@ -3386,6 +3560,29 @@ function Graph2D (props) {
                         </DatGui>
                     </div>
                     : null
+            }
+            {
+                pieMenuVisible && <div> 
+                    <PieMenu
+                        radius="125px"
+                        centerRadius="30px"
+                        centerX={pieMenuX}
+                        centerY={pieMenuY}
+                    >
+                        <Slice>
+                            <FontAwesomeIcon icon={faAnchor} size="2x" />
+                        </Slice>
+                        <Slice>
+                            <FontAwesomeIcon icon={faArrowsAltH} size="2x" />
+                        </Slice>
+                        <Slice>
+                            <FontAwesomeIcon icon={faArrowsAlt} size="2x" />
+                        </Slice>
+                        <Slice>
+                            <FontAwesomeIcon icon={faBezierCurve} size="2x" />
+                        </Slice>
+                    </PieMenu>
+                </div> 
             }
         </div>
     );
@@ -4331,22 +4528,9 @@ const graphSharedProptypes = {
     "nodeRightClicked": PropTypes.object,
 
     /**
-    *  screen coordinates of right-clicked node
-    */
-    "nodeRightClickedViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
-
-
-    "linkRightClickedViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
-
-    /**
     * the currently hovered node
     */
     // "nodeHovered": PropTypes.object,
-
-    /**
-    *  screen coordinates of hovered node
-    */
-    // "nodeHoveredViewpointCoordinates": PropTypes.objectOf(PropTypes.number),
 
     /**
     * clicked link
