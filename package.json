@@ -10,12 +10,12 @@
   "description": "A dash version of react-force-graph, witextended with mpconvenience methods and props",
   "repository": {
     "type": "git",
-    "url": "git://github.com/JonThom/dash-react-force-graph.git"
+    "url": "git://github.com/nodelab-org/dash-react-force-graph.git"
   },
   "bugs": {
-    "url": "https://github.com/JonThom/dash-react-force-graph/issues"
+    "url": "https://github.com/nodelab-org/dash-react-force-graph/issues"
   },
-  "homepage": "https://github.com/JonThom/dash-react-force-graph",
+  "homepage": "https://github.com/nodelab-org/dash-react-force-graph",
   "main": "build/index.js",
   "scripts": {
     "start": "webpack-serve --config ./webpack.serve.config.js --open",
@@ -27,18 +27,24 @@
     "build": "npm run build:js && npm run build:py_and_r",
     "build:activated": "npm run build:js && npm run build:py_and_r-activated"
   },
-  "author": "Jon Thompson <jjt@tutanota.com>",
+  "author": "JT <no@mail.com>",
   "license": "MIT",
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.0.0",
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-solid-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "d3": "^7.8.3",
     "d3-force": "^2.1.1",
+    "fortawesome": "0.0.1-security",
     "lodash": "^4.17.21",
     "polished": "^4.1.0",
     "ramda": "^0.26.1",
     "react-dat-gui": "^4.1.1",
     "react-force-graph": "^1.41.7",
+    "react-pie-menu": "^0.3.3",
     "react-sizeme": "^2.6.12",
+    "styled-components": "^5.3.11",
     "three-css2drender": "^1.0.0",
     "three-spritetext": "^1.5.4",
     "validate-color": "^2.1.1"

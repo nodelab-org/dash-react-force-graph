@@ -1,7 +1,7 @@
 
 name = "DashReactForceGraph"
 uuid = "1b08a953-4be3-4667-9a23-ea746a737e43"
-authors = ["Jon Thompson <jjt@tutanota.com>"]
+authors = ["JT <no@mail.com>"]
 version = "0.0.1"
 
 [deps]

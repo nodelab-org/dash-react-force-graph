@@ -1,4 +1,99 @@
 {
+  "src/lib/components/ContextPieMenu.react.js": {
+    "description": "",
+    "displayName": "ContextPieMenu",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"context-pie-menu\"",
+          "computed": false
+        }
+      },
+      "contextObj": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "null",
+          "computed": false
+        }
+      },
+      "schemaOrData": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"data\"",
+          "computed": false
+        }
+      },
+      "centerX": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"0px\"",
+          "computed": false
+        }
+      },
+      "centerY": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"0px\"",
+          "computed": false
+        }
+      },
+      "radius": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"125px\"",
+          "computed": false
+        }
+      },
+      "centerRadius": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"30px\"",
+          "computed": false
+        }
+      },
+      "sliceCallback": {
+        "type": {
+          "name": "func"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "null",
+          "computed": false
+        }
+      }
+    }
+  },
   "src/lib/components/Graph2D.react.js": {
     "description": "",
     "displayName": "Graph2D",
@@ -695,26 +790,6 @@
         "required": false,
         "description": "right-clicked node"
       },
-      "nodeRightClickedViewpointCoordinates": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "number"
-          }
-        },
-        "required": false,
-        "description": "screen coordinates of right-clicked node"
-      },
-      "linkRightClickedViewpointCoordinates": {
-        "type": {
-          "name": "objectOf",
-          "value": {
-            "name": "number"
-          }
-        },
-        "required": false,
-        "description": ""
-      },
       "linkClicked": {
         "type": {
           "name": "object"
@@ -927,6 +1002,20 @@
       "showGUI": {
         "type": {
           "name": "bool"
+        },
+        "required": false,
+        "description": ""
+      },
+      "schemaOrData": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": ""
+      },
+      "contextMenuClicked": {
+        "type": {
+          "name": "string"
         },
         "required": false,
         "description": ""

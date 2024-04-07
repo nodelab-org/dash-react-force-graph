@@ -6,9 +6,7 @@
 import {ForceGraph2D} from "react-force-graph";
 import {cloneDeep} from "lodash";
 import {forceRadial} from "d3-force";
-import PieMenu, { Slice } from 'react-pie-menu';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
+import ContextPieMenu from './ContextPieMenu.react';
 import DatGui, {
     // DatBoolean,
     DatButton,
@@ -83,211 +81,6 @@ const withSizeHOC = withSize({
 // }; 
 
 const MAX_COOLDOWNTIME_MS = 3000
-
-
-import { 
-    // fix node (data)
-    faAnchor,
-    // two-way arrow. Add link or relation
-    faArrowsAltH,
-    // arrow. Add link
-    faLongArrowAltRight,
-    faLongArrowAltLeft,
-    // expand neighbours
-    faArrowsAlt,
-    faBezierCurve,
-    // bookmark
-    faBookmark, 
-    // role
-    faBriefcase,
-    // node
-    faCircle,
-    // subtyping
-    faCodeBranch,
-    // settings
-    faCog,
-    // collapse neighbours
-    faCompressArrowsAlt,
-    // similar to material UI storage
-    faDatabase,
-    // possible sizew
-    faDotCircle,
-    // download
-    faDownload,
-    // edit
-    faEdit,
-    // hide
-    faEyeSlash, 
-    // increase size
-    faExpandAlt,
-    // url value/attribute
-    faExternalLinkAlt, 
-    // color
-    faFillDrip,
-    // filtering
-    faFilter,
-    // label
-    faFont,
-    // ownership
-    faHandHolding,
-    // relation
-    faHandshake,
-    faHandshakeSlash,
-    // role
-    faHardHat,
-    // highlight
-    faHighlighter,
-    // icons
-    faIcons,
-    // images
-    faImages,
-    // key
-    faKey,
-    // chain link: relation 
-    faLink, 
-    // magic wand, possibly for special node actions
-    faMagic,
-    // inheritance, hierarchy, ownership?
-    faNetworkWired,
-    // color
-    faPaintBrush,
-    // color
-    faPalette, 
-    // atttachment value/attribute
-    faPaperclip, 
-    // connect two people
-    faPeopleArrows,
-    // query or activate node
-    faPlay,
-    faPlayCircle,
-    // add
-    faPlus,
-    faPlusCircle,
-    // plays or relates
-    faProjectDiagram,
-    // find path between two nodes
-    faRoute,
-    // node val (size)
-    faRuler,
-    // save
-    faSave,
-    // server - similar to material UI dns
-    faServer,
-    // subtype / schema
-    faSitemap,
-    // parameters / settings
-    faSlidersH,
-    // sort text 
-    faSortAlphaDown,
-    faSortAlphaDownAlt,
-    faSortAlphaUp,
-    faSortAlphaUpAlt,
-    // sort amount
-    faSortAmountDown,
-    faSortAmountDownAlt,
-    faSortAmountUp,
-    faSortAmountUpAlt,
-    // sort number
-    faSortNumericDown,
-    faSortNumericDownAlt,
-    faSortNumericUp,
-    faSortNumericUpAlt,
-    // attribute(s)
-    faTag, 
-    faTags,
-    // possibly query
-    faTerminal,
-    // settings / tools
-    faTools,
-    // delete
-    faTrash,
-    faTrashAlt,
-    // delete relation
-    faUnlink,
-    // label or attribute
-    faUserTag,
-    // Role
-    faIdBadge,
-    // Role? Guy in suit
-    faUserTie,
-    // settings
-    faWrench
-} from '@fortawesome/free-solid-svg-icons'
-
-const icons = {
-    "faAnchor":faAnchor,
-    "faArrowAltH":faArrowsAltH,
-    // arrow. Add link
-    "faLongArrowAltRight":faLongArrowAltRight, // import fails
-    "faArrowAltLeft":faLongArrowAltLeft, // import fails 
-    "faArrowsAlt":faArrowsAlt, 
-    "faBezierCurve":faBezierCurve,
-    "faBookmark":faBookmark, 
-    "faBriefcase":faBriefcase,
-    "faCircle":faCircle,
-    "faCog":faCog,
-    "faCodeBranch":faCodeBranch,
-    "faCompressArrowsAlt":faCompressArrowsAlt,
-    "faDatabase":faDatabase,
-    "faDownload":faDownload,
-    "faDotCircle":faDotCircle,
-    "faEdit":faEdit,
-    "faEyeSlash":faEyeSlash, 
-    "faExpandAlt":faExpandAlt,
-    "faExternalLinkAlt":faExternalLinkAlt, 
-    "faFillDrip":faFillDrip,
-    "faFilter":faFilter,
-    "faFont":faFont,
-    "faHandHolding":faHandHolding,
-    "faHandshake":faHandshake,
-    "faHandshakeSlash":faHandshakeSlash,
-    "faHardHat": faHardHat,
-    "faHighlighter":faHighlighter,
-    "faIcons":faIcons,
-    "faImages":faImages,
-    "faKey":faKey,
-    "faLink":faLink, 
-    "faMagic":faMagic,
-    "faNetworkWired":faNetworkWired,
-    "faPaintBrush":faPaintBrush,
-    "faPalette":faPalette, 
-    "faPaperclip":faPaperclip, 
-    "faPeopleArrows":faPeopleArrows,
-    "faPlay":faPlay,
-    "faPlayCircle":faPlayCircle,
-    "faPlus":faPlus,
-    "faPlusCircle":faPlusCircle,
-    "faProjectDiagram":faProjectDiagram,
-    "faRoute":faRoute,
-    "faRuler":faRuler,
-    "faSave":faSave,
-    "faServer":faServer,
-    "faSitemap":faSitemap,
-    "faSlidersH":faSlidersH,
-    "faSortAlphaDown":faSortAlphaDown,
-    "faSortAlphaDownAlt":faSortAlphaDownAlt,
-    "faSortAlphaUp":faSortAlphaUp,
-    "faSortAlphaUpAlt":faSortAlphaUpAlt,
-    "faSortAmountDown":faSortAmountDown,
-    "faSortAmountDownAlt":faSortAmountDownAlt,
-    "faSortAmountUp":faSortAmountUp,
-    "faSortAmountUpAlt":faSortAmountUpAlt,
-    "faSortNumericDown":faSortNumericDown,
-    "faSortNumericDownAlt":faSortNumericDownAlt,
-    "faSortNumericUp":faSortNumericUp,
-    "faSortNumericUpAlt":faSortNumericUpAlt,
-    "faTag":faTag, 
-    "faTags":faTags, 
-    "faTerminal":faTerminal,
-    "faTools":faTools,
-    "faTrash":faTrash,
-    "faTrashAlt":faTrashAlt,
-    "faUnlink":faUnlink,
-    "faIdBadge":faIdBadge,
-    "faUserTag":faUserTag,
-    "faUserTie":faUserTie,
-    "faWrench":faWrench
-}
 
 /* eslint-disable complexity */
 function Graph2D (props) {
@@ -364,6 +157,10 @@ function Graph2D (props) {
             setPieMenuY
         ],
         [
+            contextObj,
+            setContextObj
+        ],
+        [
             pieMenuVisible,
             setPieMenuVisible
         ],
@@ -392,21 +189,63 @@ function Graph2D (props) {
             "link": 70,
             "radial": 0.00
         }),
-        useState("0"),
-        useState("0"),
+        useState("0px"),
+        useState("0px"),
+        useState(null),
         useState(false),
         useRef(null)
     ];
 
-    const showPieMenu = (node) => {
-        const coords = fgRef.current.graph2ScreenCoords(
-            node.x,
-            node.y    
-        );
-        setPieMenuX((x) => String(coords.x) + "px");
-        setPieMenuY((y) => String(coords.y) + "px");
-        setPieMenuVisible((_visible) => true);
+    const showPieMenu = (clickedObj) => {
+
+        // this means only nodes
+        if ("__rootType" in clickedObj) {
+            const coords = fgRef.current.graph2ScreenCoords(
+                clickedObj.x,
+                clickedObj.y    
+            )
+
+            setPieMenuX((x) => String(coords.x) + "px");
+            setPieMenuY((y) => String(coords.y) + "px");
+
+            setContextObj((_n) => clickedObj);
+
+            setPieMenuVisible((_visible) => true);
+        // can't get the coordinates to work, shows up wrong place
+        // } else {
+            
+            // const [
+            //     sourceCoords,
+            //     targetCoords
+            // ] = [
+            //     fgRef.current.graph2ScreenCoords(
+            //         nodesById[props.linkSource].x,
+            //         nodesById[props.linkSource].y
+            //     ),
+            //     fgRef.current.graph2ScreenCoords(
+            //         nodesById[props.linkTarget].x,
+            //         nodesById[props.linkTarget].y
+            //     )
+            // ]
+
+            // coords = {x: targetCoords.x - sourceCoords.x, y: targetCoords.y - sourceCoords.y}
+
+        }
+
     };
+
+    const hidePieMenu = () => {
+        
+        setPieMenuVisible((_visible) => false);
+        
+        // setContextObj((_n) => null);
+        
+        // props.setProps({
+        //     "contextMenuClicked": null
+        // })
+
+    };
+
 
     useEffect(
         () => {
@@ -1784,7 +1623,6 @@ function Graph2D (props) {
     };
 
 
-
     const nodeVisibilityFunction = (node) => props.nodeIdsInvisibleUser === null
         ? !nodeIdsInvisibleAuto.includes(node[props.nodeId])
         : !nodeIdsInvisibleAuto.includes(node[props.nodeId]) && !props.nodeIdsInvisibleUser.includes(node[props.nodeId]);
@@ -1948,6 +1786,7 @@ function Graph2D (props) {
 
     // https://github.com/vasturiano/force-graph/blob/master/example/multi-selection/index.html
     const handleNodeClick = (node, event) => {
+
         // console.log("handleNodeClick");
 
         /**
@@ -1955,6 +1794,7 @@ function Graph2D (props) {
          * outcome depends on whether node is already selected
          * and on key press events
          */
+        hidePieMenu();
 
         // let nodeZoomIdTmp = null;
         const nodesSelectedNew = cloneDeep(props.nodesSelected);
@@ -2068,6 +1908,8 @@ function Graph2D (props) {
 
         if (node) {
 
+            showPieMenu(node);
+
             props.setProps({
                 "linkClicked": null,
                 "linkRightClicked": null,
@@ -2078,8 +1920,6 @@ function Graph2D (props) {
                 "nodeRightClicked": node,
                 "nodeClicked": null
             });
-
-            showPieMenu(node);
 
             // if there are selected nodes but they do not include the right clicked node, clear them
             if (props.nodesSelected && 
@@ -2101,6 +1941,9 @@ function Graph2D (props) {
     const handleLinkRightClick = (link, event) => {
 
         if (link) {
+
+            // can't get the link source target coordinate conversion to work..
+            hidePieMenu();
 
             const start = link[props.linkSource];
             const end = link[props.linkTarget];
@@ -2144,6 +1987,7 @@ function Graph2D (props) {
     const handleNodeDrag = (node, _translate) => {
 
         // console.log("handleNodeDrag");
+        hidePieMenu();
 
         if (props.linkRightClicked ||
             props.nodeClicked ||
@@ -2367,7 +2211,7 @@ function Graph2D (props) {
 
     const handleBackgroundClick = (_event) => {
 
-        // console.log("handleBackgroundClick");
+        hidePieMenu();
 
         if (props.linkRightClicked ||
             (props.linksSelected && props.linksSelected.length) ||
@@ -2386,8 +2230,6 @@ function Graph2D (props) {
 
         }
 
-        setPieMenuVisible((_visible) => false);
-
         if (nodeZoomId) {
 
             setNodeZoomId((_nz) => null);
@@ -2399,6 +2241,7 @@ function Graph2D (props) {
 
     const handleBackgroundRightClick = (_event) => {
 
+        hidePieMenu();
         // console.log("handleBackgroundRightClick");
 
         if (props.linkRightClicked ||
@@ -2416,8 +2259,6 @@ function Graph2D (props) {
             });
 
         }
-        
-        setPieMenuVisible((_visible) => false);
 
         if (nodeZoomId) {
 
@@ -2431,6 +2272,8 @@ function Graph2D (props) {
     const handleLinkClick = (link, event) => {
 
         if (link) {
+
+            hidePieMenu();
 
             const linksSelectedNew = cloneDeep(props.linksSelected);
             const nodesSelectedNew = cloneDeep(props.nodesSelected);
@@ -3016,8 +2859,6 @@ function Graph2D (props) {
                 }
         ))
     }
-
-    
     // const dagNodeFilter = (node) => {
     //     return props.dagNodeIds.includes(node[props.nodeId]) ? true : false;
     // };
@@ -3479,6 +3320,8 @@ function Graph2D (props) {
                     onBackgroundRightClick={handleBackgroundRightClick}
                     onZoom={(args) => {
 
+                        hidePieMenu();
+
                         if ( 
                             args && 
                             ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
@@ -3562,27 +3405,21 @@ function Graph2D (props) {
                     : null
             }
             {
-                pieMenuVisible && <div> 
-                    <PieMenu
-                        radius="125px"
-                        centerRadius="30px"
-                        centerX={pieMenuX}
-                        centerY={pieMenuY}
-                    >
-                        <Slice>
-                            <FontAwesomeIcon icon={faAnchor} size="2x" />
-                        </Slice>
-                        <Slice>
-                            <FontAwesomeIcon icon={faArrowsAltH} size="2x" />
-                        </Slice>
-                        <Slice>
-                            <FontAwesomeIcon icon={faArrowsAlt} size="2x" />
-                        </Slice>
-                        <Slice>
-                            <FontAwesomeIcon icon={faBezierCurve} size="2x" />
-                        </Slice>
-                    </PieMenu>
-                </div> 
+                pieMenuVisible && <ContextPieMenu
+                    contextObj={contextObj}
+                    schemaOrData={props.schemaOrData}
+                    centerX={pieMenuX}
+                    centerY={pieMenuY}
+                    radius="125px"
+                    centerRadius="30px"
+                    sliceCallback={(x) => {
+                        props.setProps({
+                            "contextMenuClicked": x
+                        })
+                        hidePieMenu();
+                        }
+                    }>
+                </ContextPieMenu>
             }
         </div>
     );
@@ -4665,7 +4502,11 @@ const graphSharedProptypes = {
     // "redraw": PropTypes.number
     "scripts":PropTypes.arrayOf(PropTypes.string),
     // whether to show the GUI for controlling forces
-    "showGUI": PropTypes.bool
+    "showGUI": PropTypes.bool,
+
+    "schemaOrData": PropTypes.string,
+
+    "contextMenuClicked": PropTypes.string
 
 };
 

@@ -9,15 +9,15 @@ See `usage.py` for a simple example and check out the original react component r
 ## Quick start (1 minute)
 1. Install the library: 
 
-pip: `python -m pip install git+https://github.com/JonThom/dash-react-force-graph`
+pip: `python -m pip install git+https://github.com/nodelab-org/dash-react-force-graph`
 
-[pipenv](https://pipenv.pypa.io/en/latest/): `python -m pip install git+https://github.com/JonThom/dash-react-force-graph#egg=dash-react-force-graph`
+[pipenv](https://pipenv.pypa.io/en/latest/): `python -m pip install git+https://github.com/nodelab-org/dash-react-force-graph#egg=dash-react-force-graph`
 
-[poetry](https://python-poetry.org/): `poetry add git+https://github.com/JonThom/dash-react-force-graph#master`
+[poetry](https://python-poetry.org/): `poetry add git+https://github.com/nodelab-org/dash-react-force-graph#master`
 
 3. Install Dash and its dependencies: https://dash.plotly.com/installation
 4. For a simple example, download and run `usage.py` (requires installing the python module `dash_treeview_antd`):
-	1. `wget https://github.com/JonThom/dash-react-force-graph/blob/master/usage.py`
+	1. `wget https://github.com/nodelab-org/dash-react-force-graph/blob/master/usage.py`
 	2. `python usage.py`
 5. Visit http://localhost:8050 in your web browser. Enjoy!
 

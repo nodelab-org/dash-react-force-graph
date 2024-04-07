@@ -85,11 +85,11 @@ graphData = {
         {"__nodeId":"1",  "is_inferred":False, "name": "Joe Benson", "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF001", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Joe. I am 55 years old and enjoy nature and working. My weakness? I am rather longwinded. This is to be expected, since I have a big mouth."},
         {"__nodeId":"2", "is_inferred":False,  "name": "Daniella M", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Daniella. I am 61 years old and enjoy brisk runs. That and watching old Friends episodes."},
         # {"__nodeId":"3", "is_inferred":False, "name": "Susan T", "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
-        {"__nodeId":"3", "is_inferred":False, "name": "Susan T", "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":"fas fa-user", "__thingType":"person", "__rootType":"entity"},
+        {"__nodeId":"3", "is_inferred":False, "name": "Susan T", "__nodeLabel":"Susan T", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
         {"__nodeId":"4", "is_inferred":False, "name": "Ed Smith",  "__nodeLabel":"Ed Smith", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
         {"__nodeId":"5",  "is_inferred":False, "name": "Chevron", "__nodeLabel":"Chevron", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/1024/200/200", "__thingType":"corporation", "__rootType":"entity"},
-        # {"__nodeId":"6",  "is_inferred":False, "name": "Friends of the Earth", "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300", "__thingType":"NGO", "__rootType":"entity"},
-        {"__nodeId":"6",  "is_inferred":False, "name": "Friends of the Earth", "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://this_url_doesnt_exist.really/200", "__thingType":"NGO", "__nodeIcon": "\uf0c8", "__rootType":"entity"},
+        {"__nodeId":"6",  "is_inferred":False, "name": "Friends of the Earth", "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/10/200/300", "__thingType":"NGO", "__rootType":"entity"},
+        # {"__nodeId":"6",  "is_inferred":False, "name": "Friends of the Earth", "__nodeLabel":"Friends of the Earth", "__nodeColor":"cornflowerblue", "__nodeImg":"https://this_url_doesnt_exist.really/200", "__thingType":"NGO", "__nodeIcon": "\uf0c8", "__rootType":"entity"},
         {"__nodeId":"7",  "is_inferred":False, "name": "Strawberry Fields Ltd", "__nodeLabel":"Strawberry Fields Ltd", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/11/200/300", "__thingType":"corporation", "__rootType":"entity", "__nodeVal":12},
         {"__nodeId":"8",  "is_inferred":False, "name": "The Fundamentally Supine Authority", "__nodeLabel":"The Fundamentally Supine Authority", "__nodeColor":"cornflowerblue", "__nodeImg":"https://picsum.photos/id/16/200/300", "__thingType":"government", "__rootType":"entity", "__nodeVal":10},
         {"__nodeId":"9",  "is_inferred":False, "__nodeLabel":"neighbours", "__nodeColor":"tomato", "__thingType":"neighbours", "__rootType":"relation", "__nodeVal":3},
@@ -214,7 +214,8 @@ app.layout = dbc.Container(
                         nodeIcon="__nodeIcon",
                         nodeImg="__nodeImg",
                         # nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
-                        backgroundColor="#030039"
+                        backgroundColor="#030039",
+                        schemaOrData="data"
                     ),
                 ])
             ])
@@ -312,8 +313,7 @@ app.layout = dbc.Container(
                     html.Div(id='output-linksSelected-2D'),
                 ]),
             ]),
-        ]
-        )
+        ])
     ]
 )
 
@@ -453,7 +453,6 @@ def display_clicked_selected_nodes_2D(
         "selected links: {}".format(linksSelected),
         "rightclicked node: {}".format(nodeRightClicked),
         ]
-
 
 
 @app.callback(

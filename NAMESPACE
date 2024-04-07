@@ -1,4 +1,7 @@
 # AUTO GENERATED FILE - DO NOT EDIT
 
+export(dashContextPieMenu)
 export(dashGraph2D)
 export(dashGraph3D)
+export(dashCustomPieMenu)
+export(dashCustomSlice)

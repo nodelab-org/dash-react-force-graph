@@ -2,7 +2,7 @@
 name = "dash-react-force-graph"
 version = "0.1.0"
 description = ""
-authors = ["Jon Thompson <jjt@tutanota.com>"]
+authors = ["Jon Thompson"]
 license = "MIT"
 
 [tool.poetry.dependencies]
