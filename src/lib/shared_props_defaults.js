@@ -38,6 +38,7 @@ const objSharedProps = {
     nodeLabelRelSize: 4,
     nodeVal:"__nodeVal",
     nodeLabel: "__nodeLabel",
+    nodeSubLabel: "__nodeSubLabel",
     // nodeDesc: "desc" // VR only
     // nodeVisibility: True // not exposed, use nodeIdsVisible prop instead
     nodeColor: "__nodeColor",

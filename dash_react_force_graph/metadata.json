@@ -203,6 +203,18 @@
         "required": false,
         "description": "Node object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).\n2D, 3D and VR"
       },
+      "nodeSubLabel": {
+        "type": {
+          "name": "union",
+          "value": [
+            {
+              "name": "string"
+            }
+          ]
+        },
+        "required": false,
+        "description": ""
+      },
       "nodeVal": {
         "type": {
           "name": "union",

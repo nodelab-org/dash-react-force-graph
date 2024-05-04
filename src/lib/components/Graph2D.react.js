@@ -2488,6 +2488,8 @@ function Graph2D (props) {
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
+        
+        // draw image or icon
         if (
             (
                 !img || !img_src || !img.complete
@@ -2518,7 +2520,11 @@ function Graph2D (props) {
             // save for nodePointerAreaPaintFunction
 
         }
+
+        // write node label underneath node icon
         if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
+            
+            // draw main node label 
             const label = props.nodeLabel in node
                 ? node[props.nodeLabel]
                     ? node[props.nodeLabel]
@@ -2527,19 +2533,61 @@ function Graph2D (props) {
             ctx.fontWeight = fontWeightText
             // draw text background rectangle
             ctx.font = `${fontSize}px Sans-Serif`;
-            const textWidth = ctx.measureText(label).width;
+            // if node is being dragged, use bold font
+            if (nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
+                ctx.font = `${fontSize}px Sans-Serif bold`;
+            }
+            const textMetrics = ctx.measureText(label);
+            const [textWidth, textHeight] = [textMetrics.width, textMetrics.height];
             // add padding
             const bckgDimensions = [textWidth, fontSize].map((n) => n + fontSize * 0.2);
             ctx.fillStyle = backgroundColor_tmp;
             ctx.fillRect(node.x - bckgDimensions[0] / 2, node.y - bckgDimensions[1] / 2, ...bckgDimensions);
 
             // draw text label
-            if (nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
-                ctx.font = `${fontSize}px Sans-Serif bold`;
-            }
             
             ctx.fillStyle = textColor
             ctx.fillText(label, node.x, node.y);
+
+            // draw node sub label, e.g. node type
+            if (props.nodeSubLabel in node && node[props.nodeSubLabel]) {
+
+                const subLabel = node[props.nodeSubLabel];
+                
+                const subFontSize = fontSize * 0.7;
+                
+                ctx.font = `${subFontSize}px Sans-Serif`;
+
+                // if node is being dragged, use bold font
+                if (nodeIdsDrag.indexOf(node[props.nodeId]) !== -1) {
+                    ctx.font = `${subFontSize}px Sans-Serif bold`;
+                }
+
+                const subTextMetrics = ctx.measureText(subLabel);
+                const [subTextWidth, subTextHeight] = [subTextMetrics.width, subTextMetrics.height];
+
+                // add padding
+                const subBckgDimensions = [subTextWidth, subFontSize].map((n) => n + subFontSize * 0.2);
+                
+                ctx.fillStyle = backgroundColor_tmp;
+                
+                ctx.fillRect(
+                    node.x - subBckgDimensions[0] / 2,
+                    node.y + bckgDimensions[1] - subBckgDimensions[1] / 2,
+                    ...subBckgDimensions
+                );
+
+                // draw text label
+                
+                ctx.fillStyle = textColor
+                ctx.fillText(
+                    label, 
+                    node.x, 
+                    node.y + textHeight
+                );
+
+            }
+
 
         }
         ctx.restore();
@@ -3541,6 +3589,11 @@ const graphSharedProptypes = {
      * 2D, 3D and VR
      */
     "nodeLabel":  PropTypes.oneOfType([
+        PropTypes.string,
+        //PropTypes.func
+    ]),
+
+    "nodeSubLabel":  PropTypes.oneOfType([
         PropTypes.string,
         //PropTypes.func
     ]),
