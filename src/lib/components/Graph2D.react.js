@@ -2581,9 +2581,9 @@ function Graph2D (props) {
                 
                 ctx.fillStyle = textColor
                 ctx.fillText(
-                    label, 
+                    subLabel, 
                     node.x, 
-                    node.y + textHeight
+                    node.y + bckgDimensions[1]
                 );
 
             }
