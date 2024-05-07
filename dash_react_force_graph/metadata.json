@@ -91,6 +91,28 @@
           "value": "null",
           "computed": false
         }
+      },
+      "thingTypeKey": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"__thingType\"",
+          "computed": false
+        }
+      },
+      "rootTypeKey": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"__rootType\"",
+          "computed": false
+        }
       }
     }
   },
@@ -141,6 +163,20 @@
         },
         "required": false,
         "description": "Node object accessor attribute for unique node id (used in link objects source/target)."
+      },
+      "thingType": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Node object accessor attribute for type (e.g. person)"
+      },
+      "rootType": {
+        "type": {
+          "name": "string"
+        },
+        "required": false,
+        "description": "Node object accessor attribute for root type (e.g. entity)"
       },
       "linkSource": {
         "type": {

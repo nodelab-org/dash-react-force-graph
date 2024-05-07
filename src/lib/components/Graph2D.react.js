@@ -199,7 +199,7 @@ function Graph2D (props) {
     const showPieMenu = (clickedObj) => {
 
         // this means only nodes
-        if ("__rootType" in clickedObj) {
+        if (props.rootType in clickedObj) {
             const coords = fgRef.current.graph2ScreenCoords(
                 clickedObj.x,
                 clickedObj.y    
@@ -258,7 +258,6 @@ function Graph2D (props) {
             if (fgRef &&
                 fgRef.current) {
 
-                // console.log("useEffect: add radial force");
 
                 fgRef.current.d3Force(
                     "radial",
@@ -320,8 +319,6 @@ function Graph2D (props) {
                 props.graphData.nodes.length &&
                 !props.useCoordinates &&
                 props.forceEngine === "d3") {
-
-                // console.log("useEffect: adjust graph layout forces");
 
                 if (props.fixNodes &&
                     graphDataNodes &&
@@ -526,8 +523,6 @@ function Graph2D (props) {
                     props.forceRefresh > forceRefreshCount
                 ) {
 
-                    // console.log("useEffect: new nodes added or forceRefresh incremented");
-
                     setGraphDataIdsAll((_gDataIdsAll) => ({
                         "links": linkIdsAllNew,
                         "nodes": nodeIdsAllNew
@@ -711,14 +706,12 @@ function Graph2D (props) {
 
                     // refresh selected or clicked node (with new neighbours)
                     // if (props.nodesSelected) {
-                    //     console.log("setting nodesSelected!")
                     //     props.setProps({
                     //         "nodesSelected": props.nodesSelected.map((nodeSel) => nodesById[nodeSel.__nodeId])
                     //     });
                     // }
 
                     // if (props.nodeClicked) {
-                    //     console.log("setting nodeClicked!")
                     //     props.setProps({
                     //         "nodeClicked": nodesById[props.nodeClicked.__nodeId]
                     //     });
@@ -727,8 +720,6 @@ function Graph2D (props) {
                     if (props.nodeZoomId) {
 
                         if (props.nodeZoomId === nodeZoomId) {
-
-                            // console.log("incrementing refreshNodeZoom");
 
                             setRefreshNodeZoom((rnz) => rnz + 1);
 
@@ -809,8 +800,6 @@ function Graph2D (props) {
             // checkpoint 1: should the nodeZoom effect run at all?
             if (props.graphData && props.graphData.nodes.length > 1) {
 
-                // console.log("useEffect: nodeZoomId");
-
                 const [
                     nodeIdsVisibleNew,
                     linkIdsVisibleNew
@@ -824,8 +813,6 @@ function Graph2D (props) {
                     nodesById &&
                     nodeZoomId in nodesById &&
                     "__source" in nodesById[nodeZoomId]) {
-
-                    // console.log("nodeZoomId useEffect: block 1");
 
                     nodeIdsVisibleNew.push(nodeZoomId);
 
@@ -842,9 +829,6 @@ function Graph2D (props) {
                         {},
                         {}
                     ];
-
-                    // console.log("this is nodeZoom");
-                    // console.log(cloneDeep(nodesByIdNew[nodeZoomId]));
 
                     nodesByIdNew[nodeZoomId].fx = "x" in nodesByIdNew[nodeZoomId]
                         ? nodesByIdNew[nodeZoomId].x
@@ -885,10 +869,10 @@ function Graph2D (props) {
                                 });
                                 linkIdsVisibleNew.push(linkId);
                                 nodeIdsVisibleNew.push(targetId);
-                                // ~~check whether the target node has node_id === node thingtype, i.e. is a schema type. 
+                                
                                 // If so, don't show its neighbours.~~
                                 if (Object.values(targetNode.__target).length //&&
-                                    // nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId].__thingType
+                                    
                                     ) {
 
                                     for (const [
@@ -896,7 +880,7 @@ function Graph2D (props) {
                                         obj1
                                     ] of Object.entries(targetNode.__target)) {
 
-                                        if (nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId].__thingType ||
+                                        if (nodesById[nodeZoomId][props.nodeId] !== nodesById[nodeZoomId][props.thingType] ||
                                             ["relates", "plays"].includes(linkLabel) && ["relates", "plays"].includes(linkLabel1)) {       
 
                                             if (!(linkLabel1 in targetNodeObjs[linkLabel][targetNodeObjs[linkLabel].length - 1].targetSourceNodes)) {
@@ -1125,14 +1109,6 @@ function Graph2D (props) {
                                     }
 
                                 }
-                                
-                                // if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
-                                //     // only space out nodes in schema view
-
-                                //     targetSourceLabelX += marX * 0.5;
-
-                                // }
-                                
 
                             }
     
@@ -1175,7 +1151,7 @@ function Graph2D (props) {
                         }
                         
                         // if schema, add some horizontal margin
-                        if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
+                        if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId][props.thingType]) {
 
                             targetX += marX * 0.5;
                             targetSourceX += marX * 0.5;
@@ -1220,7 +1196,7 @@ function Graph2D (props) {
 
                     //             }
                                 
-                    //             // if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
+                    //             // if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId][props.thingType]) {
                     //             //     // only space out nodes in schema view
 
                     //             //     targetSourceLabelX += marX * 0.5;
@@ -1254,7 +1230,7 @@ function Graph2D (props) {
                     //     }
                         
                     //     // if schema, add some horizontal margin
-                    //     if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
+                    //     if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId][props.thingType]) {
 
                     //         targetX += marX * 0.5;
                     //         targetSourceX += marX * 0.5;
@@ -1269,7 +1245,7 @@ function Graph2D (props) {
                     // group different source nodes in columns by link label
                     if (Object.keys(sourceNodes).length) {
 
-                        let sourceX = nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType
+                        let sourceX = nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId][props.thingType]
                             ? nodesByIdNew[nodeZoomId].fx - (marX + (Object.keys(sourceNodes).length - 1) * marX * 0.5)
                             : nodesByIdNew[nodeZoomId].fx - marX;
 
@@ -1283,7 +1259,7 @@ function Graph2D (props) {
     
                             })
                             
-                            if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId].__thingType) {
+                            if (nodesById[nodeZoomId][props.nodeId] === nodesById[nodeZoomId][props.thingType]) {
 
                                 sourceX += marX * 0.5;
 
@@ -1488,11 +1464,11 @@ function Graph2D (props) {
 
         let identityRows = `<tr>
                 <td><span style="font-weight:bold">root type</span></td>
-                <td>&nbsp;${node.__rootType}</td>
+                <td>&nbsp;${node[props.rootType]}</td>
             </tr>
             <tr>
                 <td><span style="font-weight:bold">type</span></td>
-                <td>&nbsp;${node.__thingType}</td>
+                <td>&nbsp;${node[props.thingType]}</td>
             </tr>
             `;
 
@@ -2044,7 +2020,7 @@ function Graph2D (props) {
 
             // Two-step highlighting if rootType is entity and not a schema node
             // this is hard-coded for typedb-vis-utils
-            if (node.__rootType === "entity" && node.__thingType !== node[props.nodeId]) {
+            if (node[props.rootType] === "entity" && node[props.thingType] !== node[props.nodeId]) {
 
                 // We cannot simply iterate over neighbourNodeIds nor its length adding
                 // since we are adding to it
@@ -2926,7 +2902,6 @@ function Graph2D (props) {
             fgRef.current &&
             props.emitParticle) {
 
-            // console.log("useEffect: emitParticle");
             fgRef.current.emitParticle(props.emitParticle);
 
         }
@@ -2941,8 +2916,6 @@ function Graph2D (props) {
                 fgRef &&
                 "current" in fgRef &&
                 fgRef.current) {
-
-                // console.log("useEffect: pauseAnimation");
 
                 props.pauseAnimation
                     ? fgRef.current.pauseAnimation()
@@ -3029,7 +3002,6 @@ function Graph2D (props) {
             "current" in fgRef &&
             fgRef.current){
 
-            // console.log("useEffect: set grappBbox props");
             props.setProps({"graphBbox":fgRef.current.getGraphBbox()});
 
         }
@@ -3044,8 +3016,6 @@ function Graph2D (props) {
             "current" in fgRef &&
             fgRef.current && props.zoom) {
 
-            // console.log("useEffect: zoom");
-
             fgRef.current.zoom(...props.zoom);
 
         }
@@ -3055,7 +3025,6 @@ function Graph2D (props) {
 
     const zoomToFitFunction = () => {
 
-        // console.log("zoomToFitFunction");
         if (fgRef.current) {
             fgRef.current.zoomToFit(
                 250,
@@ -3075,7 +3044,6 @@ function Graph2D (props) {
     //         props.zoomToFit
     //         ) {
             
-    //         // console.log("useEffect: zoomToFit");
     //         fgRef.current.zoomToFit(...props.zoomToFit);
     //     }
 
@@ -3092,7 +3060,6 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        // console.log("useEffect: set nodeIdsInvisibleAuto prop");
         props.setProps({"nodeIdsInvisibleAuto":nodeIdsInvisibleAuto});
 
     },[nodeIdsInvisibleAuto]);
@@ -3100,7 +3067,6 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        // console.log("useEffect: set linkIdsInvisibleAuto prop");
         props.setProps({"linkIdsInvisibleAuto":linkIdsInvisibleAuto});
 
     },[linkIdsInvisibleAuto]);
@@ -3117,7 +3083,6 @@ function Graph2D (props) {
 
         ) {
 
-            console.log("useEffect: centerAtZoom");
             const centerAtZoom = cloneDeep(props.centerAtZoom)
             // fgRef.current.centerAt((initZoomPan.x-props.centerAtZoom.x)/props.centerAtZoom.k, (initZoomPan.y-props.centerAtZoom.y)/props.centerAtZoom.k)
             if ("k" in centerAtZoom && centerAtZoom.k !== null) {
@@ -3164,8 +3129,6 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        // console.log("useEffect: setNodeIdsInvisibleAuto");
-
         const [
             nodeIdsInvisibleAutoAdded,
             nodeIdsInvisibleAutoRemoved
@@ -3209,8 +3172,6 @@ function Graph2D (props) {
 
 
     useEffect( () => {
-
-        // console.log("useEffect: setLinkIdsInvisibleAuto");
 
         const [
             linkIdsInvisibleAutoAdded,
@@ -3394,7 +3355,6 @@ function Graph2D (props) {
 
                     onZoomEnd={(args) => {
                         // keep track of currentZoomPan
-                        // console.log("onZoomEnd")
                         if (
                             args && 
                             (
@@ -3511,6 +3471,16 @@ const graphSharedProptypes = {
      * Node object accessor attribute for unique node id (used in link objects source/target).
      */
     "nodeId": PropTypes.string,
+
+    /**
+     * Node object accessor attribute for type (e.g. person)
+     */
+    "thingType": PropTypes.string,
+
+    /**
+     * Node object accessor attribute for root type (e.g. entity)
+     */
+    "rootType": PropTypes.string,
 
     /**
      * Link object accessor attribute referring to id of source node.

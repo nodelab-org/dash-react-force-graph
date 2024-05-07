@@ -13,6 +13,8 @@ const objSharedProps = {
     //graphDataProcessed: {"nodes":[], "links":[]},// {"nodes":[], "links":[]},
     // graphDataRendered: {"nodes":[], "links":[]},
     "nodeId": "__nodeId",
+    "thingType": "__thingType",
+    "rootType": "__rootType",
     "linkSource" : "source",
     "linkTarget": "target",
 

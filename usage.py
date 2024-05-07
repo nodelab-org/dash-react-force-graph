@@ -80,7 +80,7 @@ def reset_link_source_target(links):
 # print("")
 # print("graphData")
 # print(json.dumps(graphData,indent=3))
-graphData = {
+graphData_data = {
     "nodes":[
         {"__nodeId":"1",  "is_inferred":False, "name": "Joe Benson", "__nodeLabel":"Joe Benson", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF001", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Joe. I am 55 years old and enjoy nature and working. My weakness? I am rather longwinded. This is to be expected, since I have a big mouth."},
         {"__nodeId":"2", "is_inferred":False,  "name": "Daniella M", "__nodeLabel":"Daniella M", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity", "statement":"Hi my name is Daniella. I am 61 years old and enjoy brisk runs. That and watching old Friends episodes."},
@@ -118,6 +118,22 @@ graphData = {
         {"id":"14", "label":"employee", "source":"15", "target":"14"},
         {"id":"15", "label":"neighbour", "source":"15", "target":"9"},
         {"id":"16", "label":"neighbour", "source":"15", "target":"15"},
+        ]#
+    }
+
+graphData_schema = {
+    "nodes":[
+        {"__nodeId":"1",   "__nodeLabel":"thing", "__nodeColor":"cornflowerblue", "__thingType":"thing", "__rootType":"thing"},
+        {"__nodeId":"2",  "__nodeLabel":"person", "__nodeColor":"cornflowerblue", "__nodeIcon":"\uF007", "__thingType":"person", "__rootType":"entity"},
+        {"__nodeId":"3",  "__nodeLabel":"age", "__nodeColor":"green", "__thingType":"age", "__rootType":"attribute"},
+        {"__nodeId":"4",   "__nodeLabel":"partnership", "__nodeColor":"red",  "__thingType":"partnership", "__rootType":"relation"},
+        {"__nodeId":"5",  "__nodeLabel":"Chevron", "__nodeColor":"white", "__thingType":"partner", "__rootType":"relation:role"},
+        ],
+    "links":[
+        {"id":"1", "label":"link", "source":"1", "target":"2"},
+        {"id":"2", "label":"link", "source":"1", "target":"3"},
+        {"id":"3", "label":"link", "source":"1", "target":"4"},
+        {"id":"4", "label":"link", "source":"1", "target":"5"}
         ]#
     }
 
@@ -205,17 +221,38 @@ app.layout = dbc.Container(
             dbc.Row([
                 dbc.Col([
                     dash_react_force_graph.Graph2D(
-                        id='graph2D',
-                        graphData=graphData,
+                        id='graph2D-data',
+                        graphData=graphData_data,
                         heightRatio=0.8,
                         nodeId="__nodeId",
                         nodeLabel="__nodeLabel",
+                        nodeSubLabel="__thingType",
                         nodeColor="__nodeColor",
                         nodeIcon="__nodeIcon",
                         nodeImg="__nodeImg",
                         # nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
                         backgroundColor="#030039",
                         schemaOrData="data"
+                    ),
+                ])
+            ])
+        ]),
+        dbc.Container([
+            dbc.Row([
+                dbc.Col([
+                    dash_react_force_graph.Graph2D(
+                        id='graph2D-schema',
+                        graphData=graphData_schema,
+                        heightRatio=0.8,
+                        nodeId="__nodeId",
+                        nodeLabel="__nodeLabel",
+                        nodeSubLabel="__thingType",
+                        nodeColor="__nodeColor",
+                        nodeIcon="__nodeIcon",
+                        nodeImg="__nodeImg",
+                        # nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
+                        backgroundColor="#030039",
+                        schemaOrData="schema"
                     ),
                 ])
             ])
@@ -319,7 +356,7 @@ app.layout = dbc.Container(
 
 
 @app.callback(
-    Output("graph2D","newZoomPan"),
+    Output("graph2D-data","newZoomPan"),
     [
         Input("button-zoom-pan-apply", "n_clicks")
     ],
@@ -337,7 +374,7 @@ def zoom_pan(n_clicks, zoom, x, y):
 
 # @app.callback(
 #     Output('output-currentZoomPan',"children"),
-#     Input("graph2D", "currentZoomPan")
+#     Input("graph2D-data", "currentZoomPan")
 # )
 # def update_currentZoomPan(currentZoomPan):
 #     print(f"currentZoomPan: {currentZoomPan}")
@@ -350,7 +387,7 @@ def zoom_pan(n_clicks, zoom, x, y):
         Output("dropdown-linkIdsInvisibleUser","options")
     ],
     [
-        Input("graph2D","graphData"),
+        Input("graph2D-data","graphData"),
     ]
 )
 def populate_dropdown_node_link_ids_invisible_user(graphdata):
@@ -361,7 +398,7 @@ def populate_dropdown_node_link_ids_invisible_user(graphdata):
 
 
 @app.callback(
-        Output("graph2D","nodeIdsInvisibleUser"),
+        Output("graph2D-data","nodeIdsInvisibleUser"),
     [
         Input("dropdown-nodeIdsInvisibleUser","value"),
     ],
@@ -372,7 +409,7 @@ def update_nodeidsinvisible_user(value):
 
 
 @app.callback(
-        Output("graph2D","linkIdsInvisibleUser"),
+        Output("graph2D-data","linkIdsInvisibleUser"),
     [
         Input("dropdown-linkIdsInvisibleUser","value"),
     ],
@@ -383,49 +420,49 @@ def update_linkidsinvisible_user(value):
 
 # sort
 @app.callback(
-    Output("graph2D","sortRelsBy1"),
+    Output("graph2D-data","sortRelsBy1"),
     [Input("dropdown-sortRelsBy1","value")])
 def sort_rels_by_1(attr):
     return attr
 
 @app.callback(
-    Output("graph2D","sortRelsBy2"),
+    Output("graph2D-data","sortRelsBy2"),
     [Input("dropdown-sortRelsBy2","value")])
 def sort_rels_by_2(attr):
     return attr
 
 @app.callback(
-    Output("graph2D","sortRels1Descend"),
+    Output("graph2D-data","sortRels1Descend"),
     [Input("dropdown-sortRels1Descend","value")])
 def sort_rels_1_desc(value):
     return bool(value)
     
 @app.callback(
-    Output("graph2D","sortRels2Descend"),
+    Output("graph2D-data","sortRels2Descend"),
     [Input("dropdown-sortRels2Descend","value")])
 def sort_rels_2_desc(value):
     return bool(value)
 
 @app.callback(
-    Output("graph2D","sortRoleplayersBy1"),
+    Output("graph2D-data","sortRoleplayersBy1"),
     [Input("dropdown-sortRoleplayersBy1","value")])
 def sort_rps_by_1(attr):
     return attr
 
 @app.callback(
-    Output("graph2D","sortRoleplayersBy2"),
+    Output("graph2D-data","sortRoleplayersBy2"),
     [Input("dropdown-sortRoleplayersBy2","value")])
 def sort_rps_by_2(attr):
     return attr
 
 @app.callback(
-    Output("graph2D","sortRoleplayers1Descend"),
+    Output("graph2D-data","sortRoleplayers1Descend"),
     [Input("dropdown-sortRoleplayers1Descend","value")])
 def sort_rps_1_desc(value):
     return bool(value)
     
 @app.callback(
-    Output("graph2D","sortRoleplayers2Descend"),
+    Output("graph2D-data","sortRoleplayers2Descend"),
     [Input("dropdown-sortRoleplayers2Descend","value")])
 def sort_rps_2_desc(value):
     return bool(value)
@@ -440,9 +477,9 @@ def sort_rps_2_desc(value):
     Output('output-nodeRightClicked-2D',  'children'),
 ],
 [
-    Input('graph2D', 'nodesSelected'),
-    Input('graph2D', 'linksSelected'),
-    Input('graph2D', 'nodeRightClicked'),
+    Input('graph2D-data', 'nodesSelected'),
+    Input('graph2D-data', 'linksSelected'),
+    Input('graph2D-data', 'nodeRightClicked'),
 ])
 def display_clicked_selected_nodes_2D(
     nodesSelected,
@@ -458,7 +495,7 @@ def display_clicked_selected_nodes_2D(
 @app.callback(
     Output("dropdown-type","options"),
     Input("button-repopulate-dropdown-type", "n_clicks"),
-    State("graph2D","graphData")
+    State("graph2D-data","graphData")
 )
 def populate_dropdown_type(n_clicks, graphdata):
     ctx = dash.callback_context
@@ -476,7 +513,7 @@ def populate_dropdown_type(n_clicks, graphdata):
 
 # @app.callback(
 #     Output("select-node-for-icon-update", "options"),
-#     Input("graph2D", "graphData")
+#     Input("graph2D-data", "graphData")
 # )
 # def populate_select_node_for_icon_update(graphData):
     
@@ -486,9 +523,9 @@ def populate_dropdown_type(n_clicks, graphdata):
 
 
 # @app.callback(
-#     Output("graph2D","graphData"),
+#     Output("graph2D-data","graphData"),
 
-#     State("graph2D","graphData")
+#     State("graph2D-data","graphData")
 # )
 # def update_node_icon(
 
@@ -498,8 +535,8 @@ def populate_dropdown_type(n_clicks, graphdata):
 
 @app.callback(
     [
-        Output('graph2D', 'graphData'),
-        Output('graph2D', 'forceRefresh')
+        Output('graph2D-data', 'graphData'),
+        Output('graph2D-data', 'forceRefresh')
     ],
     [
         Input('button-add', 'n_clicks'),
@@ -508,8 +545,8 @@ def populate_dropdown_type(n_clicks, graphdata):
     ],
     [
         State("dropdown-type","value"),
-        State("graph2D","graphData"),
-        State('graph2D', 'forceRefresh')
+        State("graph2D-data","graphData"),
+        State('graph2D-data', 'forceRefresh')
     ])
 def update_graphdata(
     n_clicks_add, 

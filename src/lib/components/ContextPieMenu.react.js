@@ -26,19 +26,25 @@ import {
     faTag, 
     faTrash,
     faIdBadge,
+    faUser
 } from '@fortawesome/free-solid-svg-icons'
 
 
 function ContextPieMenu(props) {
+    // contextObj is typically a node, but could be a link
 
-    const {contextObj, schemaOrData, centerX, centerY, radius, centerRadius, sliceCallback} = props;
+    const {contextObj, schemaOrData, centerX, centerY, radius, centerRadius, sliceCallback, thingTypeKey, rootTypeKey} = props;
 
-    const isNode = contextObj && "__rootType" in contextObj;
+    const isNode = contextObj && rootTypeKey in contextObj;
 
     const isType = contextObj && schemaOrData === "schema";
 
     const rootType = contextObj && isNode
-        ? contextObj.__rootType
+        ? contextObj[rootTypeKey]
+        : null;
+    
+    const thingType = contextObj && isNode
+        ? contextObj[thingTypeKey]
         : null;
 
     return (
@@ -54,12 +60,15 @@ function ContextPieMenu(props) {
                 }
                 {
                     !isNode && (
-                        <Slice onSelect = {(e) => {sliceCallback("delete")}}>
-                            <FontAwesomeIcon icon={faTrash} size="2x" color="black" key="1"/>
+                        // it's not a node, so it's a link,
+                        <Slice onSelect = {(e) => {sliceCallback("hide")}}>
+                            <FontAwesomeIcon icon={faEyeSlash} size="2x" color="red" key="1"/>
                         </Slice>
                     )
                 }
                 { isNode && !isType && (
+                    // it's a thing (data)
+                    // so we enable queries and hiding it
                     <>
                         <Slice onSelect={(e) => {sliceCallback("expand-neighbours")}}>
                             <FontAwesomeIcon icon={faArrowsAlt} size="2x" color = "cyan"/>
@@ -72,19 +81,51 @@ function ContextPieMenu(props) {
                         </Slice>
                     </>
                 )}
-                {/* <Slice onSelect={sliceCallback("expand-neighbours")}>
-                    <FontAwesomeIcon icon={faArrowsAlt} size="2x" color = "cyan"/>
-                </Slice>
-                <Slice onSelect={sliceCallback("find-connecting-relations")}>
-                    <FontAwesomeIcon icon={faRoute} size="2x" color="cyan"/>
-                </Slice>
-                <Slice onSelect={sliceCallback("hide-selected")}>
-                    <FontAwesomeIcon icon={faEyeSlash} size="2x" color="red"/>
-                </Slice> */}
-                {isNode && isType && rootType === "thing" && (<></>)}
-                {isNode && isType && rootType === "entity" && (<></>)}
-                {isNode && isType && rootType === "attribute" && (<></>)}
-                {isNode && isType && rootType === "role" && (<></>)}
+                {isNode && isType && rootType === "thing" && (
+                    // it's the thing type
+                    // don't allow anything
+                    <></>
+                )} 
+                {isNode && isType && rootType === "relation:role" && (
+                    // it's an entity type (could be the root entity type)
+                    // allow styling and queries
+                    <Slice onSelect={(e) => {sliceCallback("query-plays-x")}}>
+                        <FontAwesomeIcon icon={faHardHat} size="2x" color="red"/>
+                    </Slice>
+                )}
+                {isNode && isType && rootType === "attribute" && (
+                    // it's an entity type (could be the root entity type)
+                    // allow styling and queries
+                    <>
+                        <Slice onSelect={(e) => {sliceCallback("query-isa")}}>
+                            <FontAwesomeIcon icon={faUser} size="2x" color="red"/>
+                        </Slice>
+                        <Slice onSelect={(e) => {sliceCallback("query-has")}}>
+                            <FontAwesomeIcon icon={faHandHolding} size="2x" color="red"/>
+                        </Slice>
+                        <Slice onSelect={(e) => {sliceCallback("query-has-x")}}>
+                            <FontAwesomeIcon icon={faHandHolding} size="2x" color="red"/>
+                        </Slice>
+                        <Slice onSelect={(e) => {sliceCallback("query-plays")}}>
+                            <FontAwesomeIcon icon={faHardHat} size="2x" color="red"/>
+                        </Slice>
+                    </>
+                )}
+                {isNode && isType && ["relation", "entity"].includes(rootType) && (
+                    // it's an relation type (could be the root relation type)
+                    // allow styling and queries
+                    <>
+                        <Slice onSelect={(e) => {sliceCallback("query-isa")}}>
+                            <FontAwesomeIcon icon={faUser} size="2x" color="red"/>
+                        </Slice>
+                        <Slice onSelect={(e) => {sliceCallback("query-plays")}}>
+                            <FontAwesomeIcon icon={faHardHat} size="2x" color = "cyan"/>
+                        </Slice>
+                        <Slice onSelect={(e) => {sliceCallback("query-has")}}>
+                            <FontAwesomeIcon icon={faHandHolding} size="2x" color="red"/>
+                        </Slice>
+                    </>
+                )}
             </PieMenu>
         </div>
     )
@@ -99,7 +140,9 @@ ContextPieMenu.propTypes = {
     centerY: PropTypes.string,
     "radius": PropTypes.string,
     "centerRadius": PropTypes.string,
-    "sliceCallback":PropTypes.func
+    "sliceCallback":PropTypes.func,
+    "thingTypeKey": PropTypes.string,
+    "rootTypeKey": PropTypes.string
 }
 
 
@@ -111,7 +154,9 @@ ContextPieMenu.defaultProps = {
     centerY: "0px",
     "radius": "125px",
     "centerRadius": "30px",
-    "sliceCallback": null
+    "sliceCallback": null,
+    "thingTypeKey": "__thingType",
+    "rootTypeKey": "__rootType"
 }
 
 export default ContextPieMenu;
