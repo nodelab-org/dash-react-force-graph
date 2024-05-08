@@ -200,6 +200,7 @@ function Graph2D (props) {
 
         // this means only nodes
         if (props.rootType in clickedObj) {
+
             const coords = fgRef.current.graph2ScreenCoords(
                 clickedObj.x,
                 clickedObj.y    
@@ -1884,8 +1885,6 @@ function Graph2D (props) {
 
         if (node) {
 
-            showPieMenu(node);
-
             props.setProps({
                 "linkClicked": null,
                 "linkRightClicked": null,
@@ -1906,6 +1905,12 @@ function Graph2D (props) {
                 props.setProps({
                     "nodesSelected":[]
                 })
+
+            }
+
+            if (node[props.rootType] !== "thing") {
+
+                showPieMenu(node);
 
             }
 
@@ -3420,6 +3425,7 @@ function Graph2D (props) {
                     centerY={pieMenuY}
                     radius="125px"
                     centerRadius="30px"
+                    rootTypeKey={props.rootType}
                     sliceCallback={(x) => {
                         props.setProps({
                             "contextMenuClicked": x

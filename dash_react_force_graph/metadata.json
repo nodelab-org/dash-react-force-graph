@@ -92,17 +92,6 @@
           "computed": false
         }
       },
-      "thingTypeKey": {
-        "type": {
-          "name": "string"
-        },
-        "required": false,
-        "description": "",
-        "defaultValue": {
-          "value": "\"__thingType\"",
-          "computed": false
-        }
-      },
       "rootTypeKey": {
         "type": {
           "name": "string"
