@@ -147,9 +147,14 @@ function ContextPieMenu(props) {
                             )
                         ) || (
                             choice === QUERY && (
-                                rootType === "attribute" && (
-                                    // it's an entity type (could be the root entity type)
-                                    // allow styling and queries
+                                rootType === "relation-role" && (
+                                    // it's a role type (could be the root role type)
+                                    <Slice onSelect={(e) => {sliceCallback("query-plays")}}>
+                                        <FontAwesomeIcon icon={faHardHat} size="2x" color="red"/>
+                                    </Slice>
+                                )
+                            ) || (rootType === "attribute" && (
+                                    // it's an attribute type (could be the root attribute type)
                                     <>
                                         <Slice onSelect={(e) => {sliceCallback("query-isa")}}>
                                             <FontAwesomeIcon icon={faUser} size="2x" color="red"/>
@@ -167,8 +172,7 @@ function ContextPieMenu(props) {
                                 )
                             ) || (
                                 ["relation", "entity"].includes(rootType) && (
-                                    // it's an relation type (could be the root relation type)
-                                    // allow styling and queries
+                                    // it's an relation or entity type (could be a root type)
                                     <>
                                         <Slice onSelect={(e) => {sliceCallback("query-isa")}}>
                                             <FontAwesomeIcon icon={faUser} size="2x" color="red"/>

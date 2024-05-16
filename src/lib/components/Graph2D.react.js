@@ -1908,6 +1908,8 @@ function Graph2D (props) {
 
             }
 
+            hidePieMenu();
+            
             if (node[props.rootType] !== "thing") {
 
                 showPieMenu(node);
