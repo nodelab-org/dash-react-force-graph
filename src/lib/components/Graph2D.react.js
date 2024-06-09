@@ -3,10 +3,12 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable sort-imports */
 /* eslint-disable capitalized-comments */
+
 import {ForceGraph2D} from "react-force-graph";
-import {cloneDeep} from "lodash";
+import {clone, cloneDeep} from "lodash";
 import {forceRadial} from "d3-force";
 import ContextPieMenu from './ContextPieMenu.react';
+// import SearchField from './SearchField.react';
 import DatGui, {
     // DatBoolean,
     DatButton,
@@ -236,14 +238,12 @@ function Graph2D (props) {
     };
 
     const hidePieMenu = () => {
-        
-        setPieMenuVisible((_visible) => false);
-        
-        // setContextObj((_n) => null);
-        
-        // props.setProps({
-        //     "contextMenuClicked": null
-        // })
+
+        if (pieMenuVisible) {
+
+            setPieMenuVisible((_visible) => false);
+
+        }
 
     };
 
@@ -3336,8 +3336,6 @@ function Graph2D (props) {
                     onBackgroundRightClick={handleBackgroundRightClick}
                     onZoom={(args) => {
 
-                        hidePieMenu();
-
                         if ( 
                             args && 
                             ((props.currentZoomPan === null || typeof props.currentZoomPan === "undefined") ||
@@ -3361,7 +3359,11 @@ function Graph2D (props) {
                     }}
 
                     onZoomEnd={(args) => {
+                        
+                        hidePieMenu();
+                        
                         // keep track of currentZoomPan
+
                         if (
                             args && 
                             (
@@ -3400,8 +3402,7 @@ function Graph2D (props) {
                     }}
             />
             {
-                props.showGUI 
-                    ? <div className="dat-gui-div">
+                props.showGUI && <div className="dat-gui-div">
                         <DatGui
                             data={guiSettings}
                             onUpdate={handleUpdate}
@@ -3417,8 +3418,7 @@ function Graph2D (props) {
                             </DatFolder>
                         </DatGui>
                     </div>
-                    : null
-            }
+                }
             {
                 pieMenuVisible && <ContextPieMenu
                     contextObj={contextObj}

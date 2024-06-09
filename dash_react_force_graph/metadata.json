@@ -1906,5 +1906,60 @@
         "description": "max levels of neighbourhood selection around a node by repeat clicking"
       }
     }
+  },
+  "src/lib/components/SearchField.react.js": {
+    "description": "",
+    "displayName": "SearchField",
+    "methods": [],
+    "props": {
+      "id": {
+        "type": {
+          "name": "custom",
+          "raw": "PropTypes.string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"search-field\"",
+          "computed": false
+        }
+      },
+      "options": {
+        "type": {
+          "name": "custom",
+          "raw": "PropTypes.arrayOf(PropTypes.object)"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "[]",
+          "computed": false
+        }
+      },
+      "onSelect": {
+        "type": {
+          "name": "custom",
+          "raw": "PropTypes.func"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "null",
+          "computed": false
+        }
+      },
+      "placeholder": {
+        "type": {
+          "name": "custom",
+          "raw": "PropTypes.string"
+        },
+        "required": false,
+        "description": "",
+        "defaultValue": {
+          "value": "\"search..\"",
+          "computed": false
+        }
+      }
+    }
   }
 }
