@@ -239,7 +239,7 @@ const objSharedProps = {
     "forceRefresh": 0,
     "n_rightClicks": 0,
     "maxDepth_neighbours_select": 4,
-    showGUI: true,
+    "showGUI": true,
     "schemaOrData": "schema",
     "contextMenuClicked": null
     

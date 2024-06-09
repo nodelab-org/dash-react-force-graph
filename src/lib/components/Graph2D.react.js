@@ -198,6 +198,21 @@ function Graph2D (props) {
         useRef(null)
     ];
 
+
+    useEffect(
+        () => {
+            if (
+                fgRef &&
+                fgRef.current &&
+                props.currentZoomPan &&
+                pieMenuVisible
+                ) {
+                    hidePieMenu();
+                }
+        },
+        [props.currentZoomPan]
+    )
+
     const showPieMenu = (clickedObj) => {
 
         // this means only nodes
@@ -3359,8 +3374,6 @@ function Graph2D (props) {
                     }}
 
                     onZoomEnd={(args) => {
-                        
-                        hidePieMenu();
                         
                         // keep track of currentZoomPan
 
