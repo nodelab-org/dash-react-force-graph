@@ -202,9 +202,7 @@ function Graph2D (props) {
     useEffect(
         () => {
             if (
-                fgRef &&
-                fgRef.current &&
-                props.currentZoomPan &&
+                fgRef?.current?.currentZoomPan &&
                 pieMenuVisible
                 ) {
                     hidePieMenu();
@@ -271,8 +269,7 @@ function Graph2D (props) {
              * https://github.com/vasturiano/3d-force-graph/issues/228#
              */
 
-            if (fgRef &&
-                fgRef.current) {
+            if (fgRef?.current) {
 
 
                 fgRef.current.d3Force(
@@ -331,13 +328,11 @@ function Graph2D (props) {
 
         () => {
 
-            if (props.graphData &&
-                props.graphData.nodes.length &&
+            if (props.graphData?.nodes?.length &&
                 !props.useCoordinates &&
                 props.forceEngine === "d3") {
 
                 if (props.fixNodes &&
-                    graphDataNodes &&
                     graphDataNodes.length &&
                     graphDataNodes.every((node) => "fx" in node)) {
 
@@ -555,7 +550,7 @@ function Graph2D (props) {
                             props.forceRefresh > forceRefreshCount
                         ) &&
                         props.updateNeighbours &&
-                        props.graphData.nodes.length
+                        props.graphData?.nodes?.length
                         ) {
 
                         /**
@@ -572,7 +567,7 @@ function Graph2D (props) {
 
                         if (
                             nodesClone.length &&
-                            props.graphData.links.length
+                            props.graphData?.links?.length
                         ) {
 
                             const [
@@ -629,7 +624,7 @@ function Graph2D (props) {
 
                     // set coordinates. Only necessary when not forcing refresh.
                     if (nodesClone.length && 
-                        props.graphData.nodes.length &&
+                        props.graphData?.nodes?.length &&
                         props.useCoordinates &&
                         props.nodeCoordinates
                     ) {
@@ -814,7 +809,7 @@ function Graph2D (props) {
              */
 
             // checkpoint 1: should the nodeZoom effect run at all?
-            if (props.graphData && props.graphData.nodes.length > 1) {
+            if (props.graphData?.nodes.length > 1) {
 
                 const [
                     nodeIdsVisibleNew,
@@ -825,10 +820,9 @@ function Graph2D (props) {
                 ];
 
                 // checkpoint 2: is nodeZoomId a node id or null?  And is everything else ready?
-                if (nodeZoomId &&
-                    nodesById &&
-                    nodeZoomId in nodesById &&
-                    "__source" in nodesById[nodeZoomId]) {
+                if (nodesById &&
+                    nodesById[nodeZoomId]?.__source
+                ) {
 
                     nodeIdsVisibleNew.push(nodeZoomId);
 
@@ -1621,6 +1615,7 @@ function Graph2D (props) {
 
 
     const nodeColorFunction =
+
         (node) => {
 
             let color = props.nodeColor in node
@@ -1629,13 +1624,13 @@ function Graph2D (props) {
                     : "cornflowerblue"
                 : "cornflowerblue";
 
-            if ("__abstract" in node && node.__abstract) {
+            if (node?.__abstract) {
 
                 color = transparentize(0.3, color);
 
             }
 
-            if (props.nodesSelected && props.nodesSelected.length) {
+            if (props.nodesSelected?.length) {
 
                 color = transparentize(0.3, color);
                 if (props.nodesSelected.map((nodeSel) => nodeSel[props.nodeId]).indexOf(node[props.nodeId]) !== -1) {
@@ -2212,10 +2207,10 @@ function Graph2D (props) {
         hidePieMenu();
 
         if (props.linkRightClicked ||
-            (props.linksSelected && props.linksSelected.length) ||
+            props.linksSelected?.length ||
             props.nodeClicked ||
             props.nodeRightClicked ||
-            (props.nodesSelected && props.nodesSelected.length)) {
+            props.nodesSelected?.length) {
 
             props.setProps({
                 "linkClicked": null,
@@ -2243,10 +2238,10 @@ function Graph2D (props) {
         // console.log("handleBackgroundRightClick");
 
         if (props.linkRightClicked ||
-            (props.linksSelected && props.linksSelected.length) ||
+            props.linksSelected?.length ||
             props.nodeClicked ||
             props.nodeRightClicked ||
-            (props.nodesSelected && props.nodesSelected.length)) {
+            props.nodesSelected?.length) {
 
             props.setProps({
                 "linkRightClicked": null,
@@ -2383,7 +2378,7 @@ function Graph2D (props) {
 
         }
 
-        if (props.nodesSelected && props.nodesSelected.length) {
+        if (props.nodesSelected?.length) {
             // make all other nodes more transparent
             // ctx.globalAlpha -= 0.3
             // color = transparentize(0.3, color);
@@ -2635,7 +2630,7 @@ function Graph2D (props) {
                 ? props.linkColor
                 : invert(props.backgroundColor);
         // is link selected?
-        if (props.linksSelected && props.linksSelected.length) {
+        if (props.linksSelected?.length) {
 
             color = transparentize(0.2, color);
             if (props.linksSelected.map((linkSel) => linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
@@ -2657,7 +2652,7 @@ function Graph2D (props) {
             }
         }
 
-        if (props.currentZoomPan && "k" in props.currentZoomPan) {
+        if (props.currentZoomPan?.k) {
 
             // color = transparentize(1 / (1 + props.currentZoomPan.k / 1.5), color);
             color = transparentize(1 / (1 + props.currentZoomPan.k / 1.5), color);
@@ -2682,7 +2677,7 @@ function Graph2D (props) {
     const linkCurvatureFunction = (link) => {
         
         return typeof props.linkCurvature === "string"
-            ?  props.linkCurvature in link
+            ?  link[props.linkCurvature]
                 ? link[props.linkCurvature] 
                 : 0
             :  typeof props.linkCurvature === "number"
@@ -2695,7 +2690,7 @@ function Graph2D (props) {
     const linkWidthFunction = (link) => {
         let width = props.linkWidth;
         // is link selected?
-        if (props.linksSelected && props.linksSelected.length) {
+        if (props.linksSelected?.length) {
 
             width *= 0.9;
             if (props.linksSelected.map((linkSel) => linkSel[props.linkId]).indexOf(link[props.linkId]) !== -1) {
@@ -2718,7 +2713,7 @@ function Graph2D (props) {
 
         }
         // are link source and target selected?
-        if (props.nodesSelected && props.nodesSelected.length) {
+        if (props.nodesSelected?.length) {
 
             width *= 0.9;
             if (props.nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkSource]) && props.nodesSelected.map((node) => node[props.nodeId]).includes(link[props.linkTarget])) {
@@ -2734,11 +2729,9 @@ function Graph2D (props) {
 
     const linkLineDashFunction = (link) => {
 
-        return "is_inherited" in link || "is_inferred" in link
-            ? link.is_inherited || link.is_inherited
-                ? [2,1.5]
-                : null
-            : null;
+        return link?.is_inherited || link?.is_inferred
+            ? [ 2, 1.5 ]
+            : null
 
     }
 
@@ -2747,7 +2740,7 @@ function Graph2D (props) {
         // if (linkCurvature || link.__curvature) return;
         if (link.__curvature) return;
 
-        if (!(props.currentZoomPan && ("k" in props.currentZoomPan) && (props.currentZoomPan.k < 0.4))) {
+        if (!(props.currentZoomPan?.k) && (props.currentZoomPan.k < 0.4)) {
         
             const color = linkColorFunction(link);
 
@@ -2807,8 +2800,8 @@ function Graph2D (props) {
 
         // 1. fix coordinates when nodes settle 
         // 2. update graphData props with node fx fy positions
-        if (graphDataNodes &&
-            graphDataNodes.length && 
+        if (
+            graphDataNodes?.length && 
             nodeZoomId === null
         ) {
 
@@ -2917,10 +2910,9 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        if (props.graphData.nodes &&
-            props.graphData.links &&
+        if (props.graphData?.nodes &&
+            props.graphData?.links &&
             fgRef &&
-            "current" in fgRef &&
             fgRef.current &&
             props.emitParticle) {
 
@@ -2934,9 +2926,8 @@ function Graph2D (props) {
     useEffect ( 
         () => {
 
-            if (props.graphData.nodes &&
+            if (props.graphData?.nodes &&
                 fgRef &&
-                "current" in fgRef &&
                 fgRef.current) {
 
                 props.pauseAnimation
@@ -3018,10 +3009,9 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        if (props.graphData.nodes  &&
+        if (props.graphData?.nodes  &&
             props.getGraphBbox && 
             fgRef &&
-            "current" in fgRef &&
             fgRef.current){
 
             props.setProps({"graphBbox":fgRef.current.getGraphBbox()});
@@ -3033,9 +3023,8 @@ function Graph2D (props) {
 
     useEffect( () => {
 
-        if (props.graphData.nodes &&
+        if (props.graphData?.nodes &&
             fgRef &&
-            "current" in fgRef &&
             fgRef.current && props.zoom) {
 
             fgRef.current.zoom(...props.zoom);
@@ -3061,7 +3050,6 @@ function Graph2D (props) {
 
     //     if (props.graphData.nodes &&
     //         fgRef &&
-    //         "current" in fgRef &&
     //         fgRef.current &&
     //         props.zoomToFit
     //         ) {
@@ -3099,7 +3087,6 @@ function Graph2D (props) {
 
         if (//props.graphData.nodes && // this can create a race condition
             fgRef &&
-            "current" in fgRef &&
             fgRef.current &&
             props.centerAtZoom
 
@@ -3107,13 +3094,13 @@ function Graph2D (props) {
 
             const centerAtZoom = cloneDeep(props.centerAtZoom)
             // fgRef.current.centerAt((initZoomPan.x-props.centerAtZoom.x)/props.centerAtZoom.k, (initZoomPan.y-props.centerAtZoom.y)/props.centerAtZoom.k)
-            if ("k" in centerAtZoom && centerAtZoom.k !== null) {
+            if (centerAtZoom?.k !== null) {
 
                 fgRef.current.zoom(centerAtZoom.k)
 
             } else {
 
-                centerAtZoom.k = "k" in props.currentZoomPan
+                centerAtZoom.k = props.currentZoomPan?.k
                     ? props.currentZoomPan.k
                     : null;
             
@@ -3140,7 +3127,7 @@ function Graph2D (props) {
 
 
             props.setProps({
-                "currentZoomPan":centerAtZoom
+                "currentZoomPan": centerAtZoom
             })
 
         }
@@ -3391,7 +3378,7 @@ function Graph2D (props) {
                                     props.currentZoomPan.y != args.y
                                 )
                             // try to disactivate, to avoid re-heating layout on zoom/pan before nodes fixed
-                            ) && graphDataNodes && graphDataNodes.length && (!graphDataNodes[0].vx || props.useCoordinates)
+                            ) && graphDataNodes?.length && (!graphDataNodes[0].vx || props.useCoordinates)
                         ) {
 
                             props.setProps({
