@@ -213,7 +213,7 @@ function Graph2D (props) {
 
     const showPieMenu = (clickedObj) => {
 
-        // this means only nodes
+        //  only for nodes
         if (props.rootType in clickedObj) {
 
             const coords = fgRef.current.graph2ScreenCoords(
@@ -1921,7 +1921,7 @@ function Graph2D (props) {
 
             hidePieMenu();
             
-            if (node[props.rootType] !== "thing") {
+            if (props.enableContextMenu && node[props.rootType] !== "thing") {
 
                 showPieMenu(node);
 
@@ -4537,6 +4537,8 @@ const graphSharedProptypes = {
     "showGUI": PropTypes.bool,
 
     "schemaOrData": PropTypes.string,
+
+    "enableContextMenu": PropTypes.bool,
 
     "contextMenuClicked": PropTypes.string
 

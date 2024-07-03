@@ -1,4 +1,3 @@
-// import { treemapSquarify } from "d3-hierarchy";
 
 const objSharedProps = {
     // props include most react-force-graph props (unless handled with internal logic in higher-level component)
@@ -241,6 +240,7 @@ const objSharedProps = {
     "maxDepth_neighbours_select": 4,
     "showGUI": true,
     "schemaOrData": "schema",
+    "enableContextMenu": true,
     "contextMenuClicked": null
     
 };
