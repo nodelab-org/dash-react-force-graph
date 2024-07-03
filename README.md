@@ -1,12 +1,19 @@
 # dash-react-force-graph
 
-dash-react-force-graph is a Dash component library built on (the very powerful) [react-force-graph](https://github.com/vasturiano/react-force-graph). 
+dash-react-force-graph is a Dash wrapper around the [react-force-graph](https://github.com/vasturiano/react-force-graph) library.
 
-The library allows you to easily create an interactive network visualization. It has many features in common with [Dash cytoscape](https://dash.plotly.com/cytoscape) and a few extra, such as 3D, Virtual Reality and Augmented Reality versions, as well as image nodes and backgrounds.  
+Only the ForceGraph2D component has been ported so far.
+
+Some additional React dependencies have been incorporated to add features such as node right-click context menu, and a menu for modifying graph forces.
+
+This repo is used for building an internal app. Therefore, it has absolutely no guarantees, and not much documentation. Also, it can break or be removed at any point. You are encouraged to clone or fork it and develop it further to suit your needs. (PRs are, of course, welcome).
+
+It has many features in common with [Dash cytoscape](https://dash.plotly.com/cytoscape) which is a much more polished project.
 
 See `usage.py` for a simple example and check out the original react component repo above for many others.
 
-## Quick start (1 minute)
+## Quick start 
+
 1. Install the library: 
 
 pip: `python -m pip install git+https://github.com/nodelab-org/dash-react-force-graph`
@@ -15,11 +22,11 @@ pip: `python -m pip install git+https://github.com/nodelab-org/dash-react-force-
 
 [poetry](https://python-poetry.org/): `poetry add git+https://github.com/nodelab-org/dash-react-force-graph#master`
 
-3. Install Dash and its dependencies: https://dash.plotly.com/installation
-4. For a simple example, download and run `usage.py` (requires installing the python module `dash_treeview_antd`):
+2. Install Dash and its dependencies: https://dash.plotly.com/installation
+3. For a simple example, download and run `usage.py`
 	1. `wget https://github.com/nodelab-org/dash-react-force-graph/blob/master/usage.py`
 	2. `python usage.py`
-5. Visit http://localhost:8050 in your web browser. Enjoy!
+    3. Visit http://localhost:8050 in your web browser. Enjoy!
 
 ## Features
 
@@ -33,12 +40,6 @@ Many function props (such as event handlers e.g. `onNodeClick`) which are availa
 
 See comments in the prop validation parts of the components in`./lib/components/` for detail.
 
-## Status
-
-The component is currently in an alpha-like stage. Fixes and updates will follow.
-
-For now, only the 2D graph component is ported, the others will follow once the 2D version is stable.
-
 ## technical notes
 
 ### graphData 
@@ -49,7 +50,8 @@ For now, only the 2D graph component is ported, the others will follow once the 
 ### coordinates
 
 #### fixed nodes
-* the `fixNodes` prop (boolean) makes nodes assume 
+* the `fixNodes` prop (boolean) makes nodes assume fixed positions. 
+
 #### User-specified coordinates
 * The component allows the user to specify initial node coordinates via the `useCoordinates` (boolean) `nodeCoordinates` (object) props. 
     * To allow the user to move around nodes without resetting to initial coordinates on the next render, nodes with a fixed coordinate will not revert to initial coordinates on re-render.  
@@ -59,11 +61,10 @@ For now, only the 2D graph component is ported, the others will follow once the 
     * In a better world we would have made the app without Python..
 #### nodeZoom - zooming in on a neighbourhood and reverting
 
-
 ### node coordinates
-* The component keeps track of node coordinates in 
+* The component keeps track of node coordinates.
 
-Below: the standard README text from the Dash component boilerplate 
+# Standard README text from the Dash component boilerplate 
 
 ## Contributing
 
