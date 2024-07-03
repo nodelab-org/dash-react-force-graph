@@ -2741,7 +2741,7 @@ function Graph2D (props) {
         // if (linkCurvature || link.__curvature) return;
         if (link.__curvature) return;
 
-        if (!(props.currentZoomPan && props.currentZoomPan.k) && (props.currentZoomPan.k < 0.4)) {
+        if (props.currentZoomPan && props.currentZoomPan.k && props.currentZoomPan.k > 0.4) {
         
             const color = linkColorFunction(link);
 
