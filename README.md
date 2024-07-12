@@ -43,27 +43,9 @@ See comments in the prop validation parts of the components in`./lib/components/
 ## technical notes
 
 ### graphData 
-* graphData nodes are managed using the `useState` hook as `graphDataNodes`. Links are taken directly from props.
-* A useEffect hook listens for changes to props.graphData.nodes, props.graphData.links, or props.forceRefresh. We check whether the sets of node or link ids have changed. If they have not, the `graphDataNodes` state is not updated. 
-    * The props.forceRefresh, an integer, can be used to force and update of `graphDataNodes` for cases where a change has been made but node and link ids are unchanged. (it would be friendlier to the developer, but less friendly to the computer, to compare the objects in depth rather than the ids)
-* To pass changes resulting from user interaction (dragging nodes) back up to the user, we call `props.setProps` within `onEngineStopFunction`. 
-### coordinates
-
-#### fixed nodes
-* the `fixNodes` prop (boolean) makes nodes assume fixed positions. 
-
-#### User-specified coordinates
-* The component allows the user to specify initial node coordinates via the `useCoordinates` (boolean) `nodeCoordinates` (object) props. 
-    * To allow the user to move around nodes without resetting to initial coordinates on the next render, nodes with a fixed coordinate will not revert to initial coordinates on re-render.  
-
-### resetting rightClicked nodes and link props on zoom
-* This allows us to signal to the interface to close the contextual node menu when the user zoom/pans on the canvas.
-    * In a better world we would have made the app without Python..
-#### nodeZoom - zooming in on a neighbourhood and reverting
-
-### node coordinates
-* The component keeps track of node coordinates.
-
+* A useEffect hook listens for changes to props.graphData.nodes, props.graphData.links. We check whether the sets of node or link ids have changed. If they have not, the graphData state is not updated. 
+* The props.forceRefresh, an integer, can be used to force and update of `graphDataNodes` for cases where a change has been made but node and link ids are unchanged (e.g. if node props have been changed.)
+ 
 # Standard README text from the Dash component boilerplate 
 
 ## Contributing

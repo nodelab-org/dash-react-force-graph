@@ -199,17 +199,17 @@ function Graph2D (props) {
     ];
 
 
-    useEffect(
-        () => {
-            if (
-                fgRef && fgRef.current && fgRef.current.currentZoomPan &&
-                pieMenuVisible
-                ) {
-                    hidePieMenu();
-                }
-        },
-        [props.currentZoomPan]
-    )
+    // useEffect(
+    //     () => {
+    //         if (
+    //             fgRef && fgRef.current && fgRef.current.currentZoomPan &&
+    //             pieMenuVisible
+    //             ) {
+    //                 hidePieMenu();
+    //             }
+    //     },
+    //     [props.currentZoomPan]
+    // )
 
     const showPieMenu = (clickedObj) => {
 
@@ -3387,6 +3387,11 @@ function Graph2D (props) {
                                 })
 
                         }
+
+                        if (pieMenuVisible) {
+                            hidePieMenu();
+                        }
+
                     }}
                     linkHoverPrecision={props.linkHoverPrecision}
                     // controlType={controlType}
