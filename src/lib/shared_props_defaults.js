@@ -1,5 +1,5 @@
 
-const objSharedProps = {
+const propDefaults = {
     // props include most react-force-graph props (unless handled with internal logic in higher-level component)
     // https://github.com/vasturiano/react-force-graph
     // with additional higher-level props added at the end
@@ -8,7 +8,8 @@ const objSharedProps = {
     * data input
     */
     // props
-    "graphData": {"nodes":[], "links":[]},
+    "graphDataWrite": {"nodes":[], "links":[]},
+    "graphDataRead": {"nodes":[], "links":[]},
     //graphDataProcessed: {"nodes":[], "links":[]},// {"nodes":[], "links":[]},
     // graphDataRendered: {"nodes":[], "links":[]},
     "nodeId": "__nodeId",
@@ -99,7 +100,7 @@ const objSharedProps = {
     // resumeAnimation: false, // to call the resumeAnimation method, pass True
     centerAt: null,// to call the centerAt method, pass a list or tuple ([x], [y], [ms]) (TODO)
     zoom: null, // to call the zoom method, pass a list or tuple ([number], [ms])
-    zoomToFit: 0, // a number. Increment this to make the comonent zoom to fit on next onEngineStopFunction call
+    zoomToFitNodeIds: null, // a number. Increment this to make the comonent zoom to fit on next onEngineStopFunction call
     backgroundRightClickScreenCoords:null,
     cameraPosition:	null, // 3D
     // scene: // TODO method
@@ -128,7 +129,7 @@ const objSharedProps = {
     ngraphPhysics: null,
     warmupTicks: 0,
     cooldownTicks: Infinity,
-    cooldownTime: 3000,
+    maxCooldownTime: 3000,
     fixNodes: true,
     // onEngineTick: // TODO: function
     // onEngineStop: // TODO: function
@@ -213,7 +214,7 @@ const objSharedProps = {
     nodeIdsHighlightUser: [],
     // nodeIdsVisible: [],
     nodeIdsInvisibleUser: [],
-    linkIdsHighlightUser: [],
+    // linkIdsHighlightUser: [],
     // linkIdsVisible: [],
     linkIdsInvisibleUser: [],
     externalobject_source: null,
@@ -234,9 +235,9 @@ const objSharedProps = {
     //     "vx",
     //     "vy"
     // ],
-    "updateNeighbours": true,
-    "forceRefresh": 0,
-    "n_rightClicks": 0,
+    // "updateNeighbours": true,
+    // "forceRefresh": 0,
+    // "n_rightClicks": 0,
     "maxDepth_neighbours_select": 4,
     "showGUI": true,
     "schemaOrData": "schema",
@@ -245,4 +246,4 @@ const objSharedProps = {
     
 };
 
-export default objSharedProps;
+export default propDefaults;

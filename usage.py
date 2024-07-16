@@ -222,7 +222,7 @@ app.layout = dbc.Container(
                 dbc.Col([
                     dash_react_force_graph.Graph2D(
                         id='graph2D-data',
-                        graphData=graphData_data,
+                        graphDataWrite=graphData_data,
                         heightRatio=0.8,
                         nodeId="__nodeId",
                         nodeLabel="__nodeLabel",
@@ -242,7 +242,7 @@ app.layout = dbc.Container(
                 dbc.Col([
                     dash_react_force_graph.Graph2D(
                         id='graph2D-schema',
-                        graphData=graphData_schema,
+                        graphDataWrite=graphData_schema,
                         heightRatio=0.8,
                         nodeId="__nodeId",
                         nodeLabel="__nodeLabel",
@@ -387,7 +387,7 @@ def zoom_pan(n_clicks, zoom, x, y):
         Output("dropdown-linkIdsInvisibleUser","options")
     ],
     [
-        Input("graph2D-data","graphData"),
+        Input("graph2D-data","graphDataRead"),
     ]
 )
 def populate_dropdown_node_link_ids_invisible_user(graphdata):
@@ -495,7 +495,7 @@ def display_clicked_selected_nodes_2D(
 @app.callback(
     Output("dropdown-type","options"),
     Input("button-repopulate-dropdown-type", "n_clicks"),
-    State("graph2D-data","graphData")
+    State("graph2D-data","graphDataRead")
 )
 def populate_dropdown_type(n_clicks, graphdata):
     ctx = dash.callback_context
@@ -535,8 +535,7 @@ def populate_dropdown_type(n_clicks, graphdata):
 
 @app.callback(
     [
-        Output('graph2D-data', 'graphData'),
-        Output('graph2D-data', 'forceRefresh')
+        Output('graph2D-data', 'graphDataWrite'),
     ],
     [
         Input('button-add', 'n_clicks'),
@@ -545,16 +544,14 @@ def populate_dropdown_type(n_clicks, graphdata):
     ],
     [
         State("dropdown-type","value"),
-        State("graph2D-data","graphData"),
-        State('graph2D-data', 'forceRefresh')
+        State("graph2D-data","graphDataRead")
     ])
 def update_graphdata(
     n_clicks_add, 
     n_clicks_delete, 
     icon, 
     thingType_selected,
-    graphData,
-    previousForceRefreshCount
+    graphData
     ):
     ctx = dash.callback_context
 
@@ -565,9 +562,7 @@ def update_graphdata(
     
     print("")
     print("received graphData: {} ".format(graphData))
-    if previousForceRefreshCount == None:
-        previousForceRefreshCount = 0
-    forceRefreshCount = dash.no_update
+
     graphData["links"] = reset_link_source_target(graphData["links"])
     # graphData = rm_graphData_render_data(graphData, graph_lib="2D", coordinates_rm=[])
 
@@ -602,10 +597,9 @@ def update_graphdata(
         for node in graphData["nodes"]:
             if node["__thingType"]==thingType_selected:
                 node["__nodeIcon"] = dict_fa5_cheatsheet[icon]
-        forceRefreshCount = previousForceRefreshCount + 1
     print("")
     print("returning graphData: {} ".format(graphData))
-    return [graphData, forceRefreshCount]
+    return [graphData]
 
 
 

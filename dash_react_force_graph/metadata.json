@@ -139,12 +139,19 @@
         "required": false,
         "description": "Dash-assigned callback that should be called to report property changes\nto Dash, to make them available for callbacks."
       },
-      "graphData": {
+      "graphDataWrite": {
         "type": {
           "name": "object"
         },
         "required": true,
-        "description": "Graph data structure. Prop which is provided by user.\nCan also be used to apply incremental updates. Format {nodes:{}, links:{}}"
+        "description": "Graph data structure. Allows user to update graphData\nFormat {nodes:{}, links:{}}"
+      },
+      "graphDataRead": {
+        "type": {
+          "name": "object"
+        },
+        "required": false,
+        "description": "Graph data. To be read by the user"
       },
       "nodeId": {
         "type": {
@@ -617,7 +624,7 @@
         "required": false,
         "description": "How many build-in frames to render before stopping and freezing the layout engine."
       },
-      "cooldownTime": {
+      "maxCooldownTime": {
         "type": {
           "name": "number"
         },
@@ -895,16 +902,6 @@
         "required": false,
         "description": "ids of invisible nodes supplied by user as prop"
       },
-      "linkIdsHighlightUser": {
-        "type": {
-          "name": "arrayOf",
-          "value": {
-            "name": "string"
-          }
-        },
-        "required": false,
-        "description": "ids of highlighted links (through search)"
-      },
       "linkIdsInvisibleAuto": {
         "type": {
           "name": "arrayOf",
@@ -913,7 +910,7 @@
           }
         },
         "required": false,
-        "description": ""
+        "description": "ids of highlighted links (through search)"
       },
       "linkIdsInvisibleUser": {
         "type": {
@@ -987,20 +984,6 @@
       "currentZoomPan": {
         "type": {
           "name": "object"
-        },
-        "required": false,
-        "description": ""
-      },
-      "updateNeighbours": {
-        "type": {
-          "name": "bool"
-        },
-        "required": false,
-        "description": ""
-      },
-      "forceRefresh": {
-        "type": {
-          "name": "number"
         },
         "required": false,
         "description": ""
