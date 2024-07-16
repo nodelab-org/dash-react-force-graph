@@ -575,119 +575,121 @@ function Graph2D (props) {
 
                     });
 
+                }
+
                     // set user-given coordinates to fx
-                    if (nodesCloneTmp.length && 
-                        props.useCoordinates &&
-                        props.nodeCoordinates
-                    ) {
+                if (
+                    nodesCloneTmp.length && 
+                    props.useCoordinates &&
+                    props.nodeCoordinates
+                ) {
 
-                        nodesCloneTmp.forEach((node) => {
+                    nodesCloneTmp.forEach((node) => {
 
-                            if (!("fx" in node) || typeof node.fx === "undefined") {
+                        if (!("fx" in node) || typeof node.fx === "undefined") {
 
-                                const [
-                                    coordX,
-                                    coordY
-                                ] = [
-                                    typeof props.nodeCoordinates === "string"
-                                        ? props.nodeCoordinates in node
-                                            ? node[props.nodeCoordinates].x
-                                            : null
-                                        : "x" in props.nodeCoordinates && props.nodeCoordinates.x in node
-                                            ? node[props.nodeCoordinates.x]
-                                            : null,
-                                    typeof props.nodeCoordinates === "string"
-                                        ? props.nodeCoordinates in node
-                                            ? node[props.nodeCoordinates].y
-                                            : null
-                                        : "y" in props.nodeCoordinates && props.nodeCoordinates.y in node
-                                            ? node[props.nodeCoordinates.y]
-                                            : null
-                                ];
-    
-                                if (coordX && coordY) {
-    
-                                    node.fx = coordX;
-                                    node.fy = coordY;
-    
-                                }
+                            const [
+                                coordX,
+                                coordY
+                            ] = [
+                                typeof props.nodeCoordinates === "string"
+                                    ? props.nodeCoordinates in node
+                                        ? node[props.nodeCoordinates].x
+                                        : null
+                                    : "x" in props.nodeCoordinates && props.nodeCoordinates.x in node
+                                        ? node[props.nodeCoordinates.x]
+                                        : null,
+                                typeof props.nodeCoordinates === "string"
+                                    ? props.nodeCoordinates in node
+                                        ? node[props.nodeCoordinates].y
+                                        : null
+                                    : "y" in props.nodeCoordinates && props.nodeCoordinates.y in node
+                                        ? node[props.nodeCoordinates.y]
+                                        : null
+                            ];
+
+                            if (coordX && coordY) {
+
+                                node.fx = coordX;
+                                node.fy = coordY;
 
                             }
 
-                        });
-
-                    }
-
-                    setGraphDataNodes((_nodes) => nodesCloneTmp);
-                    setGraphDataLinks((_links) => linksCloneTmp);
-
-                    props.setProps(
-                        {
-                            graphDataRead: {
-                                nodes: graphDataNodes,
-                                links: graphDataLinks
-                            }
                         }
-                    )
-                    
-                    // reset right clicked node and link
-                    if (
-                        props.linkRightClicked ||
-                        props.nodeRightClicked ||
-                        props.nodeClicked ||
-                        props.linkClicked
-                    ) {
 
-                        props.setProps({
-                            "linkRightClicked": null,
-                            "nodeRightClicked": null,
-                            "nodeClicked":null,
-                            "linkClicked":null
-                        });
-
-                    }
-
-                    // refresh selected or clicked node (with new neighbours)
-                    if (props.nodesSelected && props.nodesSelected.length) { 
-
-                        const nodesById = Object.fromEntries(nodesCloneTmp.map((node) => [node[props.nodeId], cloneDeep(node)]))
-
-                        const nodesSelectedIds = props.nodesSelected
-                            .map((node) => node[props.nodeId])    
-                            .filter((nodeId) => Object.keys(nodesById).includes(nodeId))
-
-                        props.setProps({
-                            "nodesSelected": nodesSelectedIds.map((nodeId) => nodesById[nodeId])
-                        });
-
-                    }
-
-                    // if (props.nodeClicked) {
-                    //     props.setProps({
-                    //         "nodeClicked": nodesById[props.nodeClicked.__nodeId]
-                    //     });
-                    // }
-
-                    if (nodeZoomId) {
-
-                        setNodeZoomId((_nz) => null)
-
-                    }
-
-                    // if (props.nodeZoomId) {
-
-                    //     // recompute nodeZoom layout
-                    //     if (props.nodeZoomId === nodeZoomId) {
-
-                    //         setNodeZoomId((nz) => null)
-
-                    //     }   
-
-                    //     setNodeZoomId((nz) => props.nodeZoomId);
-
-                    // }
+                    });
 
                 }
+
+                setGraphDataNodes((_nodes) => nodesCloneTmp);
+                setGraphDataLinks((_links) => linksCloneTmp);
+
+                props.setProps(
+                    {
+                        graphDataRead: {
+                            nodes: graphDataNodes,
+                            links: graphDataLinks
+                        }
+                    }
+                )
+                
+                // reset right clicked node and link
+                if (
+                    props.linkRightClicked ||
+                    props.nodeRightClicked ||
+                    props.nodeClicked ||
+                    props.linkClicked
+                ) {
+
+                    props.setProps({
+                        "linkRightClicked": null,
+                        "nodeRightClicked": null,
+                        "nodeClicked":null,
+                        "linkClicked":null
+                    });
+
+                }
+
+                // refresh selected or clicked node (with new neighbours)
+                if (props.nodesSelected && props.nodesSelected.length) { 
+
+                    const nodesById = Object.fromEntries(nodesCloneTmp.map((node) => [node[props.nodeId], cloneDeep(node)]))
+
+                    const nodesSelectedIds = props.nodesSelected
+                        .map((node) => node[props.nodeId])    
+                        .filter((nodeId) => Object.keys(nodesById).includes(nodeId))
+
+                    props.setProps({
+                        "nodesSelected": nodesSelectedIds.map((nodeId) => nodesById[nodeId])
+                    });
+
+                }
+
+                // if (props.nodeClicked) {
+                //     props.setProps({
+                //         "nodeClicked": nodesById[props.nodeClicked.__nodeId]
+                //     });
+                // }
+
+                if (nodeZoomId) {
+
+                    setNodeZoomId((_nz) => null)
+
+                }
+
+                // if (props.nodeZoomId) {
+
+                //     // recompute nodeZoom layout
+                //     if (props.nodeZoomId === nodeZoomId) {
+
+                //         setNodeZoomId((nz) => null)
+
+                //     }   
+
+                //     setNodeZoomId((nz) => props.nodeZoomId);
+
+                // }
+
 
             }
 
