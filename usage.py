@@ -232,7 +232,8 @@ app.layout = dbc.Container(
                         nodeImg="__nodeImg",
                         # nodeIcon_fontsheets= {"FontAwesome": "https://kit.fontawesome.com/a6e0eeba63.js"},
                         backgroundColor="#030039",
-                        schemaOrData="data"
+                        schemaOrData="data",
+                        fixNodes=False
                     ),
                 ])
             ])
