@@ -988,9 +988,12 @@
         "required": false,
         "description": ""
       },
-      "zoomToFit": {
+      "zoomToFitNodeIds": {
         "type": {
-          "name": "number"
+          "name": "arrayOf",
+          "value": {
+            "name": "string"
+          }
         },
         "required": false,
         "description": ""

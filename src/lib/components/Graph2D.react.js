@@ -4416,7 +4416,7 @@ const graphSharedProptypes = {
     
     // "forceRefresh": PropTypes.number,
 
-    "zoomToFit": PropTypes.number,
+    "zoomToFitNodeIds": PropTypes.arrayOf(PropTypes.string),
     
     "n_nodeRightClicks": PropTypes.number,
     "n_linkRightClicks": PropTypes.number,
