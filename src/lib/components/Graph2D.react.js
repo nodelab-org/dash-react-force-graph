@@ -2744,7 +2744,7 @@ function Graph2D (props) {
                     {
                         graphDataRead: {
                             nodes: graphDataNodes,
-                            links: props.graphDataRead.links
+                            links: graphDataLinks
                         }
                     }
                 )
