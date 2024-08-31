@@ -1022,9 +1022,37 @@
         "required": false,
         "description": ""
       },
-      "showGUI": {
+      "centerForce": {
         "type": {
-          "name": "bool"
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "chargeForce": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "linkForce": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "radialForce": {
+        "type": {
+          "name": "number"
+        },
+        "required": false,
+        "description": ""
+      },
+      "reheat": {
+        "type": {
+          "name": "number"
         },
         "required": false,
         "description": ""

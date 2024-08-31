@@ -100,7 +100,7 @@ const propDefaults = {
     // resumeAnimation: false, // to call the resumeAnimation method, pass True
     centerAt: null,// to call the centerAt method, pass a list or tuple ([x], [y], [ms]) (TODO)
     zoom: null, // to call the zoom method, pass a list or tuple ([number], [ms])
-    zoomToFitNodeIds: null, // a number. Increment this to make the comonent zoom to fit on next onEngineStopFunction call
+    zoomToFitNodeIds: [], // an array of node ids to zoom on next onEngineStopFunction call
     backgroundRightClickScreenCoords:null,
     cameraPosition:	null, // 3D
     // scene: // TODO method
@@ -239,7 +239,11 @@ const propDefaults = {
     // "forceRefresh": 0,
     // "n_rightClicks": 0,
     "maxDepth_neighbours_select": 4,
-    "showGUI": true,
+    "centerForce": 0.52,
+    "chargeForce": -45,
+    "linkForce": 70,
+    "radialForce": 0.00,
+    "reheat": 0, // increment to reheat simulation
     "schemaOrData": "schema",
     "enableContextMenu": true,
     "contextMenuClicked": null

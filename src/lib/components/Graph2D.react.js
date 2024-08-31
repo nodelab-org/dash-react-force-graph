@@ -8,15 +8,7 @@ import {ForceGraph2D} from "react-force-graph";
 import {cloneDeep} from "lodash";
 import {forceRadial} from "d3-force";
 import ContextPieMenu from './ContextPieMenu.react';
-// import SearchField from './SearchField.react';
-import DatGui, {
-    // DatBoolean,
-    DatButton,
-    // DatColor,
-    DatFolder,
-    DatNumber
-    // DatSelect
-} from "react-dat-gui";
+
 import React, {useEffect, useRef, useState} from "react";
 import PropTypes from "prop-types";
 import validateColor from "validate-color";
@@ -121,10 +113,6 @@ function Graph2D (props) {
             setNodeIdsHighlight
         ],
         [
-            guiSettings,
-            setGuiSettings
-        ],
-        [
             pieMenuCoordinates,
             setPieMenuCoordinates
         ],
@@ -146,12 +134,6 @@ function Graph2D (props) {
         useState([]),
         useState([]),
         useState([]),
-        useState({
-            "center": 0.52,
-            "charge": -45,
-            "link": 70,
-            "radial": 0.00
-        }),
         useState(null),
         useState(null),
         useState(3000),
@@ -248,14 +230,6 @@ function Graph2D (props) {
         []
     );
 
-
-    // Update current state with changes from controls
-    /* eslint-disable one-var */
-    const handleUpdate = (newData) => setGuiSettings({...guiSettings,
-        ...newData});
-    /* eslint-enable one-var */
-
-
     // useEffect(
     //     () => {
 
@@ -304,16 +278,16 @@ function Graph2D (props) {
 
                 fgRef.current
                     .d3Force("link")
-                    .distance((_link) => guiSettings.link);
+                    .distance((_link) => props.linkForce);
                 fgRef.current
                     .d3Force("charge")
-                    .strength(() => guiSettings.charge);
+                    .strength(() => props.chargeForce);
                 fgRef.current
                     .d3Force("center")
-                    .strength(() => guiSettings.center);
+                    .strength(() => props.centerForce);
                 fgRef.current
                     .d3Force("radial")
-                    .strength(() => guiSettings.radial);
+                    .strength(() => props.radialForce);
 
                 fgRef.current.d3ReheatSimulation();
 
@@ -321,10 +295,10 @@ function Graph2D (props) {
 
         },
         [
-            guiSettings.link,
-            guiSettings.charge,
-            guiSettings.center,
-            guiSettings.radial
+            props.linkForce,
+            props.chargeForce,
+            props.centerForce,
+            props.radialForce
         ]
     );
 
@@ -3287,24 +3261,6 @@ function Graph2D (props) {
                     }}
             />
             {
-                props.showGUI && <div className="dat-gui-div">
-                        <DatGui
-                            data={guiSettings}
-                            onUpdate={handleUpdate}
-                            >
-                            <DatFolder title='Graph layout' closed={true}>
-                                <DatNumber path='link' label='link' min={0} max={100} step={1} />
-                                <DatNumber path='charge' label='charge' min={-100} max={100} step={1} />
-                                <DatNumber path='center' label='center' min={0} max={1} step={0.01} />
-                                <DatNumber path='radial' label='radial' min={0} max={1} step={0.01} />
-                                <DatButton label='restore default forces' onClick={restoreDefaultForcesFunction}/>
-                                <DatButton label='reheat simulation' onClick={reheatFunction}/>
-                                <DatButton label='zoom to fit' onClick={zoomToFitFunction}/>
-                            </DatFolder>
-                        </DatGui>
-                    </div>
-                }
-            {
                 pieMenuCoordinates && <ContextPieMenu
                     contextObj={contextObj}
                     schemaOrData={props.schemaOrData}
@@ -4423,7 +4379,17 @@ const graphSharedProptypes = {
     // "redraw": PropTypes.number
     "scripts":PropTypes.arrayOf(PropTypes.string),
     // whether to show the GUI for controlling forces
-    "showGUI": PropTypes.bool,
+    
+    "centerForce": PropTypes.number,
+    
+    "chargeForce": PropTypes.number,
+    
+    "linkForce": PropTypes.number,
+    
+    "radialForce": PropTypes.number,
+    
+    // increment to reheat simulation
+    "reheat": PropTypes.number, 
 
     "schemaOrData": PropTypes.string,
 
