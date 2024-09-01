@@ -2598,9 +2598,6 @@ function Graph2D (props) {
     
     const linkCanvasObjectFunction = (link, ctx) => {
 
-        // if (linkCurvature || link.__curvature) return;
-        if (link.__curvature) return;
-
         if (props.currentZoomPan && props.currentZoomPan.k && props.currentZoomPan.k > 0.4) {
         
             const color = linkColorFunction(link);
@@ -2614,19 +2611,22 @@ function Graph2D (props) {
             // ignore unbound links
             if (typeof start !== "object" || typeof end !== "object") return;
 
-            // calculate label positioning
-            const textPos = Object.assign(...["x", "y"].map((c) => ({
-                [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
-            })));
+            // TODO: take into account link[props.linkCurvature]
 
-            const relLink = { x: end.x - start.x, y: end.y - start.y };
+            const vector = { x: end.x - start.x, y: end.y - start.y };
 
-            const maxTextLength = Math.sqrt(Math.pow(relLink.x, 2) + Math.pow(relLink.y, 2)) - LABEL_NODE_MARGIN * 2;
+            const vectorLength = Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2))
 
-            let textAngle = Math.atan2(relLink.y, relLink.x);
+            const maxTextLength = vectorLength - LABEL_NODE_MARGIN * 2;
+
+            const angle = Math.atan2(vector.y, vector.x);
+            
             // maintain label vertical orientation for legibility
-            if (textAngle > Math.PI / 2) textAngle = -(Math.PI - textAngle);
-            if (textAngle < -Math.PI / 2) textAngle = -(-Math.PI - textAngle);
+            const textAngle = angle > Math.PI / 2
+                ? -(Math.PI - angle)
+                : angle < -Math.PI / 2 
+                    ? -(-Math.PI - angle)
+                    : angle
 
             const label = `${link[props.linkLabel]}`;
 
@@ -2640,6 +2640,28 @@ function Graph2D (props) {
 
             // draw text label (with background rect)
             ctx.save();
+
+            // calculate label positioning
+            const textPos = Object.assign(...["x", "y"].map((c) => ({
+                [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
+            })));
+
+            if (props.linkCurvature && link[props.linkCurvature]) {
+                // nb: negative curvature is not possible
+                // but negative numbers are truthy
+
+                // displace text label to match link curvature
+                // https://github.com/vasturiano/react-force-graph
+                // A value of 0 renders a straight line. 
+                // 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle.
+
+                const angleNorm = angle + Math.PI / 2;
+                const radius = vectorLength / 2;
+                textPos.x = textPos.x + Math.cos(angleNorm) * radius;
+                textPos.y = textPos.y + Math.sin(angleNorm) * radius;
+                
+            }
+
             ctx.translate(textPos.x, textPos.y);
             ctx.rotate(textAngle);
 
