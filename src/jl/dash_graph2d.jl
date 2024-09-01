@@ -8,15 +8,18 @@ export dash_graph2d
 A Graph2D component.
 
 Keyword arguments:
-- `id` (String; required): The ID used to identify this component in Dash callbacks.
+- `id` (String | Dict; required): The ID used to identify this component in Dash callbacks.
 - `active` (Bool; optional): whether or not session is active. Used to enable or disable warning browser dialog when closing
 - `backgroundColor` (String; optional): Getter/setter for the canvas background color, default transparent
 - `centerAtZoom` (Dict with Strings as keys and values of type Real; optional): calls centerAt, then zoom. Takes an object with keys "k", "x", "y"
+- `centerForce` (Real; optional)
+- `chargeForce` (Real; optional)
+- `contextMenuClicked` (String; optional)
 - `controlType` (String; optional): Which type of control to use to control the camera on 3D mode. Choice between trackball, orbit or fly.
 - `cooldownTicks` (Real; optional): How many build-in frames to render before stopping and freezing the layout engine.
-- `cooldownTime` (Real; optional): How long (ms) to render for before stopping and freezing the layout engine.
 - `currentZoomPan` (Dict; optional)
 - `emitParticle` (Dict; optional): An alternative mechanism for generating particles, this method emits a non-cyclical single particle within a specific link. The emitted particle shares the styling (speed, width, color) of the regular particle props. A valid link object that is included in graphData should be passed as a single parameter.
+- `enableContextMenu` (Bool; optional)
 - `enableNavigationControls` (Bool; optional): Whether to enable the trackball navigation controls used to move the camera using mouse interactions (rotate/zoom/pan).
 - `enableNodeDrag` (Bool; optional): Whether to enable the user interaction to drag nodes by click-dragging. If enabled, every time a node is dragged the simulation is re-heated so the other nodes react to the changes. Only applicable if enablePointerInteraction is true.
 - `enablePointerInteraction` (Bool; optional): Whether to enable the mouse tracking events. This activates an internal tracker of the canvas mouse position and enables the functionality of object hover/click and tooltip labels, at the cost of performance. If you're looking for maximum gain in your graph performance it's recommended to switch off this property.
@@ -25,13 +28,13 @@ Keyword arguments:
 - `externalobject_source` (String; optional): externalobject_source:
 - `fixNodes` (Bool; optional): Whether to fix node coordinates after simulation has cooled
 - `forceEngine` (String; optional): Which force-simulation engine to use (d3 or ngraph).
-- `forceRefresh` (Real; optional)
 - `getGraphBbox` (Bool; optional): Returns the current bounding box of the nodes in the graph, formatted as { x: [<num>, <num>], y: [<num>, <num>], z: [<num>, <num>] }. 
 If no nodes are found, returns null. Accepts an optional argument to define a custom node filter: node => <boolean>, which should return a truthy value if the node is to be included. 
 This can be useful to calculate the bounding box of a portion of the graph.
 Bounding box is saved as the graphBbox prop
-- `graphData` (Dict; required): Graph data structure. Prop which is provided by user.
-Can also be used to apply incremental updates. Format {nodes:{}, links:{}}
+- `graphDataRead` (Dict; optional): Graph data. To be read by the user
+- `graphDataWrite` (Dict; required): Graph data structure. Allows user to update graphData
+Format {nodes:{}, links:{}}
 - `heightRatio` (Real; optional): height of component as proportion of container
 - `key` (String; optional): The key used to identify this component in React
 - `linkAutoColor` (Bool; optional): Automatically color link with inverse of background color
@@ -49,20 +52,20 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}
 - `linkDirectionalParticleSpeed` (Real | String; optional): Link object accessor function, attribute or a numeric constant for the directional particles speed, expressed as the ratio of the link length to travel per frame. Values above 0.5 are discouraged.
 - `linkDirectionalParticleWidth` (Real | String; optional): Link object accessor function, attribute or a numeric constant for the directional particles width. Values are rounded to the nearest decimal for indexing purposes.
 - `linkDirectionalParticles` (Real | String; optional): Link object accessor function, attribute or a numeric constant for the number of particles (small spheres) to display over the link line. The particles are distributed equi-spaced along the line, travel in the direction source > target, and can be used to indicate link directionality.
+- `linkForce` (Real; optional)
 - `linkHoverPrecision` (Real; optional): Whether to display the link label when gazing the link closely (low value) or from far away (high value).
 - `linkId` (String; optional): The link attribute containing the unique link id
-- `linkIdsHighlightUser` (Array of Strings; optional): ids of highlighted links (through search)
-- `linkIdsInvisibleAuto` (Array of Strings; optional)
+- `linkIdsInvisibleAuto` (Array of Strings; optional): ids of highlighted links (through search)
 - `linkIdsInvisibleUser` (Array of Strings; optional): ids of visible links
 - `linkLabel` (String; optional): Link object accessor function or attribute for name (shown in label). Supports plain text or HTML content (except in VR).
 - `linkOpacity` (Real; optional): Line opacity of links, between [0,1]. 3D, VR, AR
 - `linkResolution` (Real; optional): Geometric resolution of each link 3D line, expressed in how many radial segments to divide the cylinder. Higher values yield smoother cylinders. Applicable only to links with positive width. 3D, VR, AR
 - `linkRightClicked` (Dict; optional): right-clicked link
-- `linkRightClickedViewpointCoordinates` (Dict with Strings as keys and values of type Real; optional)
 - `linkSource` (String; optional): Link object accessor attribute referring to id of source node.
 - `linkTarget` (String; optional): Link object accessor attribute referring to id of target node.
 - `linkWidth` (Real | String; optional): Link object accessor function, attribute or a numeric constant for the link line width.
 - `linksSelected` (Array of Dicts; optional): selected (clicked) links
+- `maxCooldownTime` (Real; optional): How long (ms) to render for before stopping and freezing the layout engine.
 - `maxDepth_neighbours_select` (Real; optional): max levels of neighbourhood selection around a node by repeat clicking
 - `maxZoom` (Real; optional)
 - `minZoom` (Real; optional): ids of links highlighted due to being dragged
@@ -90,7 +93,7 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}
 - `nodeResolution` (Real; optional): Geometric resolution of each node's sphere, expressed in how many slice segments to divide the circumference. Higher values yield smoother spheres. Only applicable to 3D modes.
 3D, VR, AR
 - `nodeRightClicked` (Dict; optional): right-clicked node
-- `nodeRightClickedViewpointCoordinates` (Dict with Strings as keys and values of type Real; optional): screen coordinates of right-clicked node
+- `nodeSubLabel` (String; optional)
 - `nodeTextAutoColor` (Bool; optional): Automatically color node text with inverse of backgroundColor
 - `nodeTextColor` (String; optional): Node text color
 - `nodeVal` (Real | String; optional): Ratio of node circle area (square px) [2D] or sphere volume (cubic px) [3D] per value unit.
@@ -99,11 +102,14 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}
 - `numDimensions` (Real; optional): Not applicable to 2D mode. Number of dimensions to run the force simulation on. 3D, VR, AR
 - `pauseAnimation` (Bool; optional): Pauses the rendering cycle of the component, effectively freezing the current view and cancelling all user interaction. This method can be used to save performance in circumstances when a static image is sufficient.
 - `pixelUnitRatio` (Real; optional): pixelUnitRatio: if node attribute (in some unit of measurement) is used as coordinates, pixel:unit scale
+- `radialForce` (Real; optional)
 - `refresh` (Bool; optional): Redraws all the nodes/links. 3D, VR, AR
+- `reheat` (Real; optional)
 - `rendererConfig` (Dict; optional): Configuration parameters to pass to the ThreeJS WebGLRenderer constructor. This prop only has an effect on component mount. 3D only
+- `rootType` (String; optional): Node object accessor attribute for root type (e.g. entity)
+- `schemaOrData` (String; optional)
 - `scripts` (Array of Strings; optional)
 - `showCoordinates` (Bool; optional): showCoordinates: whether or not to show pointer coordinates in hover tooltip (not yet used)
-- `showGUI` (Bool; optional)
 - `size` (Dict; optional): provided react-sizeme. Contains an object with "width" and "height" attributes
 - `sortRels1Descend` (Bool; optional): sort in descending order?
 - `sortRels2Descend` (Bool; optional): sort in descending order?
@@ -113,14 +119,14 @@ Can also be used to apply incremental updates. Format {nodes:{}, links:{}}
 - `sortRoleplayers2Descend` (Bool; optional): sort in descending order?
 - `sortRoleplayersBy1` (String; optional): in zoom view, node attribute to sort role players by first
 - `sortRoleplayersBy2` (String; optional): in zoom view, node attribute to sort role players by after first sort
-- `updateNeighbours` (Bool; optional)
+- `thingType` (String; optional): Node object accessor attribute for type (e.g. person)
 - `useCoordinates` (Bool; optional): useCoordinates: whether to set nodeCoordinates for node coordinates
 - `warmupTicks` (Real; optional): Number of layout engine cycles to dry-run at ignition before starting to render.
 - `zoom` (Array of Reals; optional): Calls zoom() method. ([number], [ms])
-- `zoomToFit` (Real; optional)
+- `zoomToFitNodeIds` (Array of Strings; optional)
 """
 function dash_graph2d(; kwargs...)
-        available_props = Symbol[:id, :active, :backgroundColor, :centerAtZoom, :controlType, :cooldownTicks, :cooldownTime, :currentZoomPan, :emitParticle, :enableNavigationControls, :enableNodeDrag, :enablePointerInteraction, :enableZoomPanInteraction, :externalobjectInput, :externalobject_source, :fixNodes, :forceEngine, :forceRefresh, :getGraphBbox, :graphData, :heightRatio, :key, :linkAutoColor, :linkAutoColorBy, :linkClicked, :linkColor, :linkCurvature, :linkDesc, :linkDirectionalArrowColor, :linkDirectionalArrowLength, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticles, :linkHoverPrecision, :linkId, :linkIdsHighlightUser, :linkIdsInvisibleAuto, :linkIdsInvisibleUser, :linkLabel, :linkOpacity, :linkResolution, :linkRightClicked, :linkRightClickedViewpointCoordinates, :linkSource, :linkTarget, :linkWidth, :linksSelected, :maxDepth_neighbours_select, :maxZoom, :minZoom, :n_linkRightClicks, :n_nodeRightClicks, :ngraphPhysics, :nodeAutoColorBy, :nodeClicked, :nodeColor, :nodeCoordinates, :nodeDesc, :nodeIcon, :nodeIconSizeFactor, :nodeId, :nodeIdsHighlightUser, :nodeIdsInvisibleAuto, :nodeIdsInvisibleUser, :nodeImg, :nodeImgSizeFactor, :nodeLabel, :nodeLabelRelSize, :nodeOpacity, :nodeRelSize, :nodeResolution, :nodeRightClicked, :nodeRightClickedViewpointCoordinates, :nodeTextAutoColor, :nodeTextColor, :nodeVal, :nodeZoomId, :nodesSelected, :numDimensions, :pauseAnimation, :pixelUnitRatio, :refresh, :rendererConfig, :scripts, :showCoordinates, :showGUI, :size, :sortRels1Descend, :sortRels2Descend, :sortRelsBy1, :sortRelsBy2, :sortRoleplayers1Descend, :sortRoleplayers2Descend, :sortRoleplayersBy1, :sortRoleplayersBy2, :updateNeighbours, :useCoordinates, :warmupTicks, :zoom, :zoomToFit]
+        available_props = Symbol[:id, :active, :backgroundColor, :centerAtZoom, :centerForce, :chargeForce, :contextMenuClicked, :controlType, :cooldownTicks, :currentZoomPan, :emitParticle, :enableContextMenu, :enableNavigationControls, :enableNodeDrag, :enablePointerInteraction, :enableZoomPanInteraction, :externalobjectInput, :externalobject_source, :fixNodes, :forceEngine, :getGraphBbox, :graphDataRead, :graphDataWrite, :heightRatio, :key, :linkAutoColor, :linkAutoColorBy, :linkClicked, :linkColor, :linkCurvature, :linkDesc, :linkDirectionalArrowColor, :linkDirectionalArrowLength, :linkDirectionalArrowRelPos, :linkDirectionalArrowResolution, :linkDirectionalParticleColor, :linkDirectionalParticleResolution, :linkDirectionalParticleSpeed, :linkDirectionalParticleWidth, :linkDirectionalParticles, :linkForce, :linkHoverPrecision, :linkId, :linkIdsInvisibleAuto, :linkIdsInvisibleUser, :linkLabel, :linkOpacity, :linkResolution, :linkRightClicked, :linkSource, :linkTarget, :linkWidth, :linksSelected, :maxCooldownTime, :maxDepth_neighbours_select, :maxZoom, :minZoom, :n_linkRightClicks, :n_nodeRightClicks, :ngraphPhysics, :nodeAutoColorBy, :nodeClicked, :nodeColor, :nodeCoordinates, :nodeDesc, :nodeIcon, :nodeIconSizeFactor, :nodeId, :nodeIdsHighlightUser, :nodeIdsInvisibleAuto, :nodeIdsInvisibleUser, :nodeImg, :nodeImgSizeFactor, :nodeLabel, :nodeLabelRelSize, :nodeOpacity, :nodeRelSize, :nodeResolution, :nodeRightClicked, :nodeSubLabel, :nodeTextAutoColor, :nodeTextColor, :nodeVal, :nodeZoomId, :nodesSelected, :numDimensions, :pauseAnimation, :pixelUnitRatio, :radialForce, :refresh, :reheat, :rendererConfig, :rootType, :schemaOrData, :scripts, :showCoordinates, :size, :sortRels1Descend, :sortRels2Descend, :sortRelsBy1, :sortRelsBy2, :sortRoleplayers1Descend, :sortRoleplayers2Descend, :sortRoleplayersBy1, :sortRoleplayersBy2, :thingType, :useCoordinates, :warmupTicks, :zoom, :zoomToFitNodeIds]
         wild_props = Symbol[]
         return Component("dash_graph2d", "Graph2D", "dash_react_force_graph", available_props, wild_props; kwargs...)
 end

@@ -244,6 +244,17 @@ function Graph2D (props) {
     //     },
     //     [guiSettings.linkCurvature]
     // );
+    useEffect(
+        () => {
+
+            reheatFunction();
+
+        },
+        [
+            props.reheat,
+            props.useCoordinates
+        ]
+    )
 
 
     useEffect(
@@ -996,6 +1007,7 @@ function Graph2D (props) {
                 setGraphDataNodes(
                     (nodes) => nodes.map(
                         (node) => {
+
                             // restore fixed coordinates
 
                             const [
@@ -1030,23 +1042,28 @@ function Graph2D (props) {
                         }
                     )
                 )
-            } else if (props.fixNodes) {
+            } else {
+                
+                if (props.fixNodes) {
 
-                // free up fixed nodes
-                setGraphDataNodes(
-                    (nodes) => nodes.map(
-                        (node) => {
-                            // restore fixed coordinates
-                            if ("fx" in node) {
-        
-                                delete node.fx;
-                                delete node.fy;
-        
+                    // free up fixed nodes 
+                    // after reheating, they will settle in new fixed positions
+                    setGraphDataNodes(
+                        (nodes) => nodes.map(
+                            (node) => {
+                                // restore fixed coordinates
+                                if ("fx" in node) {
+            
+                                    delete node.fx;
+                                    delete node.fy;
+            
+                                }
+                                return node;
                             }
-                            return node;
-                        }
+                        )
                     )
-                )
+
+                }
 
                 setCooldownTime((cdt) => Math.min(graphDataNodes.length * 50, props.maxCooldownTime));
 
