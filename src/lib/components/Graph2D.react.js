@@ -2652,11 +2652,7 @@ function Graph2D (props) {
                 [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
             })));
 
-            console.log("props.linkCurvature: ", props.linkCurvature)
-            console.log("textPos prior to taking into account linkCurvature: ", textPos)
-
             if (props.linkCurvature) {
-                console.log("adjusting textPos")
                 // nb: negative curvature is not possible
                 // but negative numbers are truthy
 
@@ -2675,8 +2671,6 @@ function Graph2D (props) {
                 textPos.y = textPos.y - Math.sin(leftPerpendicularAngle) * radius;
             
             }
-
-            console.log("textPos after taking into account linkCurvature: ", cloneDeep(textPos))            
 
             ctx.translate(textPos.x, textPos.y);
             ctx.rotate(textAngle);
