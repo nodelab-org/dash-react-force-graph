@@ -2189,13 +2189,13 @@ function Graph2D (props) {
     );
 
 
-    useEffect(
-        () => {
-            // when link curvature changes, clone and replace the links to re-render the component
-            setGraphDataLinks((gdl) => cloneDeep(gdl))
+    // useEffect(
+    //     () => {
+    //         // when link curvature changes, clone and replace the links to re-render the component
+    //         setGraphDataLinks((gdl) => cloneDeep(gdl))
 
-        }, [props.linkCuvature]
-    )
+    //     }, [props.linkCuvature]
+    // )
 
     // useEffect(
     //     () => {
@@ -2652,7 +2652,11 @@ function Graph2D (props) {
                 [c]: start[c] + (end[c] - start[c]) / 2 // calc middle point
             })));
 
-            if (props.linkCurvature && link[props.linkCurvature]) {
+            console.log("props.linkCurvature: ", props.linkCurvature)
+            console.log("textPos prior to taking into account linkCurvature: ", textPos)
+
+            if (props.linkCurvature) {
+                console.log("adjusting textPos")
                 // nb: negative curvature is not possible
                 // but negative numbers are truthy
 
@@ -2661,12 +2665,18 @@ function Graph2D (props) {
                 // A value of 0 renders a straight line. 
                 // 1 indicates a radius equal to half of the line length, causing the curve to approximate a semi-circle.
 
-                const angleNorm = angle + Math.PI / 2;
-                const radius = vectorLength / 2;
-                textPos.x = textPos.x + Math.cos(angleNorm) * radius;
-                textPos.y = textPos.y + Math.sin(angleNorm) * radius;
-                
+                const leftPerpendicularAngle = angle + Math.PI / 2;
+                const radius = vectorLength * props.linkCurvature / 2;
+
+                console.log("leftPerpendicularAngle: ", leftPerpendicularAngle)
+                console.log("radius: ", radius)
+
+                textPos.x = textPos.x - Math.cos(leftPerpendicularAngle) * radius;
+                textPos.y = textPos.y - Math.sin(leftPerpendicularAngle) * radius;
+            
             }
+
+            console.log("textPos after taking into account linkCurvature: ", cloneDeep(textPos))            
 
             ctx.translate(textPos.x, textPos.y);
             ctx.rotate(textAngle);
@@ -3180,7 +3190,7 @@ function Graph2D (props) {
                     // linkCurveRotation={props.linkCurveRotation} // 3D, VR, AR,
                     // linkMaterial: null, // 3D, VR, AR, not exposed
                     linkCanvasObject={linkCanvasObjectFunction}
-                    linkCanvasObjectMode={()=>"after"}
+                    linkCanvasObjectMode={()=> "after" }
                     linkDirectionalArrowLength={props.linkDirectionalArrowLength}
                     linkDirectionalArrowColor={linkColorFunction}
                     linkDirectionalArrowRelPos={props.linkDirectionalArrowRelPos}
