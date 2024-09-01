@@ -2189,6 +2189,14 @@ function Graph2D (props) {
     );
 
 
+    useEffect(
+        () => {
+            // when link curvature changes, clone and replace the links to re-render the component
+            setGraphDataLinks((gdl) => cloneDeep(gdl))
+
+        }, [props.linkCuvature]
+    )
+
     // useEffect(
     //     () => {
 
@@ -2611,8 +2619,6 @@ function Graph2D (props) {
             // ignore unbound links
             if (typeof start !== "object" || typeof end !== "object") return;
 
-            // TODO: take into account link[props.linkCurvature]
-
             const vector = { x: end.x - start.x, y: end.y - start.y };
 
             const vectorLength = Math.sqrt(Math.pow(vector.x, 2) + Math.pow(vector.y, 2))
@@ -2626,7 +2632,7 @@ function Graph2D (props) {
                 ? -(Math.PI - angle)
                 : angle < -Math.PI / 2 
                     ? -(-Math.PI - angle)
-                    : angle
+                    : angle;
 
             const label = `${link[props.linkLabel]}`;
 
@@ -2670,7 +2676,7 @@ function Graph2D (props) {
 
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillStyle = color;// invert(backgroundColor);
+            ctx.fillStyle = color;
             ctx.fillText(label, 0, 0);
             ctx.restore();
 
@@ -3125,8 +3131,8 @@ function Graph2D (props) {
                     // props
                     autoPauseRedraw={true}
                     graphData={{
-                        nodes: graphDataNodes ? graphDataNodes : [],
-                        links: graphDataLinks ? graphDataLinks : []
+                        nodes: graphDataNodes || [],
+                        links: graphDataLinks || []
                     }}
                     nodeId={props.nodeId}
                     linkSource={props.linkSource}
