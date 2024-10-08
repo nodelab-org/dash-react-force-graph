@@ -2373,10 +2373,15 @@ function Graph2D (props) {
             const iconWidth = ctx.measureText(node[props.nodeIcon]).width
 
             node.__bckgDimensions = [iconWidth, iconSize]
-            node.__yNudge = -iconSize * 0.2
+            node.__yNudge = iconSize * 0.4
             node.__yNudgePaint = iconSize * 0.3
             // ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - 10 / 1.5, iconSize);
-            ctx.fillText(`${node[props.nodeIcon]}`, node.x, node.y - (node.__bckgDimensions[1] + node.__yNudge), iconSize);
+            ctx.fillText(
+                `${node[props.nodeIcon]}`, 
+                node.x, 
+                node.y - node.__bckgDimensions[1] + node.__yNudge, 
+                iconSize
+            );
     
             // save for nodePointerAreaPaintFunction
 
@@ -2553,7 +2558,6 @@ function Graph2D (props) {
                 : 0
     }
 
-    // const linkDirectionalArrowColorFunction = (link) => link.color
 
     const linkWidthFunction = (link) => {
         let width = props.linkWidth;
@@ -2606,7 +2610,7 @@ function Graph2D (props) {
     
     const linkCanvasObjectFunction = (link, ctx) => {
 
-        if (props.currentZoomPan && props.currentZoomPan.k && props.currentZoomPan.k > 0.4) {
+        if (props.currentZoomPan && props.currentZoomPan.k && props.currentZoomPan.k > 0.6) {
         
             const color = linkColorFunction(link);
 
@@ -2663,9 +2667,6 @@ function Graph2D (props) {
 
                 const leftPerpendicularAngle = angle + Math.PI / 2;
                 const radius = vectorLength * props.linkCurvature / 2;
-
-                console.log("leftPerpendicularAngle: ", leftPerpendicularAngle)
-                console.log("radius: ", radius)
 
                 textPos.x = textPos.x - Math.cos(leftPerpendicularAngle) * radius;
                 textPos.y = textPos.y - Math.sin(leftPerpendicularAngle) * radius;
@@ -2885,7 +2886,6 @@ function Graph2D (props) {
     //     }
     //     props.setProps({refresh:false})
     // },[props.refresh])
-
 
     // useEffect( () => {
     //     // e.g. fgRef.current.d3Force('collide', d3.forceCollide(Graph.nodeRelSize()))
