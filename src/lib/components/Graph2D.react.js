@@ -1371,6 +1371,12 @@ function Graph2D (props) {
 
                 }
 
+                props.setProps(
+                    {
+                        "zoomToFitNodeIds": graphDataNodes.map((node) => node[props.nodeId])
+                    }
+                )
+
             }
 
         },
