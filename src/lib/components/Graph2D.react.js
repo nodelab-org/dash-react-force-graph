@@ -10,7 +10,7 @@ import {forceRadial} from "d3-force";
 import ContextPieMenu from './ContextPieMenu.react';
 
 import React, {useEffect, useRef, useState} from "react";
-import PropTypes from "prop-types";
+import PropTypes, { number } from "prop-types";
 import validateColor from "validate-color";
 // import importScript from "../customHooks/importScript.js";
 
@@ -248,6 +248,57 @@ function Graph2D (props) {
         () => {
 
             reheatFunction();
+
+            if (fgRef) {
+
+                const numberOfNodes = graphDataNodes.length;
+                let [sumX, sumY] = [0,0];
+                
+                if (props.useCoordinates) {
+
+                    if (typeof props.nodeCoordinates === "string") {
+
+                        graphDataNodes.forEach(
+                            (node) => {
+                                if (props.nodeCoordinates in node) {
+                                    sumX += node[props.nodeCoordinates].x
+                                    sumY += node[props.nodeCoordinates].y
+                                }
+                            }
+                        )
+
+                    } else if (
+                        typeof props.nodeCoordinates === "object" && 
+                        "x" in props.nodeCoordinates &&
+                        "y" in props.nodeCoordinates
+                    ) { 
+
+                        graphDataNodes.forEach(
+                            (node) => {
+                                if (props.nodeCoordinates.x in node) {
+                                    sumX += node[props.nodeCoordinates.x]
+                                }
+                                if (props.nodeCoordinates.y in node) {
+                                    sumY += node[props.nodeCoordinates.y]
+                                }
+                            }
+                        )
+                    }
+
+                    fgRef.current.centerAt(
+                        sumX / numberOfNodes,
+                        sumY / numberOfNodes,
+                        250
+                    );
+
+                    }
+    
+                fgRef.current.zoom(
+                    3,
+                    250
+                );
+    
+            }
 
         },
         [
@@ -889,40 +940,40 @@ function Graph2D (props) {
             // restore user-provided nodeCoordinates 
             console.log("restore user-provided nodeCoordinates")
 
+
             setGraphDataNodes(
-                (nodes) => nodes.map(
-                    (node) => {
-                        const [
-                            coordX,
-                            coordY
-                        ] = [
-                            typeof props.nodeCoordinates === "string"
-                                ? props.nodeCoordinates in node
-                                    ? node[props.nodeCoordinates].x
-                                    : null
-                                : "x" in props.nodeCoordinates && props.nodeCoordinates.x in node
-                                    ? node[props.nodeCoordinates.x]
-                                    : null,
-                            typeof props.nodeCoordinates === "string"
-                                ? props.nodeCoordinates in node
-                                    ? node[props.nodeCoordinates].y
-                                    : null
-                                : "y" in props.nodeCoordinates && props.nodeCoordinates.y in node
-                                    ? node[props.nodeCoordinates.y]
-                                    : null
-                        ];
 
-                        if (coordX && coordY) {
+                (nodes) => {
 
-                            node.fx = coordX;
-                            node.fy = coordY;
+                    if (typeof props.nodeCoordinates === "string") {
 
-                        }
-
-                        return node;
-
+                        return nodes.map(
+                            (node) => {
+                                if (props.nodeCoordinates in node) {
+                                    node.fx = node[props.nodeCoordinates].x
+                                    node.fy = node[props.nodeCoordinates].y
+                                }
+                            }
+                        )
+    
+                    } else if (
+                        typeof props.nodeCoordinates === "object" && 
+                        "x" in props.nodeCoordinates &&
+                        "y" in props.nodeCoordinates
+                    ) { 
+    
+                        return nodes.map(
+                            (node) => {
+                                if (props.nodeCoordinates.x in node) {
+                                    node.fx = node[props.nodeCoordinates.x]
+                                }
+                                if (props.nodeCoordinates.y in node) {
+                                    node.fy = node[props.nodeCoordinates.y]
+                                }
+                            }
+                        )
                     }
-                )
+                }
             )
         } else if (props.fixNodes) {
             // no nodeCoordinates, restore fixed coordinates
