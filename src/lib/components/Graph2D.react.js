@@ -247,6 +247,7 @@ function Graph2D (props) {
     useEffect(
         () => {
 
+            console.log("line 250 fired")
             reheatFunction();
 
             if (fgRef) {
@@ -287,10 +288,17 @@ function Graph2D (props) {
 
                 } else {
 
+                    console.log("not props.useCoordinates")
+
                     graphDataNodes.forEach(
                         (node) => {
-                            sumX += ("fx" in node? node.fx : node.x)
-                            sumY += ("fy" in node? node.fy : node.y)
+                            if ("fx" in node && typeof node.fx === "number") {
+                                sumX += node.fx
+                                sumY += node.fy
+                            } else if ("x" in node && typeof node.x === "number") {
+                                sumX += node.x
+                                sumY += node.y
+                            }
                         }
                     )
                 }
