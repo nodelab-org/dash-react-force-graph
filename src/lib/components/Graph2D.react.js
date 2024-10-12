@@ -285,19 +285,22 @@ function Graph2D (props) {
                         )
                     }
 
-                    fgRef.current.centerAt(
-                        sumX / numberOfNodes,
-                        sumY / numberOfNodes,
-                        250
-                    );
+                } else {
 
-                    }
-    
-                fgRef.current.zoom(
-                    3,
+                    graphDataNodes.forEach(
+                        (node) => {
+                            sumX += ("fx" in node? node.fx : node.x)
+                            sumY += ("fy" in node? node.fy : node.y)
+                        }
+                    )
+                }
+                
+                fgRef.current.centerAt(
+                    sumX / numberOfNodes,
+                    sumY / numberOfNodes,
                     250
                 );
-    
+
             }
 
         },
