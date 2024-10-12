@@ -1315,6 +1315,12 @@ function Graph2D (props) {
 
                 }
 
+                props.setProps(
+                    {
+                        "zoomToFitNodeIds": nodesCloneTmp.map((node) => node[props.nodeId])
+                    }
+                )
+
                 setGraphDataNodes((_nodes) => nodesCloneTmp);
                 setGraphDataLinks((_links) => linksCloneTmp);
 
@@ -1370,12 +1376,6 @@ function Graph2D (props) {
                     exitNodeZoomView();
 
                 }
-
-                props.setProps(
-                    {
-                        "zoomToFitNodeIds": graphDataNodes.map((node) => node[props.nodeId])
-                    }
-                )
 
             }
 
