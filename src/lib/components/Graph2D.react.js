@@ -247,7 +247,6 @@ function Graph2D (props) {
     useEffect(
         () => {
 
-            console.log("line 250 fired")
             reheatFunction();
 
             if (fgRef) {
@@ -286,28 +285,23 @@ function Graph2D (props) {
                         )
                     }
 
+                                        
+                    fgRef.current.centerAt(
+                        sumX / numberOfNodes,
+                        sumY / numberOfNodes,
+                        250
+                    );
+
                 } else {
 
-                    console.log("not props.useCoordinates")
-
-                    graphDataNodes.forEach(
-                        (node) => {
-                            if ("fx" in node && typeof node.fx === "number") {
-                                sumX += node.fx
-                                sumY += node.fy
-                            } else if ("x" in node && typeof node.x === "number") {
-                                sumX += node.x
-                                sumY += node.y
-                            }
+                    // neither fx nor x are defined yet 
+                    props.setProps(
+                        {
+                            "zoomToFitNodeIds": graphDataNodes.map((node) => node[props.nodeId])
                         }
                     )
                 }
-                
-                fgRef.current.centerAt(
-                    sumX / numberOfNodes,
-                    sumY / numberOfNodes,
-                    250
-                );
+
 
             }
 
